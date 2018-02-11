@@ -67,9 +67,10 @@ class DBLAPI {
     return response.body;
   }
 
-  async getVotes(onlyids) {
+  async getVotes(onlyids, days) {
     if (!this.token) throw new Error('This function requires a token to be set');
-    const response = await this._request('get', 'bots/votes', { onlyids }, true);
+    if (days < 0 || days > 31) throw new Error('Days parameter out of bounds (0-31)');
+    const response = await this._request('get', 'bots/votes', { onlyids, days }, true);
     return response.body;
   }
 
