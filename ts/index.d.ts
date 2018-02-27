@@ -1,8 +1,6 @@
-import { Client, Shard } from "discord.js";
-
 export declare class Stats {
     server_count: number;
-    shards: Shard[];
+    shards: any[];
 }
 
 export declare class Bot {

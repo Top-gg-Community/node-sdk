@@ -1,13 +1,12 @@
 const snekfetch = require('snekfetch');
 const API = 'https://discordbots.org/api/';
 const { Bot, Bots, BotsQuery, Stats, User, UserSocial, Votes } = require('./ts/index');
-const { Client, Shard } = require('discord.js')
 
 class DBLAPI {
   /**
    * 
    * @param {string} token 
-   * @param {Client} client 
+   * @param {any} client 
    */
   constructor(token, client) {
     this.token = token;
