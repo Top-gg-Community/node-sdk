@@ -16,6 +16,7 @@
   "author": "Discord Bot List <support@discordbots.org> (https://discordbots.org)",
   "license": "Apache-2.0",
   "dependencies": {
+    "discord.js": "^11.3.0",
     "snekfetch": "^3.6.4"
   }
 }
