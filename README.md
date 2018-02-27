@@ -7,10 +7,6 @@ A module for interacting with the discordbots.org API
 ## Documentation
 Documentation can be found [here](https://discordbots.org/api/docs#jslib)
 
-### Dependencies 
-   * discord.js: ^11.3.0
-   * snekfetch: ^3.6.4
-
 ## Example
 ```js
 const Discord = require("discord.js");
