@@ -12,7 +12,7 @@ declare module "dblapi.js" {
 
 		public token?: string;
 	
-		private _request(method: string, endpoint: string, data?: Object, auth?: boolean): Promise<Buffer>
+		private _request(method: string, endpoint: string, data?: Object, auth?: boolean): Promise<Object>
 	}
 
 	type BotStats = {
