@@ -26,7 +26,7 @@ class DBLAPI {
    * @param {Object} [data] Data to send with the request.
    * @param {boolean} [auth] Boolean indicating if auth is needed.
    * @private
-   * @returns {Promise<Object>}
+   * @returns {Promise<snekfetch>}
    */
   _request(method, endpoint, data, auth) {
     const request = snekfetch[method](API + endpoint);
