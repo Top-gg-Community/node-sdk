@@ -1,18 +1,18 @@
 declare module "dblapi.js" {
 	export class DBLAPI {
-		constructor(token: string, client: any)
+		constructor(token: string, client?: any)
 		
-		public postStats(serverCount: number, shardId: number, shardCount: number): Promise<Buffer>
+		public postStats(serverCount: number, shardId?: number, shardCount?: number): Promise<Buffer>
 		public getStats(id: string): Promise<BotStats>
 		public getBot(id: string): Promise<Bot>
 		public getUser(id: string): Promise<User>
-		public getBots(id: BotsQuery): Promise<BotSearchResult>
-		public getVotes(onlyids: boolean, days: number): Promise<Votes[]>
+		public getBots(query: BotsQuery): Promise<BotSearchResult>
+		public getVotes(onlyids?: boolean, days?: number): Promise<Votes[]>
 		public hasVoted(id: string): Promise<boolean>
 
 		public token?: string;
 	
-		private _request(method: string, endpoint: string, data: Object, auth: boolean): Promise<Buffer>
+		private _request(method: string, endpoint: string, data?: Object, auth?: boolean): Promise<Buffer>
 	}
 
 	type BotStats = {
