@@ -1,5 +1,5 @@
 # dblapi.js
-A module for interacting with the discordbots.org API
+An official module for interacting with the discordbots.org API
 
 ## Installation
 `npm install dblapi.js`

@@ -1,7 +1,7 @@
 {
   "name": "dblapi.js",
-  "version": "1.1.0",
-  "description": "A module for interacting with the discordbots.org API",
+  "version": "1.1.1",
+  "description": "An official module for interacting with the discordbots.org API",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,6 +14,7 @@
     "javascript"
   ],
   "author": "Discord Bot List <support@discordbots.org> (https://discordbots.org)",
+  "repository": "DiscordBotList/dblapi.js",
   "license": "Apache-2.0",
   "dependencies": {
     "snekfetch": "^3.6.4"
