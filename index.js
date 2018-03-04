@@ -4,8 +4,8 @@ const API = 'https://discordbots.org/api/';
 class DBLAPI {
   /**
    * Creates a new DBLAPI Instance.
-   * @param {string} token Your Discordbots token for this bot.
-   * @param {any} [client] Your Client Instance, if present it will auto update your stats every 30 minutes.
+   * @param {string} token Your discordbots.org token for this bot.
+   * @param {any} [client] Your Client instance, if present it will auto update your stats every 30 minutes.
    */
   constructor(token, client) {
     this.token = token;
@@ -19,10 +19,11 @@ class DBLAPI {
       });
     }
   }
+
   /**
    * Creates the request with snekfetch.
    * @param {string} method Http method to use.
-   * @param {string} endpoint API Endpoint to use.
+   * @param {string} endpoint API endpoint to use.
    * @param {Object} [data] Data to send with the request.
    * @param {boolean} [auth] Boolean indicating if auth is needed.
    * @private
@@ -35,11 +36,12 @@ class DBLAPI {
     if (auth) request.set({ Authorization: this.token });
     return request;
   }
+
   /**
-   * Post Stats to Discordbotlist.
-   * @param {number|number[]} serverCount The Server count of your bot.
+   * Post Stats to Discord Bot List.
+   * @param {number|number[]} serverCount The server count of your bot.
    * @param {number} [shardId] The ID of this shard.
-   * @param {number} [shardCount] The Count of all Shards of your bot.
+   * @param {number} [shardCount] The count of all shards of your bot.
    * @returns {Promise<Object>}
    */
   async postStats(serverCount, shardId, shardCount) {
@@ -52,7 +54,7 @@ class DBLAPI {
       data.shard_count = shardCount;
     } else {
       data.server_count = this.client.guilds.size;
-      if (this.client.shard) {
+      if (this.client.shard && this.client.shard.count) {
         data.shard_id = this.client.shard.id;
         data.shard_count = this.client.shard.count;
       }
@@ -60,8 +62,9 @@ class DBLAPI {
     const response = await this._request('post', 'bots/stats', data, true);
     return response.body;
   }
+
   /**
-   * Gets Stats from a bot.
+   * Gets stats from a bot.
    * @param {string} id The ID of the bot you want to get the stats from.
    * @returns {Promise<Buffer>}
    */
@@ -71,9 +74,10 @@ class DBLAPI {
     const response = await this._request('get', `bots/${id}/stats`);
     return response.body;
   }
+
   /**
-   * Gets Information about a bot.
-   * @param {string} id The ID of the bot you want to get the Information from.
+   * Gets information about a bot.
+   * @param {string} id The ID of the bot you want to get the information from.
    * @returns {Promise<Buffer>}
    */
   async getBot(id) {
@@ -82,9 +86,10 @@ class DBLAPI {
     const response = await this._request('get', `bots/${id}`);
     return response.body;
   }
+
   /**
-   * Gets Information about a User.
-   * @param {string} id The ID of the User you want to get the Information from.
+   * Gets information about a user.
+   * @param {string} id The ID of the user you want to get the information from.
    * @returns {Promise<Buffer>}
    */
   async getUser(id) {
@@ -92,17 +97,19 @@ class DBLAPI {
     const response = await this._request('get', `users/${id}`);
     return response.body;
   }
+
   /**
    * Gets a list of bots matching your query.
-   * @param {Object} query The Query for the search.
+   * @param {Object} query The query for the search.
    * @returns {Promise<Buffer>}
    */
   async getBots(query) {
     const response = await this._request('get', 'bots', query);
     return response.body;
   }
+
   /**
-   * Gets Votes from your bot.
+   * Gets votes from your bot.
    * @param {boolean} onlyids boolean indicating if this request should only return IDs.
    * @param {number} days a number indicating how much days ago the votes should be shown.
    * @returns {Promise<Buffer>}
@@ -113,9 +120,10 @@ class DBLAPI {
     const response = await this._request('get', 'bots/votes', { onlyids, days }, true);
     return response.body;
   }
+
   /**
-   * Returns if an User has voted for your Bot.
-   * @param {string} id The ID of the User to check for.
+   * Returns if a user has voted for your bot.
+   * @param {string} id The ID of the user to check for.
    * @returns {Promise<boolean>}
    */
   async hasVoted(id) {
