@@ -111,7 +111,7 @@ class DBLAPI {
   /**
    * Gets votes from your bot.
    * @param {boolean} onlyids boolean indicating if this request should only return IDs.
-   * @param {number} days a number indicating how much days ago the votes should be shown.
+   * @param {number} days a number indicating how many days ago the votes should be shown.
    * @returns {Promise<Buffer>}
    */
   async getVotes(onlyids, days) {
@@ -124,11 +124,12 @@ class DBLAPI {
   /**
    * Returns if a user has voted for your bot.
    * @param {string} id The ID of the user to check for.
+   * @param {number} days a number indicating how many days ago the vote should have been made.
    * @returns {Promise<boolean>}
    */
-  async hasVoted(id) {
+  async hasVoted(id, days) {
     if (!this.token) throw new Error('This function requires a token to be set');
-    const voters = await this.getVotes(true);
+    const voters = await this.getVotes(true, days);
     return voters.includes(id);
   }
 }
