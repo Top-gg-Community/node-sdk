@@ -8,7 +8,7 @@ declare module "dblapi.js" {
 		public getUser(id: string): Promise<User>
 		public getBots(query: BotsQuery): Promise<BotSearchResult>
 		public getVotes(onlyids?: boolean, days?: number): Promise<Votes[]>
-		public hasVoted(id: string): Promise<boolean>
+		public hasVoted(id: string, days?: number): Promise<boolean>
 
 		public token?: string;
 	
