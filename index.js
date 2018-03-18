@@ -12,9 +12,9 @@ class DBLAPI {
     if (client) {
       this.client = client;
       client.on('ready', () => {
-        this.postStats();
+        this.postStats().catch(e => console.error(`[dblapi.js autopost] Failed to post stats: ${e.text}`)); // eslint-disable-line no-console
         setInterval(() => {
-          this.postStats();
+          this.postStats().catch(e => console.error(`[dblapi.js autopost] Failed to post stats: ${e.text}`)); // eslint-disable-line no-console
         }, 1800000);
       });
     }
