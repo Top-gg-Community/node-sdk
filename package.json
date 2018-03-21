@@ -18,5 +18,6 @@
   "license": "Apache-2.0",
   "dependencies": {
     "snekfetch": "^3.6.4"
-  }
+  },
+  "typings": "./typings/index.d.ts"
 }
