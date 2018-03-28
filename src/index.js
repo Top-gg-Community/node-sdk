@@ -1,22 +1,46 @@
 const snekfetch = require('snekfetch');
 const API = 'https://discordbots.org/api/';
 
+const isLib = (library, client) => {
+  try {
+    const lib = require.cache[require.resolve(library)];
+    return lib && client instanceof lib.exports.Client;
+  } catch (e) {
+    return false;
+  }
+};
+
+const isASupportedLibrary = client => isLib('discord.js', client) || isLib('eris', client);
+
 class DBLAPI {
   /**
    * Creates a new DBLAPI Instance.
    * @param {string} token Your discordbots.org token for this bot.
-   * @param {any} [client] Your Client instance, if present it will auto update your stats every 30 minutes.
+   * @param {Object} [options] Your DBLAPI options.
+   * @param {number} [options.statsInterval=1800000] How often the autoposter should post stats in ms. May not be smaller than 900000 and defaults to 1800000.
+   * @param {any} [client] Your Client instance, if present and supported it will auto update your stats every `options.statsInterval` ms.
    */
-  constructor(token, client) {
+  constructor(token, options, client) {
     this.token = token;
-    if (client) {
+    if (isASupportedLibrary(options)) {
+      client = options;
+      options = {};
+    }
+    this.options = options || {};
+
+    if (client && isASupportedLibrary(client)) {
+      if (!this.options.statsInterval) this.options.statsInterval = 1800000;
+      if (this.options.statsInterval < 900000) throw new Error('statsInterval may not be shorter than 900000 (15 minutes)');
+
       this.client = client;
-      client.on('ready', () => {
+      this.client.on('ready', () => {
         this.postStats().catch(e => console.error(`[dblapi.js autopost] Failed to post stats: ${e.text}`)); // eslint-disable-line no-console
         setInterval(() => {
           this.postStats().catch(e => console.error(`[dblapi.js autopost] Failed to post stats: ${e.text}`)); // eslint-disable-line no-console
-        }, 1800000);
+        }, this.options.statsInterval);
       });
+    } else if (client) {
+      console.error(`[dblapi.js autopost] The provided client is not supported. Please add an issue or pull request to the github repo https://github.com/DiscordBotList/dblapi.js`); // eslint-disable-line no-console
     }
   }
 

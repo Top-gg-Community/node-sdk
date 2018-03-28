@@ -1,7 +1,7 @@
 export = DBLAPI;
 
 declare class DBLAPI {
-	constructor(token: string, client?: any)
+	constructor(token: string, options?: DBLAPI.DBLOptions, client?: any)
 
 	public postStats(serverCount: number, shardId?: number, shardCount?: number): Promise<Buffer>
 	public getStats(id: string): Promise<DBLAPI.BotStats>
@@ -17,6 +17,10 @@ declare class DBLAPI {
 }
 
 declare namespace DBLAPI {
+	export type DBLOptions = {
+		statsInterval?: number;
+	}
+
 	export type BotStats = {
 		server_count: number;
 		shards: number[];
