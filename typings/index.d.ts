@@ -8,7 +8,7 @@ declare class DBLAPI {
 	public getBot(id: string): Promise<DBLAPI.Bot>
 	public getUser(id: string): Promise<DBLAPI.User>
 	public getBots(query: DBLAPI.BotsQuery): Promise<DBLAPI.BotSearchResult>
-	public getVotes(onlyids?: boolean, days?: number): Promise<DBLAPI.Votes[]>
+	public getVotes(): Promise<DBLAPI.Votes[]>
 	public hasVoted(id: string): Promise<boolean>
 
 	public token?: string;
