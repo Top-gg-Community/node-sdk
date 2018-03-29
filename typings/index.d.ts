@@ -16,9 +16,29 @@ declare class DBLAPI {
   private _request(method: string, endpoint: string, data?: Object, auth?: boolean): Promise<Object>
 }
 
+import { EventEmitter } from 'events';
+import { Server, ServerResponse, IncomingMessage } from 'http';
+declare class DBLWebhook extends EventEmitter {
+  constructor(port: number, path?: string, auth?: string)
+
+  public port: number;
+  public path: string;
+  public auth?: string;
+  private _server: Server;
+  private _startWebhook(): void;
+  private _handleRequest(req: IncomingMessage, res: ServerResponse): void;
+  private _returnResponse(res: ServerResponse, statusCode: number, data?: string): void;
+
+  public on(event: 'ready', listener: (hostname: string, port: number, path: string) => void): this;
+  public on(event: 'vote', listener: (bot: string, user: string, type: string, query?: object) => void): this;
+}
+
 declare namespace DBLAPI {
   export type DBLOptions = {
     statsInterval?: number;
+    webhookPort?: number;
+    webhookAuth?: string;
+    webhookPath?: string;
   }
 
   export type BotStats = {
