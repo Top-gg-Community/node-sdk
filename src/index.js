@@ -18,6 +18,8 @@ class DBLAPI {
    * @param {string} token Your discordbots.org token for this bot.
    * @param {Object} [options] Your DBLAPI options.
    * @param {number} [options.statsInterval=1800000] How often the autoposter should post stats in ms. May not be smaller than 900000 and defaults to 1800000.
+   * @param {number} [options.webhookPort] The port to run the webhook on. Will activate webhook when set.
+   * @param {string} [options.webhookAuth] The string for Authorization you set on the site for verification.
    * @param {any} [client] Your Client instance, if present and supported it will auto update your stats every `options.statsInterval` ms.
    */
   constructor(token, options, client) {
@@ -41,6 +43,11 @@ class DBLAPI {
       });
     } else if (client) {
       console.error(`[dblapi.js autopost] The provided client is not supported. Please add an issue or pull request to the github repo https://github.com/DiscordBotList/dblapi.js`); // eslint-disable-line no-console
+    }
+
+    if (this.options.webhookPort) {
+      const DBLWebhook = require('./webhook');
+      this.webhook = new DBLWebhook(this.options.webhookPort, this.options.webhookAuth);
     }
   }
 
