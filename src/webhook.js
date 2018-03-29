@@ -6,11 +6,13 @@ class DBLWebhook extends EventEmitter {
   /**
    * Creates a new DBLWebhook Instance.
    * @param {number} port The port to run the webhook on.
+   * @param {string} [path='/dblwebhook'] The path for the webhook request.
    * @param {string} [auth] The string for Authorization you set on the site for verification.
    */
-  constructor(port, auth) {
+  constructor(port, path, auth) {
     super();
     this.port = port;
+    this.path = path || '/dblwebhook';
     this.auth = auth;
 
     this._server = null;
@@ -26,14 +28,15 @@ class DBLWebhook extends EventEmitter {
        * @event ready
        * @param {string} hostname The hostname of the webhook server
        * @param {number} port The port the webhook server is running on
+       * @param {string} path The path for the webhook
        */
       // Get the user's public IP via an API for hostname later?
-      this.emit('ready', { hostname: '0.0.0.0', port: this.port });
+      this.emit('ready', { hostname: '0.0.0.0', port: this.port, path: this.path });
     });
   }
 
   _handleRequest(req, res) {
-    if (req.url === '/dblwebhook' && req.method === 'POST') {
+    if (req.url === this.path && req.method === 'POST') {
       if (this.auth && this.auth !== req.headers.authorization) return this._returnResponse(res, 403);
       if (req.headers['content-type'] !== 'application/json') return this._returnResponse(res, 400);
       let data = '';

@@ -20,6 +20,7 @@ class DBLAPI {
    * @param {number} [options.statsInterval=1800000] How often the autoposter should post stats in ms. May not be smaller than 900000 and defaults to 1800000.
    * @param {number} [options.webhookPort] The port to run the webhook on. Will activate webhook when set.
    * @param {string} [options.webhookAuth] The string for Authorization you set on the site for verification.
+   * @param {string} [options.webhookPath='/dblwebhook'] The path for the webhook request.
    * @param {any} [client] Your Client instance, if present and supported it will auto update your stats every `options.statsInterval` ms.
    */
   constructor(token, options, client) {
@@ -47,7 +48,7 @@ class DBLAPI {
 
     if (this.options.webhookPort) {
       const DBLWebhook = require('./webhook');
-      this.webhook = new DBLWebhook(this.options.webhookPort, this.options.webhookAuth);
+      this.webhook = new DBLWebhook(this.options.webhookPort, this.options.webhookPath, this.options.webhookAuth);
     }
   }
 
