@@ -93,8 +93,8 @@ class DBLAPI {
         data.shard_count = this.client.shards.size;
       }
     }
-    const response = await this._request('post', 'bots/stats', data, true);
-    return response.body;
+    const { body } = await this._request('post', 'bots/stats', data, true);
+    return body;
   }
 
   /**
@@ -105,8 +105,8 @@ class DBLAPI {
   async getStats(id) {
     if (!id && !this.client) throw new Error('getStats requires id as argument');
     if (!id) id = this.client.user.id;
-    const response = await this._request('get', `bots/${id}/stats`);
-    return response.body;
+    const { body } = await this._request('get', `bots/${id}/stats`);
+    return body;
   }
 
   /**
@@ -117,8 +117,8 @@ class DBLAPI {
   async getBot(id) {
     if (!id && !this.client) throw new Error('getBot requires id as argument');
     if (!id) id = this.client.user.id;
-    const response = await this._request('get', `bots/${id}`);
-    return response.body;
+    const { body } = await this._request('get', `bots/${id}`);
+    return body;
   }
 
   /**
@@ -128,8 +128,8 @@ class DBLAPI {
    */
   async getUser(id) {
     if (!id) throw new Error('getUser requires id as argument');
-    const response = await this._request('get', `users/${id}`);
-    return response.body;
+    const { body } = await this._request('get', `users/${id}`);
+    return body;
   }
 
   /**
@@ -138,8 +138,8 @@ class DBLAPI {
    * @returns {Promise<Buffer>}
    */
   async getBots(query) {
-    const response = await this._request('get', 'bots', query);
-    return response.body;
+    const { body } = await this._request('get', 'bots', query);
+    return body;
   }
 
   /**
@@ -148,8 +148,8 @@ class DBLAPI {
    */
   async getVotes() {
     if (!this.token) throw new Error('This function requires a token to be set');
-    const response = await this._request('get', 'bots/votes', undefined, true);
-    return response.body;
+    const { body } = await this._request('get', 'bots/votes', undefined, true);
+    return body;
   }
 
   /**
@@ -160,8 +160,8 @@ class DBLAPI {
   async hasVoted(id) {
     if (!this.token) throw new Error('This function requires a token to be set');
     if (!id) throw new Error('hasVoted requires id as argument');
-    const response = await this._request('get', 'bots/check', { userId: id }, true);
-    return !!response.body.voted;
+    const { body } = await this._request('get', 'bots/check', { userId: id }, true);
+    return body.voted;
   }
 }
 
