@@ -2,8 +2,7 @@ export = DBLAPI;
 
 declare class DBLAPI {
   constructor(token: string, options: DBLAPI.DBLOptions, client?: object);
-  constructor(token: string, client: object);
-  constructor(token: string);
+  constructor(token: string, client?: object);
 
   public postStats(serverCount: number, shardId?: number, shardCount?: number): Promise<Buffer>
   public getStats(id: string): Promise<DBLAPI.BotStats>
