@@ -1,19 +1,20 @@
 export = DBLAPI;
 
 declare class DBLAPI {
-  constructor(token: string, options?: DBLAPI.DBLOptions, client?: any)
+  constructor(token: string, options: DBLAPI.DBLOptions, client?: object);
+  constructor(token: string, client?: object);
 
   public postStats(serverCount: number, shardId?: number, shardCount?: number): Promise<Buffer>
   public getStats(id: string): Promise<DBLAPI.BotStats>
   public getBot(id: string): Promise<DBLAPI.Bot>
   public getUser(id: string): Promise<DBLAPI.User>
   public getBots(query: DBLAPI.BotsQuery): Promise<DBLAPI.BotSearchResult>
-  public getVotes(): Promise<DBLAPI.Votes[]>
+  public getVotes(): Promise<DBLAPI.Vote[]>
   public hasVoted(id: string): Promise<boolean>
 
   public token?: string;
 
-  private _request(method: string, endpoint: string, data?: Object, auth?: boolean): Promise<Object>
+  private _request(method: string, endpoint: string, data?: object, auth?: boolean): Promise<object>
 }
 
 import { EventEmitter } from 'events';
@@ -94,7 +95,7 @@ declare namespace DBLAPI {
     github?: string;
   }
 
-  export type BotsQuery ={
+  export type BotsQuery = {
     limit?: number;
     offset?: number;
     search: string;
@@ -110,7 +111,7 @@ declare namespace DBLAPI {
     total: number;
   }
 
-  export type Votes = {
+  export type Vote = {
     username: string;
     discriminator: string;
     id: string;
