@@ -1,3 +1,4 @@
+const EventEmitter = require('events');
 const snekfetch = require('snekfetch');
 const API = 'https://discordbots.org/api/';
 
@@ -12,7 +13,7 @@ const isLib = (library, client) => {
 
 const isASupportedLibrary = client => isLib('discord.js', client) || isLib('eris', client);
 
-class DBLAPI {
+class DBLAPI extends EventEmitter {
   /**
    * Creates a new DBLAPI Instance.
    * @param {string} token Your discordbots.org token for this bot.
@@ -24,6 +25,7 @@ class DBLAPI {
    * @param {any} [client] Your Client instance, if present and supported it will auto update your stats every `options.statsInterval` ms.
    */
   constructor(token, options, client) {
+    super();
     this.token = token;
     if (isASupportedLibrary(options)) {
       client = options;
@@ -35,11 +37,26 @@ class DBLAPI {
       if (!this.options.statsInterval) this.options.statsInterval = 1800000;
       if (this.options.statsInterval < 900000) throw new Error('statsInterval may not be shorter than 900000 (15 minutes)');
 
+      /**
+       * Event that fires when the stats have been posted successfully by the autoposter
+       * @event posted
+       */
+
+      /**
+       * Event to notify that the autoposter post request failed
+       * @event error
+       * @param {error} error The error
+       */
+
       this.client = client;
       this.client.on('ready', () => {
-        this.postStats().catch(e => console.error(`[dblapi.js autopost] Failed to post stats: ${e.text}`)); // eslint-disable-line no-console
+        this.postStats()
+          .then(() => this.emit('posted'))
+          .catch(e => this.emit('error', e));
         setInterval(() => {
-          this.postStats().catch(e => console.error(`[dblapi.js autopost] Failed to post stats: ${e.text}`)); // eslint-disable-line no-console
+          this.postStats()
+            .then(() => this.emit('posted'))
+            .catch(e => this.emit('error', e));
         }, this.options.statsInterval);
       });
     } else if (client) {
