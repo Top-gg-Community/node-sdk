@@ -22,6 +22,7 @@ class DBLAPI extends EventEmitter {
    * @param {number} [options.webhookPort] The port to run the webhook on. Will activate webhook when set.
    * @param {string} [options.webhookAuth] The string for Authorization you set on the site for verification.
    * @param {string} [options.webhookPath='/dblwebhook'] The path for the webhook request.
+   * @param {http.Server} [options.webhookServer] An existing http server to attach the webhook to.
    * @param {any} [client] Your Client instance, if present and supported it will auto update your stats every `options.statsInterval` ms.
    */
   constructor(token, options, client) {
@@ -63,9 +64,9 @@ class DBLAPI extends EventEmitter {
       console.error(`[dblapi.js autopost] The provided client is not supported. Please add an issue or pull request to the github repo https://github.com/DiscordBotList/dblapi.js`); // eslint-disable-line no-console
     }
 
-    if (this.options.webhookPort) {
+    if (this.options.webhookPort || this.options.webhookServer) {
       const DBLWebhook = require('./webhook');
-      this.webhook = new DBLWebhook(this.options.webhookPort, this.options.webhookPath, this.options.webhookAuth);
+      this.webhook = new DBLWebhook(this.options.webhookPort, this.options.webhookPath, this.options.webhookAuth, this.options.webhookServer);
     }
   }
 

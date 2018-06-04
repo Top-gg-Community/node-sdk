@@ -8,31 +8,49 @@ class DBLWebhook extends EventEmitter {
    * @param {number} port The port to run the webhook on.
    * @param {string} [path='/dblwebhook'] The path for the webhook request.
    * @param {string} [auth] The string for Authorization you set on the site for verification.
+   * @param {http.Server} [server] An existing http server to connect with.
    */
-  constructor(port, path, auth) {
+  constructor(port, path, auth, server) {
     super();
-    this.port = port;
+    this.port = port || 0;
     this.path = path || '/dblwebhook';
     this.auth = auth;
 
     this._server = null;
+    this.attached = false;
 
-    this._startWebhook();
+    if (server && !(server instanceof http.Server)) throw Error('Server provided is not a http server');
+    if (server) {
+      this._attachWebhook(server);
+    } else {
+      this._startWebhook();
+    }
+  }
+
+  _emitListening() {
+    /**
+     * Event to notify that the webhook is listening
+     * @event ready
+     * @param {string} hostname The hostname of the webhook server
+     * @param {number} port The port the webhook server is running on
+     * @param {string} path The path for the webhook
+     */
+    // Get the user's public IP via an API for hostname later?
+    this.emit('ready', { hostname: '0.0.0.0', port: this.port, path: this.path });
   }
 
   _startWebhook() {
     this._server = http.createServer(this._handleRequest.bind(this));
-    this._server.listen(this.port, () => {
-      /**
-       * Event to notify that the webhook is listening
-       * @event ready
-       * @param {string} hostname The hostname of the webhook server
-       * @param {number} port The port the webhook server is running on
-       * @param {string} path The path for the webhook
-       */
-      // Get the user's public IP via an API for hostname later?
-      this.emit('ready', { hostname: '0.0.0.0', port: this.port, path: this.path });
-    });
+    this._server.listen(this.port, this._emitListening.bind(this));
+  }
+
+  _attachWebhook(server) {
+    this._server = server;
+    this._listeners = server.listeners('request');
+    server.removeAllListeners('request');
+    server.on('request', this._handleRequest.bind(this));
+    server.on('listening', this._emitListening.bind(this));
+    this.attached = true;
   }
 
   _handleRequest(req, res) {
@@ -67,6 +85,12 @@ class DBLWebhook extends EventEmitter {
         }
       });
     } else {
+      if (this.attached) {
+        for (const listener of this._listeners) {
+          listener.call(this._server, req, res);
+        }
+        return undefined;
+      }
       return this._returnResponse(res, 404);
     }
     return undefined;
