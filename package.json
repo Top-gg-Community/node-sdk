@@ -1,6 +1,6 @@
 {
   "name": "dblapi.js",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "An official module for interacting with the discordbots.org API",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,7 @@
   "repository": "DiscordBotList/dblapi.js",
   "license": "Apache-2.0",
   "dependencies": {
-    "snekfetch": "^3.6.4"
+    "snekfetch": "^4.0.2"
   },
   "typings": "./typings/index.d.ts"
 }
