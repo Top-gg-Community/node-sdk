@@ -22,8 +22,7 @@ dbl.on('posted', () => {
 })
 
 dbl.on('error', e => {
- console.log('Oops!');
- console.log(JSON.stringify(e));
+ console.log(`Oops! ${e}`);
 })
 ```
 
