@@ -1,6 +1,7 @@
 export = DBLAPI;
+import { EventEmitter } from 'events';
 
-declare class DBLAPI {
+declare class DBLAPI extends EventEmitter {
   constructor(token: string, options: DBLAPI.DBLOptions, client?: object);
   constructor(token: string, client?: object);
 
@@ -15,18 +16,23 @@ declare class DBLAPI {
   public token?: string;
 
   private _request(method: string, endpoint: string, data?: object, auth?: boolean): Promise<object>
+
+  public on(event: 'posted', listener: () => void): this;
+  public on(event: 'error', listener: (error: Error) => void): this;
 }
 
-import { EventEmitter } from 'events';
 import { Server, ServerResponse, IncomingMessage } from 'http';
 declare class DBLWebhook extends EventEmitter {
-  constructor(port: number, path?: string, auth?: string)
+  constructor(port?: number, path?: string, auth?: string, server?: Server)
 
   public port: number;
   public path: string;
   public auth?: string;
   private _server: Server;
+  private attached: boolean;
+  private _emitListening(): void;
   private _startWebhook(): void;
+  private _attachWebhook(server: Server): void;
   private _handleRequest(req: IncomingMessage, res: ServerResponse): void;
   private _returnResponse(res: ServerResponse, statusCode: number, data?: string): void;
 
@@ -40,6 +46,7 @@ declare namespace DBLAPI {
     webhookPort?: number;
     webhookAuth?: string;
     webhookPath?: string;
+    webhookServer?: Server;
   }
 
   export type BotStats = {

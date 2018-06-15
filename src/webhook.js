@@ -11,6 +11,7 @@ class DBLWebhook extends EventEmitter {
    * @param {http.Server} [server] An existing http server to connect with.
    */
   constructor(port, path, auth, server) {
+    if (!port && !server) throw new Error('Neither port nor server provided');
     super();
     this.port = port || 0;
     this.path = path || '/dblwebhook';
