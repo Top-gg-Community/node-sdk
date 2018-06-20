@@ -1,6 +1,6 @@
 const EventEmitter = require('events');
-const snekfetch = require('snekfetch');
-const API = 'https://discordbots.org/api/';
+const https = require('https');
+const qs = require('querystring');
 
 const isLib = (library, client) => {
   try {
@@ -71,20 +71,59 @@ class DBLAPI extends EventEmitter {
   }
 
   /**
-   * Creates the request with snekfetch.
+   * Creates the request.
    * @param {string} method Http method to use.
    * @param {string} endpoint API endpoint to use.
    * @param {Object} [data] Data to send with the request.
    * @param {boolean} [auth] Boolean indicating if auth is needed.
    * @private
-   * @returns {Promise<snekfetch>}
+   * @returns {Promise<Object>}
    */
   _request(method, endpoint, data, auth) {
-    const request = snekfetch[method](API + endpoint);
-    if (method === 'post' && data) request.send(data);
-    if (method === 'get' && data) request.query(data);
-    if (auth) request.set({ Authorization: this.token });
-    return request;
+    return new Promise((resolve, reject) => {
+      const response = {
+        raw: '',
+        body: null,
+        status: null,
+        headers: null,
+      };
+
+      const options = {
+        hostname: 'discordbots.org',
+        path: `/api/${endpoint}`,
+        method,
+        headers: {},
+      };
+
+      if (auth) options.headers.authorization = this.token;
+      if (data && method === 'post') options.headers['content-type'] = 'application/json';
+      if (data && method === 'get') options.path += `?${qs.encode(data)}`;
+
+      const request = https.request(options, res => {
+        response.status = res.statusCode;
+        response.headers = res.headers;
+        res.on('data', chunk => {
+          response.raw += chunk;
+        });
+        res.on('end', () => {
+          response.body = res.headers['content-type'].includes('application/json') ? JSON.parse(response.raw) : response.raw;
+          if (res.statusCode >= 200 && res.statusCode < 300) {
+            resolve(response);
+          } else {
+            const err = new Error(`${res.statusCode} ${res.statusMessage}`);
+            Object.assign(err, response);
+            reject(err);
+          }
+        });
+      });
+
+      request.on('error', err => {
+        reject(err);
+      });
+
+      if (data && method === 'post') request.write(JSON.stringify(data));
+      request.end();
+    });
   }
 
   /**
@@ -118,7 +157,7 @@ class DBLAPI extends EventEmitter {
   /**
    * Gets stats from a bot.
    * @param {string} id The ID of the bot you want to get the stats from.
-   * @returns {Promise<Buffer>}
+   * @returns {Promise<Object>}
    */
   async getStats(id) {
     if (!id && !this.client) throw new Error('getStats requires id as argument');
@@ -130,7 +169,7 @@ class DBLAPI extends EventEmitter {
   /**
    * Gets information about a bot.
    * @param {string} id The ID of the bot you want to get the information from.
-   * @returns {Promise<Buffer>}
+   * @returns {Promise<Object>}
    */
   async getBot(id) {
     if (!id && !this.client) throw new Error('getBot requires id as argument');
@@ -142,7 +181,7 @@ class DBLAPI extends EventEmitter {
   /**
    * Gets information about a user.
    * @param {string} id The ID of the user you want to get the information from.
-   * @returns {Promise<Buffer>}
+   * @returns {Promise<Object>}
    */
   async getUser(id) {
     if (!id) throw new Error('getUser requires id as argument');
@@ -153,7 +192,7 @@ class DBLAPI extends EventEmitter {
   /**
    * Gets a list of bots matching your query.
    * @param {Object} query The query for the search.
-   * @returns {Promise<Buffer>}
+   * @returns {Promise<Object>}
    */
   async getBots(query) {
     const response = await this._request('get', 'bots', query);

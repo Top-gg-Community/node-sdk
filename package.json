@@ -16,8 +16,6 @@
   "author": "Discord Bot List <support@discordbots.org> (https://discordbots.org)",
   "repository": "DiscordBotList/dblapi.js",
   "license": "Apache-2.0",
-  "dependencies": {
-    "snekfetch": "^4.0.2"
-  },
+  "dependencies": {},
   "typings": "./typings/index.d.ts"
 }
