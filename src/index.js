@@ -212,7 +212,7 @@ class DBLAPI extends EventEmitter {
   }
 
   /**
-   * Returns if a user has voted for your bot.
+   * Returns true if a user has voted for your bot in the last 24h.
    * @param {string} id The ID of the user to check for.
    * @returns {Promise<boolean>}
    */
@@ -221,6 +221,15 @@ class DBLAPI extends EventEmitter {
     if (!id) throw new Error('hasVoted requires id as argument');
     const response = await this._request('get', 'bots/check', { userId: id }, true);
     return !!response.body.voted;
+  }
+
+  /**
+   * Returns true if the weekend multiplier is currently active.
+   * @returns {Promise<boolean>}
+   */
+  async isWeekend() {
+    const response = await this._request('get', 'weekend');
+    return response.body.is_weekend;
   }
 }
 

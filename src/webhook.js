@@ -77,6 +77,7 @@ class DBLWebhook extends EventEmitter {
            * @param {string} bot Id of the bot that was voted for.
            * @param {string} user Id of the user that voted.
            * @param {string} type Type of the vote. Is always "upvote" except when using the test button it's "test".
+           * @param {boolean} isWeekend Whether the weekend multiplier is in effect, meaning users votes count as two.
            * @param {object} [query] The possible querystring parameters from the vote page.
            */
           this.emit('vote', data);

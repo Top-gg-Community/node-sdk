@@ -12,6 +12,7 @@ declare class DBLAPI extends EventEmitter {
   public getBots(query: DBLAPI.BotsQuery): Promise<DBLAPI.BotSearchResult>
   public getVotes(): Promise<DBLAPI.Vote[]>
   public hasVoted(id: string): Promise<boolean>
+  public isWeekend(): Promise<boolean>
 
   public token?: string;
 
@@ -37,7 +38,7 @@ declare class DBLWebhook extends EventEmitter {
   private _returnResponse(res: ServerResponse, statusCode: number, data?: string): void;
 
   public on(event: 'ready', listener: (hostname: string, port: number, path: string) => void): this;
-  public on(event: 'vote', listener: (bot: string, user: string, type: string, query?: object) => void): this;
+  public on(event: 'vote', listener: (bot: string, user: string, type: string, isWeekend: boolean, query?: object) => void): this;
 }
 
 declare namespace DBLAPI {
