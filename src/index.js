@@ -102,12 +102,14 @@ class DBLAPI extends EventEmitter {
       const request = https.request(options, res => {
         response.status = res.statusCode;
         response.headers = res.headers;
+        response.ok = res.statusCode >= 200 && res.statusCode < 300;
+        response.statusText = res.statusMessage;
         res.on('data', chunk => {
           response.raw += chunk;
         });
         res.on('end', () => {
           response.body = res.headers['content-type'].includes('application/json') ? JSON.parse(response.raw) : response.raw;
-          if (res.statusCode >= 200 && res.statusCode < 300) {
+          if (response.ok) {
             resolve(response);
           } else {
             const err = new Error(`${res.statusCode} ${res.statusMessage}`);
