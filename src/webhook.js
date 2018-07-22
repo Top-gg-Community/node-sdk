@@ -1,5 +1,5 @@
 const EventEmitter = require('events');
-const http = require('http');
+const { Server, createServer } = require('http');
 const querystring = require('querystring');
 
 class DBLWebhook extends EventEmitter {
@@ -20,7 +20,7 @@ class DBLWebhook extends EventEmitter {
     this._server = null;
     this.attached = false;
 
-    if (server && !(server instanceof http.Server)) throw Error('Server provided is not a http server');
+    if (server && !(server instanceof Server)) throw Error('The server is not an instance of http.Server');
     if (server) {
       this._attachWebhook(server);
     } else {
@@ -41,7 +41,7 @@ class DBLWebhook extends EventEmitter {
   }
 
   _startWebhook() {
-    this._server = http.createServer(this._handleRequest.bind(this));
+    this._server = createServer(this._handleRequest.bind(this));
     this._server.listen(this.port, this._emitListening.bind(this));
   }
 
