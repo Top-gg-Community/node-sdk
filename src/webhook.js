@@ -31,7 +31,7 @@ class DBLWebhook extends EventEmitter {
   _emitListening() {
     /**
      * Event to notify that the webhook is listening
-     * @event ready
+     * @event DBLWebhook#ready
      * @param {string} hostname The hostname of the webhook server
      * @param {number} port The port the webhook server is running on
      * @param {string} path The path for the webhook
@@ -73,7 +73,7 @@ class DBLWebhook extends EventEmitter {
           }
           /**
            * Event that fires when the webhook has received a vote.
-           * @event vote
+           * @event DBLWehook#vote
            * @param {string} bot Id of the bot that was voted for.
            * @param {string} user Id of the user that voted.
            * @param {string} type Type of the vote. Is always "upvote" except when using the test button it's "test".
