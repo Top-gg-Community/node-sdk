@@ -145,11 +145,8 @@ class DBLAPI extends EventEmitter {
       data.shard_count = shardCount;
     } else {
       data.server_count = this.client.guilds.size;
-      if (this.client.shard && this.client.shard.count) {
-        data.shard_id = this.client.shard.id;
-        data.shard_count = this.client.shard.count;
-      } else if (this.client.shards && this.client.shards.size !== 1) {
-        data.shard_count = this.client.shards.size;
+      if (this.client.ws.shards) {
+        data.shard_count = this.client.ws.shards.length;
       }
     }
     const response = await this._request('post', 'bots/stats', data, true);
