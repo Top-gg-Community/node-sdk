@@ -1,5 +1,5 @@
 const EventEmitter = require('events');
-const http = require('http');
+const { Server, createServer } = require('http');
 const querystring = require('querystring');
 
 class DBLWebhook extends EventEmitter {
@@ -20,7 +20,7 @@ class DBLWebhook extends EventEmitter {
     this._server = null;
     this.attached = false;
 
-    if (server && !(server instanceof http.Server)) throw Error('Server provided is not a http server');
+    if (server && !(server instanceof Server)) throw Error('The server is not an instance of http.Server');
     if (server) {
       this._attachWebhook(server);
     } else {
@@ -31,7 +31,7 @@ class DBLWebhook extends EventEmitter {
   _emitListening() {
     /**
      * Event to notify that the webhook is listening
-     * @event ready
+     * @event DBLWebhook#ready
      * @param {string} hostname The hostname of the webhook server
      * @param {number} port The port the webhook server is running on
      * @param {string} path The path for the webhook
@@ -41,7 +41,7 @@ class DBLWebhook extends EventEmitter {
   }
 
   _startWebhook() {
-    this._server = http.createServer(this._handleRequest.bind(this));
+    this._server = createServer(this._handleRequest.bind(this));
     this._server.listen(this.port, this._emitListening.bind(this));
   }
 
@@ -73,7 +73,7 @@ class DBLWebhook extends EventEmitter {
           }
           /**
            * Event that fires when the webhook has received a vote.
-           * @event vote
+           * @event DBLWehook#vote
            * @param {string} bot Id of the bot that was voted for.
            * @param {string} user Id of the user that voted.
            * @param {string} type Type of the vote. Is always "upvote" except when using the test button it's "test".
