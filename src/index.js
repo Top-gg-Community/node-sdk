@@ -75,11 +75,10 @@ class DBLAPI extends EventEmitter {
    * @param {string} method Http method to use.
    * @param {string} endpoint API endpoint to use.
    * @param {Object} [data] Data to send with the request.
-   * @param {boolean} [auth] Boolean indicating if auth is needed.
    * @private
    * @returns {Promise<Object>}
    */
-  _request(method, endpoint, data, auth) {
+  _request(method, endpoint, data) {
     return new Promise((resolve, reject) => {
       const response = {
         raw: '',
@@ -95,7 +94,11 @@ class DBLAPI extends EventEmitter {
         headers: {},
       };
 
-      if (auth) options.headers.authorization = this.token;
+      if (this.token) {
+        options.headers.authorization = this.token;
+      } else {
+        console.warn('[dblapi.js] Warning: No DBL token has been provided.'); // eslint-disable-line no-console
+      }
       if (data && method === 'post') options.headers['content-type'] = 'application/json';
       if (data && method === 'get') options.path += `?${qs.encode(data)}`;
 
@@ -136,7 +139,6 @@ class DBLAPI extends EventEmitter {
    * @returns {Promise<Object>}
    */
   async postStats(serverCount, shardId, shardCount) {
-    if (!this.token) throw new Error('This function requires a token to be set');
     if (!serverCount && !this.client) throw new Error('postStats requires 1 argument');
     const data = {};
     if (serverCount) {
@@ -206,7 +208,6 @@ class DBLAPI extends EventEmitter {
    * @returns {Promise<Array>}
    */
   async getVotes() {
-    if (!this.token) throw new Error('This function requires a token to be set');
     const response = await this._request('get', 'bots/votes', undefined, true);
     return response.body;
   }
@@ -217,7 +218,6 @@ class DBLAPI extends EventEmitter {
    * @returns {Promise<boolean>}
    */
   async hasVoted(id) {
-    if (!this.token) throw new Error('This function requires a token to be set');
     if (!id) throw new Error('hasVoted requires id as argument');
     const response = await this._request('get', 'bots/check', { userId: id }, true);
     return !!response.body.voted;

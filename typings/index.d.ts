@@ -16,7 +16,7 @@ declare class DBLAPI extends EventEmitter {
 
   public token?: string;
 
-  private _request(method: string, endpoint: string, data?: object, auth?: boolean): Promise<object>
+  private _request(method: string, endpoint: string, data?: object): Promise<object>
 
   public on(event: 'posted', listener: () => void): this;
   public on(event: 'error', listener: (error: Error) => void): this;
