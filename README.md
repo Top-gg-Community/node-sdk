@@ -1,11 +1,11 @@
 # dblapi.js
-An official module for interacting with the discordbots.org API
+An official module for interacting with the top.gg API
 
 ## Installation
 `npm install dblapi.js`
 
 ## Documentation
-Documentation can be found [here](https://discordbots.org/api/docs#jslib)
+Documentation can be found [here](https://top.gg/api/docs#jslib)
 
 ## Example
 
@@ -14,7 +14,7 @@ Documentation can be found [here](https://discordbots.org/api/docs#jslib)
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const DBL = require("dblapi.js");
-const dbl = new DBL('Your discordbots.org token', client);
+const dbl = new DBL('Your top.gg token', client);
 
 // Optional events
 dbl.on('posted', () => {
