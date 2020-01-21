@@ -16,7 +16,7 @@ const isASupportedLibrary = client => isLib('discord.js', client) || isLib('eris
 class DBLAPI extends EventEmitter {
   /**
    * Creates a new DBLAPI Instance.
-   * @param {string} token Your discordbots.org token for this bot.
+   * @param {string} token Your top.gg token for this bot.
    * @param {Object} [options] Your DBLAPI options.
    * @param {number} [options.statsInterval=1800000] How often the autoposter should post stats in ms. May not be smaller than 900000 and defaults to 1800000.
    * @param {number} [options.webhookPort] The port to run the webhook on. Will activate webhook when set.
@@ -88,7 +88,7 @@ class DBLAPI extends EventEmitter {
       };
 
       const options = {
-        hostname: 'discordbots.org',
+        hostname: 'top.gg',
         path: `/api/${endpoint}`,
         method,
         headers: {},
