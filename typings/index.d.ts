@@ -5,6 +5,7 @@ declare class DBLAPI extends EventEmitter {
   constructor(token: string, options: DBLAPI.DBLOptions, client?: object);
   constructor(token: string, client?: object);
 
+  public webhook?: DBLWebhook;
   public postStats(serverCount: number, shardId?: number, shardCount?: number): Promise<object>
   public getStats(id: string): Promise<DBLAPI.BotStats>
   public getBot(id: string): Promise<DBLAPI.Bot>
