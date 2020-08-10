@@ -61,7 +61,7 @@ class DBLAPI extends EventEmitter {
         }, this.options.statsInterval);
       });
     } else if (client) {
-      console.error(`[dblapi.js autopost] The provided client is not supported. Please add an issue or pull request to the github repo https://github.com/DiscordBotList/dblapi.js`); // eslint-disable-line no-console
+      console.error(`[dblapi.js autopost] The provided client is not supported. Please add an issue or pull request to the github repo https://github.com/top-gg/dblapi.js`); // eslint-disable-line no-console
     }
 
     if (this.options.webhookPort || this.options.webhookServer) {

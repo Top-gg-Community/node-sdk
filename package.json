@@ -14,7 +14,7 @@
     "javascript"
   ],
   "author": "Discord Bot List <support@top.gg> (https://top.gg)",
-  "repository": "DiscordBotList/dblapi.js",
+  "repository": "top-gg/dblapi.js",
   "license": "Apache-2.0",
   "dependencies": {},
   "typings": "./typings/index.d.ts"
