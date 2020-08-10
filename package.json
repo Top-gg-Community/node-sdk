@@ -1,6 +1,6 @@
 {
   "name": "dblapi.js",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "An official module for interacting with the top.gg API",
   "main": "index.js",
   "scripts": {
