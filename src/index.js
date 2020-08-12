@@ -143,6 +143,18 @@ class DBLAPI extends EventEmitter {
   }
 
   /**
+   * The clients user ID if client was provided
+   * @type {?string}
+   */
+  get _clientID () {
+    if (this.client) {
+      return this.client.user.id;
+    } else {
+      return null;
+    }
+  }
+
+  /**
    * Post Stats to Discord Bot List.
    * @param {number|number[]} serverCount The server count of your bot.
    * @param {number} [shardId] The ID of this shard.
@@ -175,24 +187,22 @@ class DBLAPI extends EventEmitter {
 
   /**
    * Gets stats from a bot.
-   * @param {string} id The ID of the bot you want to get the stats from.
+   * @param {string} id=client.user.id The ID of the bot you want to get the stats from.
    * @returns {Promise<Object>}
    */
-  async getStats(id) {
-    if (!id && !this.client) throw new Error('getStats requires id as argument');
-    if (!id) id = this.client.user.id;
+  async getStats(id = this._clientID) {
+    if (!id) throw new Error('getStats requires id as argument');
     const response = await this._request('get', `bots/${id}/stats`);
     return response.body;
   }
 
   /**
    * Gets information about a bot.
-   * @param {string} id The ID of the bot you want to get the information from.
+   * @param {string} id=client.user.id The ID of the bot you want to get the information from.
    * @returns {Promise<Object>}
    */
-  async getBot(id) {
-    if (!id && !this.client) throw new Error('getBot requires id as argument');
-    if (!id) id = this.client.user.id;
+  async getBot(id = this._clientID) {
+    if (!id) throw new Error('getBot requires id as argument');
     const response = await this._request('get', `bots/${id}`);
     return response.body;
   }

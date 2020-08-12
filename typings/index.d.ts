@@ -20,7 +20,9 @@ declare class DBLAPI extends EventEmitter {
   public isWeekend(): Promise<boolean>;
 
   public token?: string;
+  public interval?: number;
 
+  private _clientID?: string;
   private _request(
     method: string,
     endpoint: string,
