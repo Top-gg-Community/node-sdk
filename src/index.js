@@ -49,17 +49,28 @@ class DBLAPI extends EventEmitter {
        * @param {error} error The error
        */
 
+      this.interval = null
+
       this.client = client;
-      this.client.on('ready', () => {
+      const setup = () => {
         this.postStats()
           .then(() => this.emit('posted'))
           .catch(e => this.emit('error', e));
-        setInterval(() => {
+
+        if (this.interval) clearInterval(this.interval)
+
+        this.interval = setInterval(() => {
           this.postStats()
             .then(() => this.emit('posted'))
             .catch(e => this.emit('error', e));
         }, this.options.statsInterval);
-      });
+      }
+
+      if (client.readyAt !== null || client.startTime !== null) {
+        setup()
+      } else {
+        client.on('ready', setup.bind(this))
+      }
     } else if (client) {
       console.error(`[dblapi.js autopost] The provided client is not supported. Please add an issue or pull request to the github repo https://github.com/top-gg/dblapi.js`); // eslint-disable-line no-console
     }
