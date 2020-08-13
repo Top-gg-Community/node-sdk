@@ -175,7 +175,7 @@ class DBLAPI extends EventEmitter {
 
   /**
    * Gets stats from a bot.
-   * @param {string} id=client.user.id The ID of the bot you want to get the stats from.
+   * @param {string} [id=this.client.user.id] The ID of the bot you want to get the stats from.
    * @returns {Promise<Object>}
    */
   async getStats(id) {
@@ -187,7 +187,7 @@ class DBLAPI extends EventEmitter {
 
   /**
    * Gets information about a bot.
-   * @param {string} id The ID of the bot you want to get the information from.
+   * @param {string} [id=this.client.user.id] The ID of the bot you want to get the information from.
    * @returns {Promise<Object>}
    */
   async getBot(id) {
