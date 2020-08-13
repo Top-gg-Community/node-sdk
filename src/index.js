@@ -53,11 +53,11 @@ class DBLAPI extends EventEmitter {
 
       this.client = client;
       const setup = () => {
+        if (this._interval) return
+
         this.postStats()
           .then(() => this.emit('posted'))
           .catch(e => this.emit('error', e));
-
-        if (this._interval) return
 
         this._interval = setInterval(() => {
           this.postStats()
