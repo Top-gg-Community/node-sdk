@@ -22,7 +22,6 @@ declare class DBLAPI extends EventEmitter {
   public token?: string;
 
   private _interval?: number;
-  private _clientID?: string;
   private _request(
     method: string,
     endpoint: string,
