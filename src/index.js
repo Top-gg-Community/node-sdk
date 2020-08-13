@@ -66,7 +66,7 @@ class DBLAPI extends EventEmitter {
         }, this.options.statsInterval);
       }
 
-      if (client.ready || client.ws.status === 0) {
+      if (client.ready || client.ws && client.ws.status === 0) {
         setup()
       } else {
         client.on('ready', setup.bind(this))
