@@ -57,7 +57,7 @@ class DBLAPI extends EventEmitter {
           .then(() => this.emit('posted'))
           .catch(e => this.emit('error', e));
 
-        if (this._interval) clearInterval(this._interval)
+        if (this._interval) return
 
         this._interval = setInterval(() => {
           this.postStats()
