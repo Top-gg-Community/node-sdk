@@ -49,7 +49,7 @@ class DBLAPI extends EventEmitter {
        * @param {error} error The error
        */
 
-      this.interval = null
+      this._interval = null
 
       this.client = client;
       const setup = () => {
@@ -57,9 +57,9 @@ class DBLAPI extends EventEmitter {
           .then(() => this.emit('posted'))
           .catch(e => this.emit('error', e));
 
-        if (this.interval) clearInterval(this.interval)
+        if (this._interval) clearInterval(this._interval)
 
-        this.interval = setInterval(() => {
+        this._interval = setInterval(() => {
           this.postStats()
             .then(() => this.emit('posted'))
             .catch(e => this.emit('error', e));
