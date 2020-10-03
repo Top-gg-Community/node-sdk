@@ -16,7 +16,7 @@ const isASupportedLibrary = client => isLib('discord.js', client) || isLib('eris
 class DBLAPI extends EventEmitter {
   /**
    * Creates a new DBLAPI Instance.
-   * @param {string} token Your top.gg token for this bot.
+   * @param {string} token Your top.gg token for this bot, required.
    * @param {Object} [options] Your DBLAPI options.
    * @param {number} [options.statsInterval=1800000] How often the autoposter should post stats in ms. May not be smaller than 900000 and defaults to 1800000.
    * @param {number} [options.webhookPort] The port to run the webhook on. Will activate webhook when set.
@@ -26,6 +26,7 @@ class DBLAPI extends EventEmitter {
    * @param {any} [client] Your Client instance, if present and supported it will auto update your stats every `options.statsInterval` ms.
    */
   constructor(token, options, client) {
+    if (!token) throw Error("[dblapi.js] No DBL token has been provided.")
     super();
     this.token = token;
     if (isASupportedLibrary(options)) {
@@ -78,7 +79,7 @@ class DBLAPI extends EventEmitter {
    * @private
    * @returns {Promise<Object>}
    */
-  _request(method, endpoint, data) {
+  async _request(method, endpoint, data) {
     return new Promise((resolve, reject) => {
       const response = {
         raw: '',
@@ -94,11 +95,7 @@ class DBLAPI extends EventEmitter {
         headers: {},
       };
 
-      if (this.token) {
-        options.headers.authorization = this.token;
-      } else {
-        console.warn('[dblapi.js] Warning: No DBL token has been provided.'); // eslint-disable-line no-console
-      }
+      options.headers.authorization = this.token;
       if (data && method === 'post') options.headers['content-type'] = 'application/json';
       if (data && method === 'get') options.path += `?${qs.encode(data)}`;
 
@@ -115,7 +112,7 @@ class DBLAPI extends EventEmitter {
           if (response.ok) {
             resolve(response);
           } else {
-            const err = new Error(`${res.statusCode} ${res.statusMessage}`);
+            const err = new Error(`[dblapi.js] ${res.statusCode} ${res.statusMessage}`);
             Object.assign(err, response);
             reject(err);
           }
@@ -139,7 +136,7 @@ class DBLAPI extends EventEmitter {
    * @returns {Promise<Object>}
    */
   async postStats(serverCount, shardId, shardCount) {
-    if (!serverCount && !this.client) throw new Error('postStats requires 1 argument');
+    if (!serverCount && !this.client) throw new Error('[dblapi.js] postStats requires 1 argument');
     const data = {};
     if (serverCount) {
       data.server_count = serverCount;
@@ -168,8 +165,7 @@ class DBLAPI extends EventEmitter {
    * @returns {Promise<Object>}
    */
   async getStats(id) {
-    if (!id && !this.client) throw new Error('getStats requires id as argument');
-    if (!id) id = this.client.user.id;
+    if (!id) throw new Error('[dblapi.js] getStats requires id as argument');
     const response = await this._request('get', `bots/${id}/stats`);
     return response.body;
   }
@@ -180,8 +176,7 @@ class DBLAPI extends EventEmitter {
    * @returns {Promise<Object>}
    */
   async getBot(id) {
-    if (!id && !this.client) throw new Error('getBot requires id as argument');
-    if (!id) id = this.client.user.id;
+    if (!id) throw new Error('[dblapi.js] getBot requires id as argument');
     const response = await this._request('get', `bots/${id}`);
     return response.body;
   }
@@ -192,7 +187,7 @@ class DBLAPI extends EventEmitter {
    * @returns {Promise<Object>}
    */
   async getUser(id) {
-    if (!id) throw new Error('getUser requires id as argument');
+    if (!id) throw new Error('[dblapi.js] getUser requires id as argument');
     const response = await this._request('get', `users/${id}`);
     return response.body;
   }
@@ -222,7 +217,7 @@ class DBLAPI extends EventEmitter {
    * @returns {Promise<boolean>}
    */
   async hasVoted(id) {
-    if (!id) throw new Error('hasVoted requires id as argument');
+    if (!id) throw new Error('[dblapi.js] hasVoted requires id as argument');
     const response = await this._request('get', 'bots/check', { userId: id }, true);
     return !!response.body.voted;
   }
