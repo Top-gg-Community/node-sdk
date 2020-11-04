@@ -86,7 +86,7 @@ declare class DBLAPI extends EventEmitter {
    *
    */
   public postStats(
-    serverCount: number,
+    serverCount: number | number[],
     shardId?: number,
     shardCount?: number
   ): Promise<object>;
