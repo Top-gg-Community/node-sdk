@@ -34,7 +34,11 @@ const Topgg = require('@top-gg/sdk')
 const api = new Topgg.Api('Your top.gg token')
 
 setInterval(() => {
-  api.postStats(client.guilds.cache.size, client.shard.ids[0], client.options.shardCount)
+  api.postStats({
+    serverCount: client.guilds.cache.size,
+    shardId: client.shard.ids[0], // if you're sharding
+    shardCount: client.options.shardCount
+  })
 }, 1800000) // post every 30 minutes
 ```
 With this your server count, and shard count, will be auto-posted to top<span>.gg, nothing else needs to be done
@@ -49,7 +53,9 @@ const app = express() // Your express app
 
 const webhook = new Topgg.Webhook('topggauth123') // add your top.gg webhook authorization (not bot token)
 
-app.post('/dblwebhook', webhook.middleware()) // attach the middleware
+app.post('/dblwebhook', webhook.middleware(), (req, res) => {
+  req.vote // your vote object
+}) // attach the middleware
 
 app.listen(3000) // your port
 ```

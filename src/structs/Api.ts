@@ -8,11 +8,6 @@ interface APIOptions {
    * Top.gg Token
    */
   token: any
-  /**
-   * Whether or not to autopost
-   * @default true
-   */
-  autoPost?: boolean
 }
 
 /**
@@ -29,13 +24,12 @@ export class Api extends EventEmitter {
   /**
    * Create Top.gg API instance
    * @param token Token or options
-   * @param client Supported library client 
+   * @param options API Options 
    */
   constructor (token: string, options?: APIOptions) {
     super()
     this.options = {
-      token: token,
-      autoPost: options.autoPost ?? true
+      token: token
     }
   }
 
@@ -71,20 +65,21 @@ export class Api extends EventEmitter {
 
   /**
    * Post bot stats to Top.gg (Do not use if you supplied a client)
-   * @param serverCount Server count
-   * @param shardId Current shard ID
-   * @param shardCount Total shard count
+   * @param stats Stats object
    * @example
    * ```js
-   * await client.postStats(28199, null, 1)
+   * await client.postStats({
+   *   serverCount: 28199, 
+   *   shardCount: 1
+   * })
    * ```
    */
-  public async postStats (serverCount?: number, shardId?: number, shardCount?: number) {
-    if (!serverCount) throw new Error('Missing Server Count')
+  public async postStats (stats: BotStats) {
+    if (!stats || !stats.serverCount) throw new Error('Missing Server Count')
     this._request('POST', '/bots/stats', {
-      server_count: serverCount,
-      shard_id: shardId,
-      shard_count: shardCount
+      server_count: stats.serverCount,
+      shard_id: stats.shardId,
+      shard_count: stats.shardCount
     })
   } 
 
@@ -96,15 +91,20 @@ export class Api extends EventEmitter {
    * await client.getStats('461521980492087297')
    * // =>
    * {
-   *   server_count: 28199,
-   *   shard_count 1,
+   *   serverCount: 28199,
+   *   shardCount 1,
    *   shards: []
    * }
    * ```
    */
   public async getStats (id: Snowflake): Promise<BotStats> {
     if (!id) throw new Error('ID missing')
-    return this._request('GET', `/bots/${id}/stats`)
+    const result = await this._request('GET', `/bots/${id}/stats`)
+    return {
+      serverCount: result.server_count,
+      shardCount: result.shard_count,
+      shards: result.shards
+    }
   }
 
   /**
@@ -190,8 +190,8 @@ export class Api extends EventEmitter {
     if (query) {
       if (query.fields instanceof Array) query.fields = query.fields.join(', ')
       if (query.search instanceof Object) {
-        query.search = Object.keys(query.search)
-          .map(key => `${key}: ${query.search[key]}`).join(' ')
+        query.search = Object.entries(query.search)
+          .map(([key, value]) => `${key}: ${value}`).join(' ')
       }
     }
     return this._request('GET', '/bots', query)

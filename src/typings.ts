@@ -98,15 +98,19 @@ interface BotStats {
   /**
    * The amount of servers the bot is in
    */
-  server_count?: number
+  serverCount?: number
   /**
-   * The amount of servers the bot is in per shard. Always present but can be empty
+   * The amount of servers the bot is in per shard. Always present but can be empty. (Only when receiving stats)
    */
-  shards: Array<number>
+  shards?: Array<number>
+  /**
+   * The shard ID to post as (only when posting)
+   */
+  shardId?: number
   /**
    * The amount of shards a bot has
    */
-  shard_count?: number
+  shardCount?: number
 }
 
 interface UserInfo {
@@ -283,4 +287,10 @@ interface Vote {
   query: {
     [key: string]: string
   }|string
+}
+
+namespace Express {
+  export interface Request {
+    vote?: Vote
+  }
 }

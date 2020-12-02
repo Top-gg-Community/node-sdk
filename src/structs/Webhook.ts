@@ -1,14 +1,8 @@
-import { EventEmitter } from 'events'
 import getBody from 'raw-body'
 import qs from 'querystring'
 
-export interface Webhook {
-  on(event: 'vote', listener: (vote: Vote) => void): this
-}
-
 /**
  * Top.gg Webhook
- * @extends EventEmitter
  * @example
  * ```js
  * const express = require('express')
@@ -17,10 +11,8 @@ export interface Webhook {
  * const app = express()
  * const wh = new Webhook('webhookauth123')
  * 
- * app.post('/dblwebhook', wh.middleware())
- * 
- * wh.on('vote', (vote) => {
- *   vote.user
+ * app.post('/dblwebhook', wh.middleware(), (req, res) => {
+ *   req.vote.user
  *   // => 321714991050784770
  * })
  * 
@@ -31,7 +23,7 @@ export interface Webhook {
  * // Authorization: webhookauth123
  * ```
  */
-export class Webhook extends EventEmitter {
+export class Webhook {
   private auth: string
 
   /**
@@ -39,8 +31,6 @@ export class Webhook extends EventEmitter {
    * @param authorization Webhook authorization to verify requests
    */
   constructor (authorization) {
-    super()
-
     this.auth = authorization
   }
 
@@ -70,29 +60,16 @@ export class Webhook extends EventEmitter {
     // @ts-ignore querystring typings are messed
     if (body?.query?.length > 0) body.query = qs.parse(body.query.substr(1))
 
-    /**
-     * Emitted when a user votes
-     * @event vote
-     * @param {Vote} vote
-     */
-    this.emit('vote', body)
-
-    res.status(200).json({ success: true, from: 'topggjs' })
+    req.vote = body
   }
 
   /**
    * Middleware function to pass to express
-   * @param opts Options
-   * @param {boolean} [opts.next=true] Whether or not to continue next() request
    */
-  public middleware (opts?) {
-    const options = {
-      next: true,
-      ...opts
-    }
-    return (req, res, next) => {
-      this._handlePost(req, res)
-      if (options.next) next()
+  public middleware () {
+    return async (req, res, next) => {
+      await this._handlePost(req, res)
+      next()
     }
   }
 }
