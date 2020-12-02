@@ -3,6 +3,7 @@ src/
 logs/
 *.log
 
+!dist/
 .eslintrc.json
 .gitattributes
 .gitignore
