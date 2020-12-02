@@ -22,6 +22,10 @@ The client also comes with a suite of API interaction methods.
 
 [GitHub](https://github.com/top-gg/node-sdk) | [NPM](https://npmjs.com/package/@top-gg/sdk) | [Discord Server](https://discord.gg/EYHTgJX)
 
+# Auto-Posting
+
+If you're looking for an easy way to post your bot's stats (server count, shard count), check out [`topgg-autoposter`](https://npmjs.com/package/topgg-autposter)
+
 # Popular examples
 
 ## Auto-Posting stats
