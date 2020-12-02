@@ -74,13 +74,16 @@ export class Api extends EventEmitter {
    * })
    * ```
    */
-  public async postStats (stats: BotStats) {
+  public async postStats (stats: BotStats): Promise<BotStats> {
     if (!stats || !stats.serverCount) throw new Error('Missing Server Count')
-    this._request('POST', '/bots/stats', {
+
+    await this._request('POST', '/bots/stats', {
       server_count: stats.serverCount,
       shard_id: stats.shardId,
       shard_count: stats.shardCount
     })
+
+    return stats
   } 
 
   /**
