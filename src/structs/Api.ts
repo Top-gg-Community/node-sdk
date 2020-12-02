@@ -1,89 +1,42 @@
 import fetch, { Headers } from 'node-fetch'
-import APIError from '../utils/APIError'
-import ClientUtils, { ClientType } from '../utils/ClientUtils'
+import ApiError from '../utils/ApiError'
 import qs from 'querystring'
-import '../typings'
 import { EventEmitter } from 'events'
 
 interface APIOptions {
   /**
-   * Top.GG Token
+   * Top.gg Token
    */
   token: any
-  /**
-   * Interval at which to post in milliseconds
-   * @default 1800000 30 minutes
-   */
-  interval?: number
   /**
    * Whether or not to autopost
    * @default true
    */
   autoPost?: boolean
-  /**
-   * Whether or not in testing phase (devs only)
-   */
-  debug?: boolean
 }
 
 /**
- * Top.GG API Client for Posting stats or Fetching data
+ * Top.gg API Client for Posting stats or Fetching data
  * @link https://top.gg/api/docs
  * @example
- * ```js
- * const client = Discord.Client() // Your discord.js or Eris client
+ * const Topgg = require('@top-gg/sdk')
  *
- * const TopGG = require('@top-gg/sdk')
- *
- * const api = new TopGG.API('Your top.gg token', client)
- *
- * api.on('posted', () => {
- *   console.log('Server count posted!')
- * })
+ * const api = new Topgg.Api('Your top.gg token')
  * ```
  */
-export default class API extends EventEmitter {
+export class Api extends EventEmitter {
   private options: APIOptions
-  private client: any
-  private clientType: ClientType
   /**
-   * Create Top.GG API instance
+   * Create Top.gg API instance
    * @param token Token or options
    * @param client Supported library client 
    */
-  constructor (token?: string|APIOptions, client?: any) {
+  constructor (token: string, options?: APIOptions) {
     super()
-    const defaultOptions = {
-      interval: 1800000,
-      autoPost: true,
-      debug: false
+    this.options = {
+      token: token,
+      autoPost: options.autoPost ?? true
     }
-    if (!token || typeof token === 'string') {
-      this.options = {
-        token,
-        ...defaultOptions
-      }
-    } else {
-      this.options = {
-        ...defaultOptions,
-        ...token
-      }
-    }
-
-    if (this.options.interval < 900000) throw new Error('Interval can not be lower than 900000 (15 minutes)')
-
-    this.client = client 
-    this.clientType = ClientUtils.figureClient(client)
-
-    if (this.options.debug) console.debug(`[DEBUG] Client Type: ${this.clientType}`)
-
-    if (this.options.autoPost && client) ClientUtils.setupAutoPoster(client, this.clientType, () => {
-      this.postStats()
-
-      setInterval(() => {
-        if (ClientUtils.isStarted(client, this.clientType)) this.postStats()
-      }, this.options.interval)
-    })
   }
 
   private async _request (method: string, path: string, body?: object): Promise<any> {
@@ -96,29 +49,28 @@ export default class API extends EventEmitter {
     // @ts-ignore querystring typings are messed
     if (body && method === 'GET') url += `?${qs.stringify(body)}`
 
-    if (this.options.debug) {
-      console.debug(`[DEBUG] ${method} ${path}: ${JSON.stringify(body)}`)
-
-      return {
-        test: true
-      }
-    }
-
     const response = await fetch(url, {
       method,
       headers,
       body: body && method !== 'GET' ? JSON.stringify(body) : null
     })
 
-    const responseBody = response.headers.get('Content-Type')?.startsWith('application/json') ? await response.json() : await response.text()
+    let responseBody 
+    if (response.headers.get('Content-Type')?.startsWith('application/json')) {
+      responseBody = await response.json()
+    } else {
+      responseBody = await response.text()
+    }
 
-    if (!response.ok) throw new APIError(response.status, response.statusText, responseBody)
+    if (!response.ok) {
+      throw new ApiError(response.status, response.statusText, responseBody)
+    }
 
     return responseBody
   }
 
   /**
-   * Post bot stats to Top.GG (Do not use if you supplied a client)
+   * Post bot stats to Top.gg (Do not use if you supplied a client)
    * @param serverCount Server count
    * @param shardId Current shard ID
    * @param shardCount Total shard count
@@ -128,23 +80,12 @@ export default class API extends EventEmitter {
    * ```
    */
   public async postStats (serverCount?: number, shardId?: number, shardCount?: number) {
-    if (!serverCount && !this.clientType) throw new Error('Missing Server Count or Client')
-    const data = {
-      server_count: serverCount ?? ClientUtils.serverCount(this.client, this.clientType),
-      shard_id: shardId ?? ClientUtils.currentShard(this.client, this.clientType),
-      shard_count: shardCount ?? ClientUtils.shardCount(this.client, this.clientType)
-    }
-
-    /**
-     * Event when the bot posts it's stats
-     * @event posted
-     * @param serverCount Posted server count
-     * @param shardId Posted shard ID
-     * @param shardCount Posted shard count
-     */
-    this._request('POST', '/bots/stats', data)
-      .then(() => this.emit('posted', data.server_count, data.shard_id, data.shard_count))
-      .catch(err => console.error(err))
+    if (!serverCount) throw new Error('Missing Server Count')
+    this._request('POST', '/bots/stats', {
+      server_count: serverCount,
+      shard_id: shardId,
+      shard_count: shardCount
+    })
   } 
 
   /**
@@ -152,7 +93,6 @@ export default class API extends EventEmitter {
    * @param id Bot ID
    * @example
    * ```js
-   * await client.getStats() // gives self
    * await client.getStats('461521980492087297')
    * // =>
    * {
@@ -163,8 +103,8 @@ export default class API extends EventEmitter {
    * ```
    */
   public async getStats (id: Snowflake): Promise<BotStats> {
-    if (!id && !this.clientType) throw new Error('ID or Client missing')
-    return this._request('GET', `/bots/${id ?? ClientUtils.id(this.client, this.clientType)}/stats`)
+    if (!id) throw new Error('ID missing')
+    return this._request('GET', `/bots/${id}/stats`)
   }
 
   /**
@@ -172,13 +112,12 @@ export default class API extends EventEmitter {
    * @param id Bot ID
    * @example
    * ```js
-   * await client.getBot() // returns self
-   * await client.getBot('461521980492087297') // returns other bot
+   * await client.getBot('461521980492087297') // returns bot info
    * ```
    */
   public async getBot (id: Snowflake): Promise<BotInfo> {
-    if (!id && !this.clientType) throw new Error('ID Missing')
-    return this._request('GET', `/bots/${id ?? ClientUtils.id(this.client, this.clientType)}`)
+    if (!id) throw new Error('ID Missing')
+    return this._request('GET', `/bots/${id}`)
   }
 
   /**

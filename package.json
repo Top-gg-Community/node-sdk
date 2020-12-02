@@ -1,17 +1,17 @@
 {
   "name": "@top-gg/sdk",
   "version": "3.0.0",
-  "description": "Official Top.GG API Client and Webhook for interaction with top.gg",
+  "description": "Official Top.gg API Interface",
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc",
-    "testap": "node ./test/test"
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/top-gg/node-sdk.git"
   },
-  "author": "Top.GG <support@top.gg> (https://top.gg)",
+  "author": "Top.gg <support@top.gg> (https://top.gg)",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/top-gg/node-sdk/issues"

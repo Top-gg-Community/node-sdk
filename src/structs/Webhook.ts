@@ -1,14 +1,13 @@
 import { EventEmitter } from 'events'
 import getBody from 'raw-body'
-import '../typings'
 import qs from 'querystring'
 
-export default interface Webhook {
+export interface Webhook {
   on(event: 'vote', listener: (vote: Vote) => void): this
 }
 
 /**
- * Top.GG Webhook
+ * Top.gg Webhook
  * @extends EventEmitter
  * @example
  * ```js
@@ -32,7 +31,7 @@ export default interface Webhook {
  * // Authorization: webhookauth123
  * ```
  */
-export default class Webhook extends EventEmitter {
+export class Webhook extends EventEmitter {
   private auth: string
 
   /**

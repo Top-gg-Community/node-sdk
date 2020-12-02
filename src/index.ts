@@ -1,9 +1,4 @@
 import './typings'
 
-import API from './structs/API'
-import Webhook from './structs/Webhook'
-
-export {
-  API,
-  Webhook
-}
+export * from './structs/Api'
+export * from './structs/Webhook'
