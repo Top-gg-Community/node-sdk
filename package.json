@@ -1,21 +1,33 @@
 {
-  "name": "dblapi.js",
-  "version": "2.4.1",
-  "description": "An official module for interacting with the top.gg API",
-  "main": "index.js",
+  "name": "@top-gg/sdk",
+  "version": "3.0.0",
+  "description": "Official Top.GG API Client and Webhook for interaction with top.gg",
+  "main": "./dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "testap": "node ./test/test"
   },
-  "keywords": [
-    "discord",
-    "bot",
-    "list",
-    "api",
-    "javascript"
-  ],
-  "author": "Discord Bot List <support@top.gg> (https://top.gg)",
-  "repository": "top-gg/dblapi.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/top-gg/node-sdk.git"
+  },
+  "author": "Top.GG <support@top.gg> (https://top.gg)",
   "license": "Apache-2.0",
-  "dependencies": {},
-  "typings": "./typings/index.d.ts"
+  "bugs": {
+    "url": "https://github.com/top-gg/node-sdk/issues"
+  },
+  "homepage": "https://github.com/top-gg/node-sdk#readme",
+  "devDependencies": {
+    "@types/node-fetch": "^2.5.7",
+    "@types/node": "^14.14.10",
+    "@types/query-string": "^6.3.0",
+    "discord.js": "latest",
+    "eris": "latest"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "node-fetch": "^2.6.1",
+    "raw-body": "^2.4.1"
+  },
+  "types": "./dist/index.d.ts"
 }

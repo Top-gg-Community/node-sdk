@@ -1,0 +1,11 @@
+node_modules/
+src/
+logs/
+*.log
+
+.eslintrc.json
+.gitattributes
+.gitignore
+.github/
+test/
+tsconfig.json
