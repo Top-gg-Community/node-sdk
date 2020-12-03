@@ -4,16 +4,15 @@ import qs from 'querystring'
 /**
  * Top.gg Webhook
  * @example
- * ```js
  * const express = require('express')
- * const { Webhook } = require('@top-gg/sdk')
+ * const { Webhook } = require(`@top-gg/sdk`)
  * 
  * const app = express()
  * const wh = new Webhook('webhookauth123')
  * 
  * app.post('/dblwebhook', wh.middleware(), (req, res) => {
- *   req.vote.user
- *   // => 321714991050784770
+ *   // req.vote is your vote object e.g
+ *   console.log(req.vote.user) // => 321714991050784770
  * })
  * 
  * app.listen(80)
@@ -21,7 +20,6 @@ import qs from 'querystring'
  * // In this situation, your TopGG Webhook dashboard should look like
  * // URL = http://your.server.ip:80/dblwebhook
  * // Authorization: webhookauth123
- * ```
  */
 export class Webhook {
   private auth: string
@@ -30,7 +28,7 @@ export class Webhook {
    * Create a new webhook client instance
    * @param authorization Webhook authorization to verify requests
    */
-  constructor (authorization) {
+  constructor (authorization: string) {
     this.auth = authorization
   }
 
