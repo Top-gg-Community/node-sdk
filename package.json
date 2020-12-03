@@ -1,7 +1,7 @@
 {
   "name": "@top-gg/sdk",
   "version": "3.0.0",
-  "description": "Official Top.gg API Interface",
+  "description": "Official Top.gg Node SDK",
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc",
