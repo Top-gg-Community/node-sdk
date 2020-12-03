@@ -199,7 +199,7 @@ export class Api extends EventEmitter {
 
   /**
    * Get users who've voted
-   * @returns {Array<ShortUser>} Array of users who've voted
+   * @returns {ShortUser[]} Array of users who've voted
    * @example
    * await client.getVotes()
    * // => 
@@ -219,7 +219,7 @@ export class Api extends EventEmitter {
    *   ...more
    * ]
    */
-  public async getVotes (): Promise<Array<ShortUser>> {
+  public async getVotes (): Promise<ShortUser[]> {
     if (!this.options.token) throw new Error('Missing token')
     return this._request('GET', '/bots/votes')
   }

@@ -43,7 +43,7 @@ interface BotInfo {
   /**
    * The tags of the bot
    */
-  tags: Array<string>
+  tags: string[]
   /**
    * The website url of the bot
    */
@@ -59,11 +59,11 @@ interface BotInfo {
   /**
    * The owners of the bot. First one in the array is the main owner
    */
-  owners: Array<Snowflake>
+  owners: Snowflake[]
   /**
    * The guilds featured on the bot page
    */
-  guilds: Array<Snowflake>
+  guilds: Snowflake[]
   /**
    * The custom bot invite url of the bot
    */
@@ -102,7 +102,7 @@ interface BotStats {
   /**
    * The amount of servers the bot is in per shard. Always present but can be empty. (Only when receiving stats)
    */
-  shards?: Array<number>
+  shards?: number[]
   /**
    * The shard ID to post as (only when posting)
    */
@@ -215,14 +215,14 @@ interface BotsQuery {
   /**
    * A list of fields to show.
    */
-  fields?: Array<string>|string
+  fields?: string[]|string
 }
 
 interface BotsResponse {
   /**
    * The matching bots
    */
-  results: Array<BotInfo>
+  results: BotInfo[]
   /**
    * The limit used
    */
