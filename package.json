@@ -1,6 +1,6 @@
 {
   "name": "@top-gg/sdk",
-  "version": "3.0.0",
+  "version": "3.0.2",
   "description": "Official Top.gg Node SDK",
   "main": "./dist/index.js",
   "scripts": {
