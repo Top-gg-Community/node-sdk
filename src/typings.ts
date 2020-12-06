@@ -260,7 +260,7 @@ interface ShortUser {
   avatar: string
 }
 
-interface Vote {
+interface WebhookPayload {
   /**
    * If webhook is a bot: ID of the bot that received a vote
    */
@@ -280,7 +280,7 @@ interface Vote {
   /**
    * Whether the weekend multiplier is in effect, meaning users votes count as two
    */
-  isWeekend: boolean
+  isWeekend?: boolean
   /**
    * Query parameters in vote page in a key to value object
    */
@@ -289,8 +289,22 @@ interface Vote {
   }|string
 }
 
+interface GuildVote extends Pick<WebhookPayload, Exclude<keyof WebhookPayload, 'bot'|'isWeekend'>> {
+  /**
+   * ID of the server that received a vote
+   */
+  guild: Snowflake
+}
+
+interface BotVote extends Pick<WebhookPayload, Exclude<keyof WebhookPayload, 'guild'>> {
+  /**
+   * ID of the bot that received a vote
+   */
+  bot: Snowflake
+}
+
 namespace Express {
   export interface Request {
-    vote?: Vote
+    vote?: WebhookPayload
   }
 }
