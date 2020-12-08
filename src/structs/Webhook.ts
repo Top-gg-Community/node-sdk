@@ -34,11 +34,11 @@ export class Webhook {
 
   private _parseRequest (req, res): Promise<WebhookPayload|false> {
     return new Promise(resolve => {
-      if (this.auth && req.headers.authorization !== this.auth) return res.status(403).json({ error: 'Unauthorized', from: 'topggjs' })
+      if (this.auth && req.headers.authorization !== this.auth) return res.status(403).json({ error: 'Unauthorized' })
       // parse json
 
       getBody(req, {}, (error, body) => {
-        if (error) return res.status(422).json({ error: 'Malformed request', from: 'topggjs' })
+        if (error) return res.status(422).json({ error: 'Malformed request' })
 
         try {
           const parsed = JSON.parse(body.toString('utf8'))
@@ -47,7 +47,7 @@ export class Webhook {
 
           resolve(parsed)
         } catch (err) {
-          res.status(400).json({ error: 'Invalid body', from: 'topggjs' })
+          res.status(400).json({ error: 'Invalid body' })
           resolve(false)
         }
       })
