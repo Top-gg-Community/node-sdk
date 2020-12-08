@@ -1,15 +1,5 @@
 import getBody from 'raw-body'
 import qs from 'querystring'
-import { EventEmitter } from 'events'
-
-interface WebhookEvents {
-  botVote: [BotVote]
-  guildVote: [GuildVote]
-}
-
-export interface Webhook {
-  on<K extends keyof WebhookEvents>(event: K, listener: (...args: WebhookEvents[K]) => void): this;
-}
 
 /**
  * Top.gg Webhook
@@ -20,14 +10,9 @@ export interface Webhook {
  * const app = express()
  * const wh = new Webhook('webhookauth123')
  * 
- * app.post('/dblwebhook', wh.attach())
- * 
- * wh.on('botVote', (vote) => { // when a user votes for a bot
- *   console.log(vote.user) // => 321714991050784770
- * })
- * 
- * wh.on('guildVote', (vote) => { // when a user votes for a server
- *   console.log(vote.guild) // => 264445053596991498
+ * app.post('/dblwebhook', wh.middleware(), (req, res) => {
+ *   // req.vote is your vote object e.g
+ *   console.log(req.vote.user) // => 321714991050784770
  * })
  * 
  * app.listen(80)
@@ -36,7 +21,7 @@ export interface Webhook {
  * // URL = http://your.server.ip:80/dblwebhook
  * // Authorization: webhookauth123
  */
-export class Webhook extends EventEmitter {
+export class Webhook {
   private auth: string
 
   /**
@@ -44,7 +29,6 @@ export class Webhook extends EventEmitter {
    * @param authorization Webhook authorization to verify requests
    */
   constructor (authorization?: string) {
-    super()
     this.auth = authorization
   }
 
@@ -84,26 +68,6 @@ export class Webhook extends EventEmitter {
       if (!response) return
       req.vote = response
       next()
-    }
-  }
-
-  public attach () {
-    return async (req, res) => {
-      const response = await this._parseRequest(req, res)
-      if (!response) return
-
-      /**
-       * Emitted when a bot is voted for
-       * @event botVote
-       * @param vote Vote object
-       */
-      if (response.bot && ['test', 'upvote'].includes(response.type)) return this.emit('botVote', response)
-      /**
-       * Emitted when a server is voted for
-       * @event guildVote
-       * @param vote Vote object
-       */
-      if (response.guild && ['test', 'upvote'].includes(response.type)) return this.emit('guildVote', response)
     }
   }
 }

@@ -289,20 +289,6 @@ interface WebhookPayload {
   }|string
 }
 
-interface GuildVote extends Pick<WebhookPayload, Exclude<keyof WebhookPayload, 'bot'|'isWeekend'>> {
-  /**
-   * ID of the server that received a vote
-   */
-  guild: Snowflake
-}
-
-interface BotVote extends Pick<WebhookPayload, Exclude<keyof WebhookPayload, 'guild'>> {
-  /**
-   * ID of the bot that received a vote
-   */
-  bot: Snowflake
-}
-
 namespace Express {
   export interface Request {
     vote?: WebhookPayload
