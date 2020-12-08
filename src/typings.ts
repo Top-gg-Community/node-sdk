@@ -260,7 +260,7 @@ interface ShortUser {
   avatar: string
 }
 
-interface Vote {
+interface WebhookPayload {
   /**
    * If webhook is a bot: ID of the bot that received a vote
    */
@@ -280,7 +280,7 @@ interface Vote {
   /**
    * Whether the weekend multiplier is in effect, meaning users votes count as two
    */
-  isWeekend: boolean
+  isWeekend?: boolean
   /**
    * Query parameters in vote page in a key to value object
    */
@@ -291,6 +291,6 @@ interface Vote {
 
 namespace Express {
   export interface Request {
-    vote?: Vote
+    vote?: WebhookPayload
   }
 }
