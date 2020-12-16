@@ -3,7 +3,7 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "declaration": true,
-    "target": "ES2017",
+    "target": "ES2019",
     "outDir": "./dist",
     "module": "commonjs",
     "esModuleInterop": true

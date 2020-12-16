@@ -8,7 +8,7 @@ An official module for interacting with the Top.<span>gg API
 
 # Introduction
 
-The base client is Topgg.API, and it takes your top.<span>gg token and provides you with plenty of methods to interact with the API.
+The base client is Topgg.Api, and it takes your top.<span>gg token and provides you with plenty of methods to interact with the API.
 
 Your Top.<span>gg token can be found [here](https://top.gg/api/docs#mybots)
 

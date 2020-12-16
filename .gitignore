@@ -1,5 +1,5 @@
 dist/
-
+docs/build
 # Logs
 logs
 *.log
