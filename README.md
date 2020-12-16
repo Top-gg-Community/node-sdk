@@ -16,9 +16,9 @@ You can also setup webhooks via Topgg.Webhook, look down below at the examples f
 
 # Links
 
-[API Docs](https://top.gg/api/docs)
+[Documentation](https://topggjs.rtfd.io)
 
-[GitHub](https://github.com/top-gg/node-sdk) | [NPM](https://npmjs.com/package/@top-gg/sdk) | [Discord Server](https://discord.gg/EYHTgJX)
+[API Reference](https://top.gg/api/docs) | [GitHub](https://github.com/top-gg/node-sdk) | [NPM](https://npmjs.com/package/@top-gg/sdk) | [Discord Server](https://discord.gg/EYHTgJX)
 
 # Auto-Posting
 
