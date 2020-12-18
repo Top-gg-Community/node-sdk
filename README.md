@@ -8,7 +8,7 @@ An official module for interacting with the Top.<span>gg API
 
 # Introduction
 
-The base client is Topgg.API, and it takes your top.<span>gg token and provides you with plenty of methods to interact with the API.
+The base client is Topgg.Api, and it takes your top.<span>gg token and provides you with plenty of methods to interact with the API.
 
 Your Top.<span>gg token can be found [here](https://top.gg/api/docs#mybots)
 
@@ -16,9 +16,9 @@ You can also setup webhooks via Topgg.Webhook, look down below at the examples f
 
 # Links
 
-[API Docs](https://top.gg/api/docs)
+[Documentation](https://topggjs.rtfd.io)
 
-[GitHub](https://github.com/top-gg/node-sdk) | [NPM](https://npmjs.com/package/@top-gg/sdk) | [Discord Server](https://discord.gg/EYHTgJX)
+[API Reference](https://top.gg/api/docs) | [GitHub](https://github.com/top-gg/node-sdk) | [NPM](https://npmjs.com/package/@top-gg/sdk) | [Discord Server](https://discord.gg/EYHTgJX)
 
 # Auto-Posting
 
