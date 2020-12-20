@@ -224,6 +224,6 @@ Whether or not the weekend multiplier is active
 **Returns**: <code>Boolean</code> - Whether the the multiplier is active  
 **Example**  
 ```js
-await client.hasVoted()
+await client.isWeekend()
 // => true/false
 ```

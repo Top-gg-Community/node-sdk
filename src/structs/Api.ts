@@ -241,7 +241,7 @@ export class Api extends EventEmitter {
    * Whether or not the weekend multiplier is active
    * @returns {Boolean} Whether the the multiplier is active
    * @example
-   * await client.hasVoted()
+   * await client.isWeekend()
    * // => true/false
    */
   public async isWeekend (): Promise<boolean> {
