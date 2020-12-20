@@ -2,6 +2,9 @@
 
 # Change Log
 
+## 3.0.5
+  - Fix to Api.isWeekend example
+
 ## 3.0.4
   - Released official documentation page
   - Added GitHub actions to publish to npm on release
