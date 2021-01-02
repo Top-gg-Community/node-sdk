@@ -41,7 +41,7 @@ export class Webhook {
         if (error) return res.status(422).json({ error: 'Malformed request' })
 
         try {
-          const parsed = JSON.parse(body.toString('utf8'))
+          const parsed = typeof body == 'object' ? body : JSON.parse(body.toString('utf8'))
 
           if (parsed?.query?.length > 0) parsed.query = qs.parse(parsed.query.substr(1))
 
