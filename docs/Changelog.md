@@ -2,6 +2,9 @@
 
 # Change Log
 
+## 3.0.6
+  - Fix to webhook, where there were issues when using a body parser that also used `raw-body`
+
 ## 3.0.5
   - Fix to Api.isWeekend example
 

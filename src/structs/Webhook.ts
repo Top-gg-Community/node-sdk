@@ -32,20 +32,24 @@ export class Webhook {
     this.auth = authorization
   }
 
+  private _formatIncoming (body): WebhookPayload {
+    if (body?.query?.length > 0) body.query = qs.parse(body.query.substr(1))
+    return body
+  }
+
   private _parseRequest (req, res): Promise<WebhookPayload|false> {
     return new Promise(resolve => {
       if (this.auth && req.headers.authorization !== this.auth) return res.status(403).json({ error: 'Unauthorized' })
       // parse json
 
+      if (req.body) return resolve(this._formatIncoming(req.body))
       getBody(req, {}, (error, body) => {
         if (error) return res.status(422).json({ error: 'Malformed request' })
 
         try {
           const parsed = JSON.parse(body.toString('utf8'))
 
-          if (parsed?.query?.length > 0) parsed.query = qs.parse(parsed.query.substr(1))
-
-          resolve(parsed)
+          resolve(this._formatIncoming(parsed))
         } catch (err) {
           res.status(400).json({ error: 'Invalid body' })
           resolve(false)
