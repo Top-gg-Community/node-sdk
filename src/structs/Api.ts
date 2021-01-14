@@ -62,6 +62,10 @@ export class Api extends EventEmitter {
     return responseBody
   }
 
+  private _isNumberArray(arr: any) {
+    return Array.isArray(arr) && arr.every(e => typeof e === 'number')
+  }
+
   /**
    * Post bot stats to Top.gg (Do not use if you supplied a client)
    * @param {Object} stats Stats object
@@ -77,6 +81,15 @@ export class Api extends EventEmitter {
    */
   public async postStats (stats: BotStats): Promise<BotStats> {
     if (!stats || !stats.serverCount) throw new Error('Missing Server Count')
+
+    if (typeof stats.serverCount !== 'number' && !this._isNumberArray(stats.serverCount))
+      throw new TypeError('Expected stats.serverCount to be a number or array of numbers')
+    
+    if (stats.shardId && typeof stats.shardId !== 'number')
+      throw new TypeError('Expected stats.shardId to be a number')
+    
+    if (stats.shardCount && typeof stats.shardCount !== 'number')
+      throw new TypeError('Expected stats.shardCount to be a number')
 
     await this._request('POST', '/bots/stats', {
       server_count: stats.serverCount,
@@ -102,6 +115,9 @@ export class Api extends EventEmitter {
    */
   public async getStats (id: Snowflake): Promise<BotStats> {
     if (!id) throw new Error('ID missing')
+    if (typeof id !== 'string')
+      throw new TypeError('Expected id to be a Snowflake/string')
+
     const result = await this._request('GET', `/bots/${id}/stats`)
     return {
       serverCount: result.server_count,
@@ -119,6 +135,9 @@ export class Api extends EventEmitter {
    */
   public async getBot (id: Snowflake): Promise<BotInfo> {
     if (!id) throw new Error('ID Missing')
+    if (typeof id !== 'string')
+      throw new TypeError('Expected id to be a Snowflake/string')
+    
     return this._request('GET', `/bots/${id}`)
   }
 
@@ -133,6 +152,9 @@ export class Api extends EventEmitter {
    */
   public async getUser (id: Snowflake): Promise<UserInfo> {
     if (!id) throw new Error('ID Missing')
+    if (typeof id !== 'string')
+      throw new TypeError('Expected id to be a Snowflake/string')
+    
     return this._request('GET', `/users/${id}`)
   }
 
@@ -234,6 +256,9 @@ export class Api extends EventEmitter {
    */
   public async hasVoted(id: Snowflake): Promise<boolean> {
     if (!id) throw new Error('Missing ID')
+    if (typeof id !== 'string')
+      throw new TypeError('Expected id to be a Snowflake/string')
+    
     return this._request('GET', '/bots/check', { userId: id }).then(x => !!x.voted)
   }
 

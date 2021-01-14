@@ -29,6 +29,9 @@ export class Webhook {
    * @param authorization Webhook authorization to verify requests
    */
   constructor (authorization?: string) {
+		if (authorization && typeof authorization !== 'string')
+			throw new TypeError('Expected authorization to be a string')
+		
     this.auth = authorization
   }
 
