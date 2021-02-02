@@ -25,7 +25,12 @@ interface BotInfo {
    */
   defAvatar: string
   /**
+   * The URL for the banner image
+   */
+  bannerUrl?: string
+  /**
    * The library of the bot
+   * @deprecated
    */
   lib: string
   /**
