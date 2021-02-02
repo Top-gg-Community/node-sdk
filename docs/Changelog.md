@@ -2,6 +2,9 @@
 
 # Change Log
 
+## 3.0.7
+  - Add new BotInfo.bannerUrl to typings
+
 ## 3.0.6
   - Fix to webhook, where there were issues when using a body parser that also used `raw-body`
 
