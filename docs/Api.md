@@ -221,7 +221,7 @@ await client.hasVoted('205680187394752512')
 Whether or not the weekend multiplier is active
 
 **Kind**: instance method of [<code>Api</code>](#Api)  
-**Returns**: <code>Boolean</code> - Whether the the multiplier is active  
+**Returns**: <code>Boolean</code> - Whether the multiplier is active  
 **Example**  
 ```js
 await client.isWeekend()
