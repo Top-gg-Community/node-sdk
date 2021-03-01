@@ -10,7 +10,7 @@ An official module for interacting with the Top.<span>gg API
 
 The base client is Topgg.Api, and it takes your Top.<span>gg token and provides you with plenty of methods to interact with the API.
 
-Your Top.<span>gg token can be found at `top.gg/bots/(BOT_ID)/webhooks` and copying the token.
+Your Top.<span>gg token can be found at `top.gg/bot/(BOT_ID)/webhooks` and copying the token.
 
 You can also setup webhooks via Topgg.Webhook, look down below at the examples for how to do so!
 
