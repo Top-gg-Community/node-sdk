@@ -2,6 +2,11 @@
 
 # Change Log
 
+## 3.0.8
+  - Change docs URL
+  - Fix typos in a few method docs
+  - Specified that .hasVoted() is last 24 hours
+
 ## 3.0.7
   - Add new BotInfo.bannerUrl to typings
 

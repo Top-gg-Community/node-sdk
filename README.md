@@ -1,4 +1,4 @@
-# Top.gg Node SDK
+# Top.<span>gg Node SDK
 
 An official module for interacting with the Top.<span>gg API
 
@@ -8,9 +8,9 @@ An official module for interacting with the Top.<span>gg API
 
 # Introduction
 
-The base client is Topgg.Api, and it takes your top.<span>gg token and provides you with plenty of methods to interact with the API.
+The base client is Topgg.Api, and it takes your Top.<span>gg token and provides you with plenty of methods to interact with the API.
 
-Your Top.<span>gg token can be found [here](https://top.gg/api/docs#mybots)
+Your Top.<span>gg token can be found at `top.gg/bots/(BOT_ID)/webhooks` and copying the token.
 
 You can also setup webhooks via Topgg.Webhook, look down below at the examples for how to do so!
 
@@ -18,7 +18,7 @@ You can also setup webhooks via Topgg.Webhook, look down below at the examples f
 
 [Documentation](https://topggjs.rtfd.io)
 
-[API Reference](https://top.gg/api/docs) | [GitHub](https://github.com/top-gg/node-sdk) | [NPM](https://npmjs.com/package/@top-gg/sdk) | [Discord Server](https://discord.gg/EYHTgJX)
+[API Reference](https://docs.top.gg) | [GitHub](https://github.com/top-gg/node-sdk) | [NPM](https://npmjs.com/package/@top-gg/sdk) | [Discord Server](https://discord.gg/EYHTgJX)
 
 # Auto-Posting
 

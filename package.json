@@ -1,6 +1,6 @@
 {
   "name": "@top-gg/sdk",
-  "version": "3.0.7",
+  "version": "3.0.8",
   "description": "Official Top.gg Node SDK",
   "main": "./dist/index.js",
   "scripts": {
@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/top-gg/node-sdk/issues"
   },
-  "homepage": "https://github.com/top-gg/node-sdk#readme",
+  "homepage": "https://topggjs.rtfd.io",
   "devDependencies": {
     "@types/node-fetch": "^2.5.7",
     "@types/node": "^14.14.10",
