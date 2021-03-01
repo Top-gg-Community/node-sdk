@@ -6,6 +6,7 @@
   - Change docs URL
   - Fix typos in a few method docs
   - Specified that .hasVoted() is last 12 hours
+  - Auto-respond with status 200 as per docs
 
 ## 3.0.7
   - Add new BotInfo.bannerUrl to typings
