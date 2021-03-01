@@ -1,4 +1,4 @@
-# Top.<span>gg Node SDK
+# Top.gg Node SDK
 
 An official module for interacting with the Top.<span>gg API
 
