@@ -202,10 +202,10 @@ await client.getVotes()
 <a name="Api+hasVoted"></a>
 
 ### api.hasVoted(id) ⇒ <code>Boolean</code>
-Get whether or not a user has voted in the last 24 hours
+Get whether or not a user has voted in the last 12 hours
 
 **Kind**: instance method of [<code>Api</code>](#Api)  
-**Returns**: <code>Boolean</code> - Whether the user has voted in the last 24 hours  
+**Returns**: <code>Boolean</code> - Whether the user has voted in the last 12 hours  
 
 | Param | Type | Description |
 | --- | --- | --- |

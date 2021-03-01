@@ -227,9 +227,9 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Get whether or not a user has voted in the last 24 hours
+   * Get whether or not a user has voted in the last 12 hours
    * @param {Snowflake} id User ID
-   * @returns {Boolean} Whether the user has voted in the last 24 hours
+   * @returns {Boolean} Whether the user has voted in the last 12 hours
    * @example
    * await client.hasVoted('205680187394752512')
    * // => true/false
