@@ -7,16 +7,17 @@ interface APIOptions {
   /**
    * Top.gg Token
    */
-  token: any
+  token?: string
 }
 
 /**
  * Top.gg API Client for Posting stats or Fetching data
- * @link https://top.gg/api/docs
  * @example
  * const Topgg = require(`@top-gg/sdk`)
  *
  * const api = new Topgg.Api('Your top.gg token')
+ * @link https://topggjs.rtfd.io <- Library docs
+ * @link https://docs.top.gg <- API Reference
  */
 export class Api extends EventEmitter {
   private options: APIOptions
@@ -25,10 +26,11 @@ export class Api extends EventEmitter {
    * @param {string} token Token or options
    * @param {object?} options API Options 
    */
-  constructor (token: string, options?: APIOptions) {
+  constructor (token: string, options: APIOptions = {}) {
     super()
     this.options = {
-      token: token
+      token: token,
+      ...options
     }
   }
 
@@ -225,9 +227,9 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Get whether or not a user has voted
+   * Get whether or not a user has voted in the last 12 hours
    * @param {Snowflake} id User ID
-   * @returns {Boolean} Whether the user has voted
+   * @returns {Boolean} Whether the user has voted in the last 12 hours
    * @example
    * await client.hasVoted('205680187394752512')
    * // => true/false

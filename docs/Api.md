@@ -4,7 +4,8 @@
 Top.gg API Client for Posting stats or Fetching data
 
 **Kind**: global class  
-**Link**: https://top.gg/api/docs  
+**Link**: https://topggjs.rtfd.io <- Library docs  
+**Link**: https://docs.top.gg <- API Reference  
 
 * [Api](#Api)
     * [new Api(token, options)](#new_Api_new)
@@ -201,10 +202,10 @@ await client.getVotes()
 <a name="Api+hasVoted"></a>
 
 ### api.hasVoted(id) ⇒ <code>Boolean</code>
-Get whether or not a user has voted
+Get whether or not a user has voted in the last 12 hours
 
 **Kind**: instance method of [<code>Api</code>](#Api)  
-**Returns**: <code>Boolean</code> - Whether the user has voted  
+**Returns**: <code>Boolean</code> - Whether the user has voted in the last 12 hours  
 
 | Param | Type | Description |
 | --- | --- | --- |
