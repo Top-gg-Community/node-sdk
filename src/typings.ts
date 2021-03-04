@@ -1,9 +1,9 @@
 /**
  * Discord ID
  */
-type Snowflake = string
+export type Snowflake = string
 
-interface BotInfo {
+export interface BotInfo {
   /**
    * The id of the bot
    */
@@ -99,7 +99,7 @@ interface BotInfo {
   donatebotguildid: Snowflake
 }
 
-interface BotStats {
+export interface BotStats {
   /**
    * The amount of servers the bot is in
    */
@@ -118,7 +118,7 @@ interface BotStats {
   shardCount?: number
 }
 
-interface UserInfo {
+export interface UserInfo {
   /**
    * The id of the user
    */
@@ -198,7 +198,7 @@ interface UserInfo {
   admin: boolean
 }
 
-interface BotsQuery {
+export interface BotsQuery {
   /**
    * The amount of bots to return. Max. 500
    */
@@ -223,7 +223,7 @@ interface BotsQuery {
   fields?: string[]|string
 }
 
-interface BotsResponse {
+export interface BotsResponse {
   /**
    * The matching bots
    */
@@ -246,7 +246,7 @@ interface BotsResponse {
   total: number
 }
 
-interface ShortUser {
+export interface ShortUser {
   /**
    * User's ID
    */
@@ -265,7 +265,7 @@ interface ShortUser {
   avatar: string
 }
 
-interface WebhookPayload {
+export interface WebhookPayload {
   /**
    * If webhook is a bot: ID of the bot that received a vote
    */

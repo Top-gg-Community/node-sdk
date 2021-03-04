@@ -2,6 +2,9 @@
 
 # Change Log
 
+## 3.0.9
+  - A change to how typings are used, properly exports via dist/typings
+
 ## 3.0.8
   - Change docs URL
   - Fix typos in a few method docs

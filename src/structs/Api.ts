@@ -3,6 +3,8 @@ import ApiError from '../utils/ApiError'
 import qs from 'querystring'
 import { EventEmitter } from 'events'
 
+import { Snowflake, BotStats, BotInfo, UserInfo, BotsResponse, ShortUser, BotsQuery } from '../typings'
+
 interface APIOptions {
   /**
    * Top.gg Token
