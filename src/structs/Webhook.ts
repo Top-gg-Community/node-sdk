@@ -1,6 +1,8 @@
 import getBody from 'raw-body'
 import qs from 'querystring'
 
+import { WebhookPayload } from '../typings'
+
 /**
  * Top.gg Webhook
  * @example
