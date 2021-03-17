@@ -71,7 +71,7 @@ Get a bots stats
 
 **Example**  
 ```js
-await client.getStats('461521980492087297')
+await api.getStats('461521980492087297')
 // =>
 {
   serverCount: 28199,
@@ -93,7 +93,7 @@ Get bot info
 
 **Example**  
 ```js
-await client.getBot('461521980492087297') // returns bot info
+await api.getBot('461521980492087297') // returns bot info
 ```
 <a name="Api+getUser"></a>
 
@@ -109,7 +109,7 @@ Get user info
 
 **Example**  
 ```js
-await client.getUser('205680187394752512')
+await api.getUser('205680187394752512')
 // =>
 user.username // Xignotic
 ```
@@ -128,7 +128,7 @@ Get a list of bots
 **Example**  
 ```js
 // Finding by properties
-await client.getBots({
+await api.getBots({
   search: {
     username: 'shiro',
     certifiedBot: true
@@ -153,7 +153,7 @@ await client.getBots({
   total: 1
 }
 // Restricting fields
-await client.getBots({
+await api.getBots({
   fields: ['id', 'username']
 })
 // =>
@@ -181,7 +181,7 @@ Get users who've voted
 **Returns**: <code>Array.&lt;ShortUser&gt;</code> - Array of users who've voted  
 **Example**  
 ```js
-await client.getVotes()
+await api.getVotes()
 // =>
 [
   {
@@ -213,7 +213,7 @@ Get whether or not a user has voted in the last 12 hours
 
 **Example**  
 ```js
-await client.hasVoted('205680187394752512')
+await api.hasVoted('205680187394752512')
 // => true/false
 ```
 <a name="Api+isWeekend"></a>
@@ -225,6 +225,6 @@ Whether or not the weekend multiplier is active
 **Returns**: <code>Boolean</code> - Whether the multiplier is active  
 **Example**  
 ```js
-await client.isWeekend()
+await api.isWeekend()
 // => true/false
 ```
