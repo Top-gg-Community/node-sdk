@@ -74,7 +74,7 @@ export class Api extends EventEmitter {
    * @param {number?} stats.shardId Posting shard (useful for process sharding)
    * @returns {BotStats} Passed object
    * @example
-   * await client.postStats({
+   * await api.postStats({
    *   serverCount: 28199, 
    *   shardCount: 1
    * })
@@ -96,7 +96,7 @@ export class Api extends EventEmitter {
    * @param {Snowflake} id Bot ID
    * @returns {BotStats} Stats of bot requested
    * @example
-   * await client.getStats('461521980492087297')
+   * await api.getStats('461521980492087297')
    * // =>
    * {
    *   serverCount: 28199,
@@ -119,7 +119,7 @@ export class Api extends EventEmitter {
    * @param {Snowflake} id Bot ID
    * @returns {BotInfo} Info for bot
    * @example
-   * await client.getBot('461521980492087297') // returns bot info
+   * await api.getBot('461521980492087297') // returns bot info
    */
   public async getBot (id: Snowflake): Promise<BotInfo> {
     if (!id) throw new Error('ID Missing')
@@ -131,7 +131,7 @@ export class Api extends EventEmitter {
    * @param {Snowflake} id User ID
    * @returns {UserInfo} Info for user
    * @example
-   * await client.getUser('205680187394752512')
+   * await api.getUser('205680187394752512')
    * // =>
    * user.username // Xignotic
    */
@@ -146,7 +146,7 @@ export class Api extends EventEmitter {
    * @returns {BotsResponse} Return response
    * @example
    * // Finding by properties
-   * await client.getBots({
+   * await api.getBots({
    *   search: {
    *     username: 'shiro',
    *     certifiedBot: true
@@ -171,7 +171,7 @@ export class Api extends EventEmitter {
    *   total: 1
    * }
    * // Restricting fields
-   * await client.getBots({
+   * await api.getBots({
    *   fields: ['id', 'username']
    * })
    * // =>
@@ -205,7 +205,7 @@ export class Api extends EventEmitter {
    * Get users who've voted
    * @returns {ShortUser[]} Array of users who've voted
    * @example
-   * await client.getVotes()
+   * await api.getVotes()
    * // => 
    * [
    *   {
@@ -233,7 +233,7 @@ export class Api extends EventEmitter {
    * @param {Snowflake} id User ID
    * @returns {Boolean} Whether the user has voted in the last 12 hours
    * @example
-   * await client.hasVoted('205680187394752512')
+   * await api.hasVoted('205680187394752512')
    * // => true/false
    */
   public async hasVoted(id: Snowflake): Promise<boolean> {
@@ -245,7 +245,7 @@ export class Api extends EventEmitter {
    * Whether or not the weekend multiplier is active
    * @returns {Boolean} Whether the multiplier is active
    * @example
-   * await client.isWeekend()
+   * await api.isWeekend()
    * // => true/false
    */
   public async isWeekend (): Promise<boolean> {
