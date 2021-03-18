@@ -67,7 +67,7 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Post bot stats to Top.gg (Do not use if you supplied a client)
+   * Post bot stats to Top.gg
    * @param {Object} stats Stats object
    * @param {number} stats.serverCount Server count
    * @param {number?} stats.shardCount Shard count
