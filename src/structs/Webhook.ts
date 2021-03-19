@@ -24,15 +24,11 @@ import { WebhookPayload } from '../typings'
  * // Authorization: webhookauth123
  */
 export class Webhook {
-  private auth: string
-
   /**
    * Create a new webhook client instance
    * @param authorization Webhook authorization to verify requests
    */
-  constructor (authorization?: string) {
-    this.auth = authorization
-  }
+  constructor (private authorization?: string) {}
 
   private _formatIncoming (body): WebhookPayload {
     if (body?.query?.length > 0) body.query = qs.parse(body.query.substr(1))
@@ -41,7 +37,7 @@ export class Webhook {
 
   private _parseRequest (req, res): Promise<WebhookPayload|false> {
     return new Promise(resolve => {
-      if (this.auth && req.headers.authorization !== this.auth) return res.status(403).json({ error: 'Unauthorized' })
+      if (this.authorization && req.headers.authorization !== this.authorization) return res.status(403).json({ error: 'Unauthorized' })
       // parse json
 
       if (req.body) return resolve(this._formatIncoming(req.body))
