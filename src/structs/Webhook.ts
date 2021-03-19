@@ -72,7 +72,7 @@ export class Webhook {
     return async (req, res, next) => {
       const response = await this._parseRequest(req, res)
       if (!response) return
-      res.sendStatus(200)
+      res.sendStatus(204)
       req.vote = response
       next()
     }
