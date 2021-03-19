@@ -38,7 +38,7 @@ const api = new Topgg.Api('Your top.gg token')
 <a name="Api+postStats"></a>
 
 ### api.postStats(stats) ⇒ <code>BotStats</code>
-Post bot stats to Top.gg (Do not use if you supplied a client)
+Post bot stats to Top.gg
 
 **Kind**: instance method of [<code>Api</code>](#Api)  
 **Returns**: <code>BotStats</code> - Passed object  
