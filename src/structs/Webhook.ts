@@ -64,7 +64,13 @@ export class Webhook {
    * app.post('/webhook', wh.listener((vote) => {
    *   console.log(vote.user) // => 395526710101278721
    * }))
-   * @param fn Vote handling function
+   * @param fn Vote handling function, this function can also throw an error to allow for the webhook to resend from Top.gg
+   * @example
+   * // Throwing an error to resend the webhook
+   * app.post('/webhook/', wh.listener((vote) => {
+   *   // for example, if your bot is offline, you should probably not handle votes and try again
+   *   if (bot.offline) throw new Error('Bot offline')
+   * }))
    * @returns An express request handler
    */
   public listener (fn: (payload: WebhookPayload, req?: Request, res?: Response, next?: NextFunction) => void | Promise<void>) {

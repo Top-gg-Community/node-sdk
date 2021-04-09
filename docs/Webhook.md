@@ -49,12 +49,20 @@ Listening function for handling webhook requests
 
 | Param | Description |
 | --- | --- |
-| fn | Vote handling function |
+| fn | Vote handling function, this function can also throw an error to allow for the webhook to resend from Top.gg |
 
 **Example**  
 ```js
 app.post('/webhook', wh.listener((vote) => {
   console.log(vote.user) // => 395526710101278721
+}))
+```
+**Example**  
+```js
+// Throwing an error to resend the webhook
+app.post('/webhook/', wh.listener((vote) => {
+  // for example, if your bot is offline, you should probably not handle votes and try again
+  if (bot.offline) throw new Error('Bot offline')
 }))
 ```
 <a name="Webhook+middleware"></a>
