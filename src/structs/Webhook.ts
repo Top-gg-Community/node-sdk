@@ -5,6 +5,14 @@ import { Request, Response, NextFunction } from 'express'
 
 import { WebhookPayload } from '../typings'
 
+export interface WebhookOptions {
+  /**
+   * Handles an error created by the function passed to Webhook.listener()
+   * @default console.error
+   */
+  error?: (error: Error) => void | Promise<void>
+}
+
 /**
  * Top.gg Webhook
  * @example
@@ -26,18 +34,24 @@ import { WebhookPayload } from '../typings'
  * // Authorization: webhookauth123
  */
 export class Webhook {
+  public options: WebhookOptions
+
   /**
    * Create a new webhook client instance
    * @param authorization Webhook authorization to verify requests
    */
-  constructor (private authorization?: string) {}
+  constructor (private authorization?: string, options: WebhookOptions = {}) {
+    this.options = {
+      error: options.error ?? console.error
+    }
+  }
 
   private _formatIncoming (body): WebhookPayload {
     if (body?.query?.length > 0) body.query = qs.parse(body.query.substr(1))
     return body
   }
 
-  private _parseRequest (req, res): Promise<WebhookPayload|false> {
+  private _parseRequest (req: Request, res: Response): Promise<WebhookPayload|false> {
     return new Promise(resolve => {
       if (this.authorization && req.headers.authorization !== this.authorization) return res.status(403).json({ error: 'Unauthorized' })
       // parse json
@@ -83,7 +97,8 @@ export class Webhook {
       try {
         await fn(response, req, res, next)
       } catch (err) {
-        console.error(err)
+        this.options.error(err)
+
         res.sendStatus(500)
       }
     }
