@@ -92,10 +92,12 @@ export class Webhook {
       const response = await this._parseRequest(req, res)
       if (!response) return
 
-      res.sendStatus(204)
-
       try {
         await fn(response, req, res, next)
+
+        if (!res.headersSent) {
+          res.sendStatus(204)
+        }
       } catch (err) {
         this.options.error(err)
 
