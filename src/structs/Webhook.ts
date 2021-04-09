@@ -1,6 +1,8 @@
 import getBody from 'raw-body'
 import qs from 'querystring'
 
+import { Request, Response, NextFunction } from 'express'
+
 import { WebhookPayload } from '../typings'
 
 /**
@@ -12,10 +14,10 @@ import { WebhookPayload } from '../typings'
  * const app = express()
  * const wh = new Webhook('webhookauth123')
  * 
- * app.post('/dblwebhook', wh.middleware(), (req, res) => {
- *   // req.vote is your vote object e.g
- *   console.log(req.vote.user) // => 321714991050784770
- * })
+ * app.post('/dblwebhook', wh.listener(vote => {
+ *   // vote is your vote object e.g
+ *   console.log(vote.user) // => 321714991050784770
+ * }))
  * 
  * app.listen(80)
  * 
@@ -57,7 +59,33 @@ export class Webhook {
   }
 
   /**
-   * Middleware function to pass to express, sets req.vote to the payload
+   * Listening function for handling webhook requests
+   * @example
+   * app.post('/webhook', wh.listener((vote) => {
+   *   console.log(vote.user) // => 395526710101278721
+   * }))
+   * @param fn Vote handling function
+   * @returns An express request handler
+   */
+  public listener (fn: (payload: WebhookPayload, req?: Request, res?: Response, next?: NextFunction) => void | Promise<void>) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      const response = await this._parseRequest(req, res)
+      if (!response) return
+
+      res.sendStatus(204)
+
+      try {
+        await fn(response, req, res, next)
+      } catch (err) {
+        console.error(err)
+        res.sendStatus(500)
+      }
+    }
+  }
+
+  /**
+   * (Use the new .listener() function) Middleware function to pass to express, sets req.vote to the payload
+   * @deprecated
    * @example
    * app.post('/dblwebhook', wh.middleware(), (req, res) => {
    *   // req.vote is your payload e.g

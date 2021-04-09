@@ -57,10 +57,10 @@ const app = express() // Your express app
 
 const webhook = new Topgg.Webhook('topggauth123') // add your top.gg webhook authorization (not bot token)
 
-app.post('/dblwebhook', webhook.middleware(), (req, res) => {
-  // req.vote is your vote object e.g
-  console.log(req.vote.user) // 221221226561929217
-}) // attach the middleware
+app.post('/dblwebhook', webhook.listener(vote => {
+  // vote is your vote object
+  console.log(vote.user) // 221221226561929217
+})) // attach the middleware
 
 app.listen(3000) // your port
 ```
