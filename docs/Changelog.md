@@ -2,6 +2,10 @@
 
 # Change Log
 
+## 3.1.0
+
+  - Added Webhook.listener() to replace Webhook.middleware()
+
 ## 3.0.9
   - A change to how typings are used, properly exports via dist/typings
 
