@@ -1,11 +1,10 @@
 {
   "name": "@top-gg/sdk",
-  "version": "3.1.2",
+  "version": "3.1.1",
   "description": "Official Top.gg Node SDK",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "npm ci && rm -rf ./dist && tsc",
-    "build2": "npm ci && del /f dist && tsc",
+    "build": "npm ci && del /f dist && tsc",
     "docs": "npm run build && npm run md",
     "md": "jsdoc2md ./dist/structs/Api.js > ./docs/Api.md && jsdoc2md ./dist/structs/Webhook.js > ./docs/Webhook.md",
     "prepublishOnly": "npm run build"
