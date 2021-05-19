@@ -1,4 +1,4 @@
-impost { Client } from "discord.js";
+import { Client } from "discord.js";
 import { Api } from "./Api";
 
 export class Autopost {
