@@ -28,6 +28,7 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
+    "discord.js": "^12.5.3",
     "node-fetch": "^2.6.1",
     "raw-body": "^2.4.1"
   },
