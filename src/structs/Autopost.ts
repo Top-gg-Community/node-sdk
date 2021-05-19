@@ -1,10 +1,10 @@
-import { Client } from "discord.js";
-import { Api } from "./Api";
+import { Client } from "discord.js"
+import { Api } from "./Api"
 
 export class Autopost {
     private _api: Api; //topgg api
     private readonly _client: Client; //Discord.js Client
-    private readonly _interval: number; //The interval for posting requests
+    private readonly _interval: number; //The interval for posting requests in ms
     
     constructor (apiToken: string, botClient: Client, intervalTime?: number){
         //ApiToken is the Token you get from top.gg bot dashboard
@@ -19,7 +19,7 @@ export class Autopost {
         }
         this._interval = intervalTime;
     }
-    public init(){
+    public init(): void {
         setInterval(() => {
             if(!this._client.options.shardCount || this._client.options.shardCount <= 1){ //Not sharding on only one shard
                 this._api.postStats({ //Post the status using _api

@@ -50,13 +50,15 @@ Post bot stats to Top.gg
 | stats.shardCount | <code>number</code> | Shard count |
 | stats.shardId | <code>number</code> | Posting shard (useful for process sharding) |
 
-**Example**  
+**Example**
+  
 ```js
 await api.postStats({
   serverCount: 28199,
   shardCount: 1
 })
 ```
+
 <a name="Api+getStats"></a>
 
 ### api.getStats(id) ⇒ <code>BotStats</code>
