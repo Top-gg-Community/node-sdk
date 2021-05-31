@@ -1,6 +1,5 @@
 import fetch, { Headers } from 'node-fetch'
 import ApiError from '../utils/ApiError'
-import qs from 'querystring'
 import { EventEmitter } from 'events'
 
 import { Snowflake, BotStats, BotInfo, UserInfo, BotsResponse, ShortUser, BotsQuery } from '../typings'
@@ -43,8 +42,7 @@ export class Api extends EventEmitter {
 
     let url = `https://top.gg/api/${path}`
 
-    // @ts-ignore querystring typings are messed
-    if (body && method === 'GET') url += `?${qs.stringify(body)}`
+    if (body && method === 'GET') url += `?${new URLSearchParams(body)}`
 
     const response = await fetch(url, {
       method,
