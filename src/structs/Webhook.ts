@@ -1,5 +1,4 @@
 import getBody from 'raw-body'
-import qs from 'querystring'
 
 import { Request, Response, NextFunction } from 'express'
 
@@ -47,7 +46,7 @@ export class Webhook {
   }
 
   private _formatIncoming (body): WebhookPayload {
-    if (body?.query?.length > 0) body.query = qs.parse(body.query.substr(1))
+    if (body?.query?.length > 0) body.query = Object.fromEntries(new URLSearchParams(body.query.substr(1)))
     return body
   }
 
