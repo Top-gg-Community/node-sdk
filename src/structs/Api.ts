@@ -42,7 +42,6 @@ export class Api extends EventEmitter {
 
     let url = `https://top.gg/api/${path}`
 
-    // @ts-ignore URLSearchParams typings are records but the value here is a string.
     if (body && method === 'GET') url += `?${new URLSearchParams(body)}`
 
     const response = await fetch(url, {
