@@ -70,7 +70,7 @@ export class Api extends EventEmitter {
     }
 
     if (!response.ok) {
-      throw new ApiError(response.status, response.statusText);
+      throw new ApiError(response.status, response.statusText, response);
     }
 
     return responseBody;
