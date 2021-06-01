@@ -8,7 +8,9 @@
     "docs": "npm run build && npm run md",
     "md": "jsdoc2md ./dist/structs/Api.js > ./docs/Api.md && jsdoc2md ./dist/structs/Webhook.js > ./docs/Webhook.md",
     "prepublishOnly": "npm run build",
-    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet"
+    "lint": "eslint '*/**/*.ts'",
+    "lint:ci": "eslint --output-file eslint_report.json --format json '*/**/*.ts'",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -41,15 +43,5 @@
     "node-fetch": "^2.6.1",
     "raw-body": "^2.4.1"
   },
-  "types": "./dist/index.d.ts",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix"
-    ]
-  }
+  "types": "./dist/index.d.ts"
 }

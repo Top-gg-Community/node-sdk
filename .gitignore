@@ -105,3 +105,4 @@ typings/
 .tern-port
 package-lock.json
 yarn.lock
+eslint_report.json

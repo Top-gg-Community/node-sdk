@@ -131,10 +131,15 @@ export class Webhook {
    * })
    */
   public middleware() {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ): Promise<void> => {
       const response = await this._parseRequest(req, res);
       if (!response) return;
       res.sendStatus(204);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore deprecated unsafe assignment
       req.vote = response;
       next();
