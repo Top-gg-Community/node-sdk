@@ -59,7 +59,7 @@ export class Api extends EventEmitter {
     const response = await fetch(url, {
       method,
       headers,
-      body: body && method !== "GET" ? JSON.stringify(body) : null,
+      body: body && method !== "GET" ? JSON.stringify(body) : undefined,
     });
 
     let responseBody;
