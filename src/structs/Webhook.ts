@@ -46,7 +46,7 @@ export class Webhook {
   private _formatIncoming(
     body: WebhookPayload & { query: string }
   ): WebhookPayload {
-    let out: WebhookPayload = { ...body };
+    const out: WebhookPayload = { ...body };
     if (body?.query?.length > 0)
       out.query = Object.fromEntries(new URLSearchParams(body.query));
     return out;
@@ -103,7 +103,11 @@ export class Webhook {
       next?: NextFunction
     ) => void | Promise<void>
   ) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ): Promise<void> => {
       const response = await this._parseRequest(req, res);
       if (!response) return;
 

@@ -92,11 +92,13 @@ export class Api extends EventEmitter {
   public async postStats(stats: BotStats): Promise<BotStats> {
     if (!stats || !stats.serverCount) throw new Error("Missing Server Count");
 
+    /* eslint-disable camelcase */
     await this._request("POST", "/bots/stats", {
       server_count: stats.serverCount,
       shard_id: stats.shardId,
       shard_count: stats.shardCount,
     });
+    /* eslint-enable camelcase */
 
     return stats;
   }
