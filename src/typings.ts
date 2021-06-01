@@ -298,7 +298,7 @@ export interface WebhookPayload {
     | string;
 }
 
-declare namespace Express {
+declare module "express" {
   export interface Request {
     vote?: WebhookPayload;
   }

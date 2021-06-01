@@ -4,13 +4,14 @@
   "description": "Official Top.gg Node SDK",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "npm ci && tsc",
+    "build": "tsc",
+    "build:ci": "npm ci && tsc",
     "docs": "npm run build && npm run md",
     "md": "jsdoc2md ./dist/structs/Api.js > ./docs/Api.md && jsdoc2md ./dist/structs/Webhook.js > ./docs/Webhook.md",
     "prepublishOnly": "npm run build",
     "lint": "eslint '*/**/*.ts'",
     "lint:ci": "eslint --output-file eslint_report.json --format json '*/**/*.ts'",
-    "prepare": "husky install"
+    "prepare": "npx husky install"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,7 @@
     "express": "^4.17.1",
     "husky": "^6.0.0",
     "jsdoc-to-markdown": "^7.0.1",
+    "lint-staged": "^11.0.0",
     "prettier": "^2.3.0",
     "typescript": "^4.2.4"
   },

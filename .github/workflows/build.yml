@@ -31,7 +31,7 @@ jobs:
           node-version: ${{ matrix.node }}
           registry-url: https://registry.npmjs.org/
       - name: Compile typescript
-        run: npm run build
+        run: npm run build:ci
       - name: Lint typescript
         run: npm run lint
       - name: Annotate Code Linting Results
