@@ -46,7 +46,7 @@ export class Webhook {
   }
 
   private _formatIncoming (body): WebhookPayload {
-    if (body?.query?.length > 0) body.query = Object.fromEntries(new URLSearchParams(body.query.substr(1)))
+    if (body?.query?.length > 0) body.query = Object.fromEntries(new URLSearchParams(body.query))
     return body
   }
 
