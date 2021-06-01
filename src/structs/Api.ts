@@ -35,7 +35,7 @@ export class Api extends EventEmitter {
     }
   }
 
-  private async _request (method: string, path: string, body?: {}): Promise<any> {
+  private async _request (method: string, path: string, body?: Record<string, any>): Promise<any> {
     const headers = new Headers()
     if (this.options.token) headers.set('Authorization', this.options.token)
     if (method !== 'GET') headers.set('Content-Type', 'application/json')
