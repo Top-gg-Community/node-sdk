@@ -33,4 +33,4 @@ jobs:
       - name: Compile typescript
         run: npm run build
       - name: Lint typescript
-        name: npm run lint
+        run: npm run lint
