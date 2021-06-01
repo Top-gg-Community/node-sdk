@@ -1,6 +1,5 @@
 import fetch, { Headers } from 'node-fetch'
 import ApiError from '../utils/ApiError'
-import qs from 'querystring'
 import { EventEmitter } from 'events'
 
 import { Snowflake, BotStats, BotInfo, UserInfo, BotsResponse, ShortUser, BotsQuery } from '../typings'
@@ -36,15 +35,14 @@ export class Api extends EventEmitter {
     }
   }
 
-  private async _request (method: string, path: string, body?: object): Promise<any> {
+  private async _request (method: string, path: string, body?: Record<string, any>): Promise<any> {
     const headers = new Headers()
     if (this.options.token) headers.set('Authorization', this.options.token)
     if (method !== 'GET') headers.set('Content-Type', 'application/json')
 
     let url = `https://top.gg/api/${path}`
 
-    // @ts-ignore querystring typings are messed
-    if (body && method === 'GET') url += `?${qs.stringify(body)}`
+    if (body && method === 'GET') url += `?${new URLSearchParams(body)}`
 
     const response = await fetch(url, {
       method,
