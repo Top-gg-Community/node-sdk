@@ -32,3 +32,5 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - name: Compile typescript
         run: npm run build
+      - name: Lint typescript
+        name: npm run lint

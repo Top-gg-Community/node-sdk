@@ -1,152 +1,152 @@
 /**
  * Discord ID
  */
-export type Snowflake = string
+export type Snowflake = string;
 
 export interface BotInfo {
   /**
    * The id of the bot
    */
-  id: Snowflake
+  id: Snowflake;
   /**
    * The username of the bot
    */
-  username: string
+  username: string;
   /**
    * The discriminator of the bot
    */
-  discriminator: string
+  discriminator: string;
   /**
    * The avatar hash of the bot's avatar
    */
-  avatar?: string
+  avatar?: string;
   /**
    * The cdn hash of the bot's avatar if the bot has none
    */
-  defAvatar: string
+  defAvatar: string;
   /**
    * The URL for the banner image
    */
-  bannerUrl?: string
+  bannerUrl?: string;
   /**
    * The library of the bot
    * @deprecated
    */
-  lib: string
+  lib: string;
   /**
    * The prefix of the bot
    */
-  prefix: string
+  prefix: string;
   /**
    * The short description of the bot
    */
-  shortdesc: string
+  shortdesc: string;
   /**
    * The long description of the bot. Can contain HTML and/or Markdown
    */
-  longdesc: string
+  longdesc: string;
   /**
    * The tags of the bot
    */
-  tags: string[]
+  tags: string[];
   /**
    * The website url of the bot
    */
-  website?: string
+  website?: string;
   /**
    * The support server invite code of the bot
    */
-  support?: string
+  support?: string;
   /**
    * The link to the github repo of the bot
    */
-  github?: string
+  github?: string;
   /**
    * The owners of the bot. First one in the array is the main owner
    */
-  owners: Snowflake[]
+  owners: Snowflake[];
   /**
    * The guilds featured on the bot page
    */
-  guilds: Snowflake[]
+  guilds: Snowflake[];
   /**
    * The custom bot invite url of the bot
    */
-  invite?: string
+  invite?: string;
   /**
    * The date when the bot was approved (in ISO 8601)
    */
-  date: string
+  date: string;
   /**
    * The certified status of the bot
    */
-  certifiedBot: boolean
+  certifiedBot: boolean;
   /**
    * 	The vanity url of the bot
    */
-  vanity?: string
+  vanity?: string;
   /**
    * The amount of upvotes the bot has
    */
-  points: number
+  points: number;
   /**
    * The amount of upvotes the bot has this month
    */
-  monthlyPoints: number
+  monthlyPoints: number;
   /**
    * The guild id for the donatebot setup
    */
-  donatebotguildid: Snowflake
+  donatebotguildid: Snowflake;
 }
 
 export interface BotStats {
   /**
    * The amount of servers the bot is in
    */
-  serverCount?: number
+  serverCount?: number;
   /**
    * The amount of servers the bot is in per shard. Always present but can be empty. (Only when receiving stats)
    */
-  shards?: number[]
+  shards?: number[];
   /**
    * The shard ID to post as (only when posting)
    */
-  shardId?: number
+  shardId?: number;
   /**
    * The amount of shards a bot has
    */
-  shardCount?: number
+  shardCount?: number;
 }
 
 export interface UserInfo {
   /**
    * The id of the user
    */
-  id: Snowflake
+  id: Snowflake;
   /**
    * The username of the user
    */
-  username: string
+  username: string;
   /**
    * The discriminator of the user
    */
-  discriminator: string
+  discriminator: string;
   /**
    * The avatar hash of the user's avatar
    */
-  avatar?: string
+  avatar?: string;
   /**
    * The cdn hash of the user's avatar if the user has none
    */
-  defAvatar: string
+  defAvatar: string;
   /**
    * The bio of the user
    */
-  bio?: string
+  bio?: string;
   /**
    * The banner image url of the user
    */
-  banner?: string
+  banner?: string;
   /**
    * The social usernames of the user
    */
@@ -154,148 +154,152 @@ export interface UserInfo {
     /**
      * The youtube channel id of the user
      */
-    youtube?: string
+    youtube?: string;
     /**
      * The reddit username of the user
      */
-    reddit?: string
+    reddit?: string;
     /**
      * The twitter username of the user
      */
-    twitter?: string
+    twitter?: string;
     /**
      * The instagram username of the user
      */
-    instagram?: string
+    instagram?: string;
     /**
      * The github username of the user
      */
-    github?: string
-  }
+    github?: string;
+  };
   /**
    * The custom hex color of the user
    */
-  color: string
+  color: string;
   /**
    * The supporter status of the user
    */
-  supporter: boolean
+  supporter: boolean;
   /**
    * The certified status of the user
    */
-  certifiedDev: boolean
+  certifiedDev: boolean;
   /**
    * The mod status of the user
    */
-  mod: boolean
+  mod: boolean;
   /**
    * The website moderator status of the user
    */
-  webMod: boolean
+  webMod: boolean;
   /**
    * The admin status of the user
    */
-  admin: boolean
+  admin: boolean;
 }
 
 export interface BotsQuery {
   /**
    * The amount of bots to return. Max. 500
    */
-  limit?: number
+  limit?: number;
   /**
    * Amount of bots to skip
    */
-  offset?: number
+  offset?: number;
   /**
    * A search string in the format of "field: value field2: value2"
    */
-  search?: {
-    [key in keyof BotInfo]: string
-  }|string
+  search?:
+    | {
+        [key in keyof BotInfo]: string;
+      }
+    | string;
   /**
    * The field to sort by. Prefix with "-"" to reverse the order
    */
-  sort?: string
+  sort?: string;
   /**
    * A list of fields to show.
    */
-  fields?: string[]|string
+  fields?: string[] | string;
 }
 
 export interface BotsResponse {
   /**
    * The matching bots
    */
-  results: BotInfo[]
+  results: BotInfo[];
   /**
    * The limit used
    */
-  limit: number
+  limit: number;
   /**
    * The offset used
    */
-  offset: number
+  offset: number;
   /**
    * The length of the results array
    */
-  count: number
+  count: number;
   /**
    * The total number of bots matching your search
    */
-  total: number
+  total: number;
 }
 
 export interface ShortUser {
   /**
    * User's ID
    */
-  id: Snowflake
+  id: Snowflake;
   /**
    * User's username
    */
-  username: string
+  username: string;
   /**
    * User's discriminator
    */
-  discriminator: string
+  discriminator: string;
   /**
    * User's avatar hash
    */
-  avatar: string
+  avatar: string;
 }
 
 export interface WebhookPayload {
   /**
    * If webhook is a bot: ID of the bot that received a vote
    */
-  bot?: Snowflake
+  bot?: Snowflake;
   /**
    * If webhook is a server: ID of the server that received a vote
    */
-  guild?: Snowflake
+  guild?: Snowflake;
   /**
    * ID of the user who voted
    */
-  user: Snowflake
+  user: Snowflake;
   /**
    * The type of the vote (should always be "upvote" except when using the test button it's "test")
    */
-  type: string
+  type: string;
   /**
    * Whether the weekend multiplier is in effect, meaning users votes count as two
    */
-  isWeekend?: boolean
+  isWeekend?: boolean;
   /**
    * Query parameters in vote page in a key to value object
    */
-  query: {
-    [key: string]: string
-  }|string
+  query:
+    | {
+        [key: string]: string;
+      }
+    | string;
 }
 
-namespace Express {
+declare namespace Express {
   export interface Request {
-    vote?: WebhookPayload
+    vote?: WebhookPayload;
   }
 }

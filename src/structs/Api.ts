@@ -1,14 +1,22 @@
-import fetch, { Headers } from 'node-fetch'
-import ApiError from '../utils/ApiError'
-import { EventEmitter } from 'events'
+import fetch, { Headers } from "node-fetch";
+import ApiError from "../utils/ApiError";
+import { EventEmitter } from "events";
 
-import { Snowflake, BotStats, BotInfo, UserInfo, BotsResponse, ShortUser, BotsQuery } from '../typings'
+import {
+  Snowflake,
+  BotStats,
+  BotInfo,
+  UserInfo,
+  BotsResponse,
+  ShortUser,
+  BotsQuery,
+} from "../typings";
 
 interface APIOptions {
   /**
    * Top.gg Token
    */
-  token?: string
+  token?: string;
 }
 
 /**
@@ -21,47 +29,51 @@ interface APIOptions {
  * @link https://docs.top.gg <- API Reference
  */
 export class Api extends EventEmitter {
-  private options: APIOptions
+  private options: APIOptions;
   /**
    * Create Top.gg API instance
    * @param {string} token Token or options
-   * @param {object?} options API Options 
+   * @param {object?} options API Options
    */
-  constructor (token: string, options: APIOptions = {}) {
-    super()
+  constructor(token: string, options: APIOptions = {}) {
+    super();
     this.options = {
       token: token,
-      ...options
-    }
+      ...options,
+    };
   }
 
-  private async _request (method: string, path: string, body?: Record<string, any>): Promise<any> {
-    const headers = new Headers()
-    if (this.options.token) headers.set('Authorization', this.options.token)
-    if (method !== 'GET') headers.set('Content-Type', 'application/json')
+  private async _request(
+    method: string,
+    path: string,
+    body?: Record<string, any>
+  ): Promise<any> {
+    const headers = new Headers();
+    if (this.options.token) headers.set("Authorization", this.options.token);
+    if (method !== "GET") headers.set("Content-Type", "application/json");
 
-    let url = `https://top.gg/api/${path}`
+    let url = `https://top.gg/api/${path}`;
 
-    if (body && method === 'GET') url += `?${new URLSearchParams(body)}`
+    if (body && method === "GET") url += `?${new URLSearchParams(body)}`;
 
     const response = await fetch(url, {
       method,
       headers,
-      body: body && method !== 'GET' ? JSON.stringify(body) : null
-    })
+      body: body && method !== "GET" ? JSON.stringify(body) : null,
+    });
 
-    let responseBody 
-    if (response.headers.get('Content-Type')?.startsWith('application/json')) {
-      responseBody = await response.json()
+    let responseBody;
+    if (response.headers.get("Content-Type")?.startsWith("application/json")) {
+      responseBody = await response.json();
     } else {
-      responseBody = await response.text()
+      responseBody = await response.text();
     }
 
     if (!response.ok) {
-      throw new ApiError(response.status, response.statusText, responseBody)
+      throw new ApiError(response.status, response.statusText, responseBody);
     }
 
-    return responseBody
+    return responseBody;
   }
 
   /**
@@ -73,21 +85,21 @@ export class Api extends EventEmitter {
    * @returns {BotStats} Passed object
    * @example
    * await api.postStats({
-   *   serverCount: 28199, 
+   *   serverCount: 28199,
    *   shardCount: 1
    * })
    */
-  public async postStats (stats: BotStats): Promise<BotStats> {
-    if (!stats || !stats.serverCount) throw new Error('Missing Server Count')
+  public async postStats(stats: BotStats): Promise<BotStats> {
+    if (!stats || !stats.serverCount) throw new Error("Missing Server Count");
 
-    await this._request('POST', '/bots/stats', {
+    await this._request("POST", "/bots/stats", {
       server_count: stats.serverCount,
       shard_id: stats.shardId,
-      shard_count: stats.shardCount
-    })
+      shard_count: stats.shardCount,
+    });
 
-    return stats
-  } 
+    return stats;
+  }
 
   /**
    * Get a bots stats
@@ -102,14 +114,14 @@ export class Api extends EventEmitter {
    *   shards: []
    * }
    */
-  public async getStats (id: Snowflake): Promise<BotStats> {
-    if (!id) throw new Error('ID missing')
-    const result = await this._request('GET', `/bots/${id}/stats`)
+  public async getStats(id: Snowflake): Promise<BotStats> {
+    if (!id) throw new Error("ID missing");
+    const result = await this._request("GET", `/bots/${id}/stats`);
     return {
       serverCount: result.server_count,
       shardCount: result.shard_count,
-      shards: result.shards
-    }
+      shards: result.shards,
+    };
   }
 
   /**
@@ -119,9 +131,9 @@ export class Api extends EventEmitter {
    * @example
    * await api.getBot('461521980492087297') // returns bot info
    */
-  public async getBot (id: Snowflake): Promise<BotInfo> {
-    if (!id) throw new Error('ID Missing')
-    return this._request('GET', `/bots/${id}`)
+  public async getBot(id: Snowflake): Promise<BotInfo> {
+    if (!id) throw new Error("ID Missing");
+    return this._request("GET", `/bots/${id}`);
   }
 
   /**
@@ -133,9 +145,9 @@ export class Api extends EventEmitter {
    * // =>
    * user.username // Xignotic
    */
-  public async getUser (id: Snowflake): Promise<UserInfo> {
-    if (!id) throw new Error('ID Missing')
-    return this._request('GET', `/users/${id}`)
+  public async getUser(id: Snowflake): Promise<UserInfo> {
+    if (!id) throw new Error("ID Missing");
+    return this._request("GET", `/users/${id}`);
   }
 
   /**
@@ -188,15 +200,16 @@ export class Api extends EventEmitter {
    *   ...
    * }
    */
-  public async getBots (query?: BotsQuery): Promise<BotsResponse> {
+  public async getBots(query?: BotsQuery): Promise<BotsResponse> {
     if (query) {
-      if (query.fields instanceof Array) query.fields = query.fields.join(', ')
+      if (query.fields instanceof Array) query.fields = query.fields.join(", ");
       if (query.search instanceof Object) {
         query.search = Object.entries(query.search)
-          .map(([key, value]) => `${key}: ${value}`).join(' ')
+          .map(([key, value]) => `${key}: ${value}`)
+          .join(" ");
       }
     }
-    return this._request('GET', '/bots', query)
+    return this._request("GET", "/bots", query);
   }
 
   /**
@@ -204,7 +217,7 @@ export class Api extends EventEmitter {
    * @returns {ShortUser[]} Array of users who've voted
    * @example
    * await api.getVotes()
-   * // => 
+   * // =>
    * [
    *   {
    *     username: 'Xignotic',
@@ -221,9 +234,9 @@ export class Api extends EventEmitter {
    *   ...more
    * ]
    */
-  public async getVotes (): Promise<ShortUser[]> {
-    if (!this.options.token) throw new Error('Missing token')
-    return this._request('GET', '/bots/votes')
+  public async getVotes(): Promise<ShortUser[]> {
+    if (!this.options.token) throw new Error("Missing token");
+    return this._request("GET", "/bots/votes");
   }
 
   /**
@@ -235,8 +248,10 @@ export class Api extends EventEmitter {
    * // => true/false
    */
   public async hasVoted(id: Snowflake): Promise<boolean> {
-    if (!id) throw new Error('Missing ID')
-    return this._request('GET', '/bots/check', { userId: id }).then(x => !!x.voted)
+    if (!id) throw new Error("Missing ID");
+    return this._request("GET", "/bots/check", { userId: id }).then(
+      (x) => !!x.voted
+    );
   }
 
   /**
@@ -246,7 +261,7 @@ export class Api extends EventEmitter {
    * await api.isWeekend()
    * // => true/false
    */
-  public async isWeekend (): Promise<boolean> {
-    return this._request('GET', '/weekend').then(x => x.is_weekend)
+  public async isWeekend(): Promise<boolean> {
+    return this._request("GET", "/weekend").then((x) => x.is_weekend);
   }
 }
