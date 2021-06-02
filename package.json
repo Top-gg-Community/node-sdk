@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc",
-    "build:ci": "npm ci && tsc",
+    "build:ci": "npm i --also=dev && tsc",
     "docs": "npm run build && npm run md",
     "md": "jsdoc2md ./dist/structs/Api.js > ./docs/Api.md && jsdoc2md ./dist/structs/Webhook.js > ./docs/Webhook.md",
     "prepublishOnly": "npm run build",
