@@ -9,7 +9,7 @@
     "docs": "npm run build && npm run md",
     "md": "jsdoc2md ./dist/structs/Api.js > ./docs/Api.md && jsdoc2md ./dist/structs/Webhook.js > ./docs/Webhook.md",
     "prepublishOnly": "npm run build",
-    "lint": "eslint '*/**/*.ts'",
+    "lint": "eslint 'src/*/**/*.ts'",
     "lint:ci": "eslint --output-file eslint_report.json --format json '*/**/*.ts'",
     "prepare": "npx husky install"
   },
