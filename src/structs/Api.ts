@@ -22,10 +22,12 @@ interface APIOptions {
 /**
  * Top.gg API Client for Posting stats or Fetching data
  * @example
+ * ```js
  * const Topgg = require(`@top-gg/sdk`)
  *
  * const api = new Topgg.Api('Your top.gg token')
- * @link https://topggjs.rtfd.io <- Library docs
+ * ```
+ * @link https://topgg.js.org <- Library docs
  * @link https://docs.top.gg <- API Reference
  */
 export class Api extends EventEmitter {
@@ -84,10 +86,12 @@ export class Api extends EventEmitter {
    * @param {number?} stats.shardId Posting shard (useful for process sharding)
    * @returns {BotStats} Passed object
    * @example
+   * ```js
    * await api.postStats({
    *   serverCount: 28199,
    *   shardCount: 1
    * })
+   * ```
    */
   public async postStats(stats: BotStats): Promise<BotStats> {
     if (!stats || !stats.serverCount) throw new Error("Missing Server Count");
@@ -108,6 +112,7 @@ export class Api extends EventEmitter {
    * @param {Snowflake} id Bot ID
    * @returns {BotStats} Stats of bot requested
    * @example
+   * ```js
    * await api.getStats('461521980492087297')
    * // =>
    * {
@@ -115,6 +120,7 @@ export class Api extends EventEmitter {
    *   shardCount 1,
    *   shards: []
    * }
+   * ```
    */
   public async getStats(id: Snowflake): Promise<BotStats> {
     if (!id) throw new Error("ID missing");
@@ -131,7 +137,9 @@ export class Api extends EventEmitter {
    * @param {Snowflake} id Bot ID
    * @returns {BotInfo} Info for bot
    * @example
+   * ```js
    * await api.getBot('461521980492087297') // returns bot info
+   * ```
    */
   public async getBot(id: Snowflake): Promise<BotInfo> {
     if (!id) throw new Error("ID Missing");
@@ -143,9 +151,11 @@ export class Api extends EventEmitter {
    * @param {Snowflake} id User ID
    * @returns {UserInfo} Info for user
    * @example
+   * ```js
    * await api.getUser('205680187394752512')
    * // =>
    * user.username // Xignotic
+   * ```
    */
   public async getUser(id: Snowflake): Promise<UserInfo> {
     if (!id) throw new Error("ID Missing");
@@ -157,6 +167,7 @@ export class Api extends EventEmitter {
    * @param {BotsQuery} query Bot Query
    * @returns {BotsResponse} Return response
    * @example
+   * ```js
    * // Finding by properties
    * await api.getBots({
    *   search: {
@@ -201,6 +212,7 @@ export class Api extends EventEmitter {
    *   ],
    *   ...
    * }
+   * ```
    */
   public async getBots(query?: BotsQuery): Promise<BotsResponse> {
     if (query) {
@@ -218,6 +230,7 @@ export class Api extends EventEmitter {
    * Get users who've voted
    * @returns {ShortUser[]} Array of users who've voted
    * @example
+   * ```js
    * await api.getVotes()
    * // =>
    * [
@@ -235,6 +248,7 @@ export class Api extends EventEmitter {
    *   }
    *   ...more
    * ]
+   * ```
    */
   public async getVotes(): Promise<ShortUser[]> {
     if (!this.options.token) throw new Error("Missing token");
@@ -246,8 +260,10 @@ export class Api extends EventEmitter {
    * @param {Snowflake} id User ID
    * @returns {Boolean} Whether the user has voted in the last 12 hours
    * @example
+   * ```js
    * await api.hasVoted('205680187394752512')
    * // => true/false
+   * ```
    */
   public async hasVoted(id: Snowflake): Promise<boolean> {
     if (!id) throw new Error("Missing ID");
@@ -260,8 +276,10 @@ export class Api extends EventEmitter {
    * Whether or not the weekend multiplier is active
    * @returns {Boolean} Whether the multiplier is active
    * @example
+   * ```js
    * await api.isWeekend()
    * // => true/false
+   * ```
    */
   public async isWeekend(): Promise<boolean> {
     return this._request("GET", "/weekend").then((x) => x.is_weekend);

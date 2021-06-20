@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "build:ci": "npm i --also=dev && tsc",
-    "docs": "npm run build && npm run md",
+    "docs": "typedoc",
     "md": "jsdoc2md ./dist/structs/Api.js > ./docs/Api.md && jsdoc2md ./dist/structs/Webhook.js > ./docs/Webhook.md",
     "prepublishOnly": "npm run build",
     "lint": "eslint src/**/*.ts",
@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/top-gg/node-sdk/issues"
   },
-  "homepage": "https://topggjs.rtfd.io",
+  "homepage": "https://topgg.js.org",
   "devDependencies": {
     "@top-gg/eslint-config": "^0.0.2",
     "@types/express": "^4.17.11",
@@ -38,6 +38,7 @@
     "jsdoc-to-markdown": "^7.0.1",
     "lint-staged": "^11.0.0",
     "prettier": "^2.3.0",
+    "typedoc": "^0.21.0",
     "typescript": "^4.2.4"
   },
   "dependencies": {
