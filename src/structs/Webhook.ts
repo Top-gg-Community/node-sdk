@@ -13,6 +13,7 @@ export interface WebhookOptions {
 /**
  * Top.gg Webhook
  * @example
+ * ```js
  * const express = require('express')
  * const { Webhook } = require(`@top-gg/sdk`)
  *
@@ -29,6 +30,9 @@ export interface WebhookOptions {
  * // In this situation, your TopGG Webhook dashboard should look like
  * // URL = http://your.server.ip:80/dblwebhook
  * // Authorization: webhookauth123
+ * ```
+ * @link {@link https://docs.top.gg/resources/webhooks/#schema | Webhook Data Schema}
+ * @link {@link https://docs.top.gg/resources/webhoooks | Webhook Documentation}
  */
 export class Webhook {
   public options: WebhookOptions;
@@ -83,16 +87,20 @@ export class Webhook {
   /**
    * Listening function for handling webhook requests
    * @example
+   * ```js
    * app.post('/webhook', wh.listener((vote) => {
    *   console.log(vote.user) // => 395526710101278721
    * }))
+   * ```
    * @param fn Vote handling function, this function can also throw an error to allow for the webhook to resend from Top.gg
    * @example
+   * ```js
    * // Throwing an error to resend the webhook
    * app.post('/webhook/', wh.listener((vote) => {
    *   // for example, if your bot is offline, you should probably not handle votes and try again
    *   if (bot.offline) throw new Error('Bot offline')
    * }))
+   * ```
    * @returns An express request handler
    */
   public listener(
@@ -126,13 +134,15 @@ export class Webhook {
   }
 
   /**
-   * (Use the new .listener() function) Middleware function to pass to express, sets req.vote to the payload
-   * @deprecated
+   * Middleware function to pass to express, sets req.vote to the payload
+   * @deprecated Use the new {@link Webhook.listener | .listener()} function
    * @example
+   * ```js
    * app.post('/dblwebhook', wh.middleware(), (req, res) => {
    *   // req.vote is your payload e.g
    *   console.log(req.vote.user) // => 395526710101278721
    * })
+   * ```
    */
   public middleware() {
     return async (

@@ -16,36 +16,26 @@ You can also setup webhooks via Topgg.Webhook, look down below at the examples f
 
 # Links
 
-[Documentation](https://topggjs.rtfd.io)
+[Documentation](https://topgg.js.org)
 
 [API Reference](https://docs.top.gg) | [GitHub](https://github.com/top-gg/node-sdk) | [NPM](https://npmjs.com/package/@top-gg/sdk) | [Discord Server](https://discord.gg/EYHTgJX)
-
-# Auto-Posting
-
-If you're looking for an easy way to post your bot's stats (server count, shard count), check out [`topgg-autoposter`](https://npmjs.com/package/topgg-autoposter)
 
 # Popular Examples
 
 ## Auto-Posting stats
 
-If you choose not to use [`topgg-autoposter`](https://npmjs.com/package/topgg-autoposter) you can always do it yourself manually;
+If you're looking for an easy way to post your bot's stats (server count, shard count), check out [`topgg-autoposter`](https://npmjs.com/package/topgg-autoposter)
 
 ```js
-const client = Discord.Client() // Your discord.js client
+const client = Discord.Client() // Your discord.js client or any other
+const { AutoPoster } = require('topgg-autoposter')
 
-const Topgg = require('@top-gg/sdk')
-
-const api = new Topgg.Api('Your top.gg token')
-
-setInterval(() => {
-  api.postStats({
-    serverCount: client.guilds.cache.size,
-    shardId: client.shard.ids[0], // if you're sharding
-    shardCount: client.options.shardCount
+AutoPoster('topgg-token', client)
+  .on('posted', () => {
+    console.log('Posted stats to Top.gg!')
   })
-}, 1800000) // post every 30 minutes
 ```
-With this your server count and shard count will be posted to top.<span>gg
+With this your server count and shard count will be posted to Top.<span>gg
 
 ## Webhook server
 
@@ -55,7 +45,7 @@ const Topgg = require('@top-gg/sdk')
 
 const app = express() // Your express app
 
-const webhook = new Topgg.Webhook('topggauth123') // add your top.gg webhook authorization (not bot token)
+const webhook = new Topgg.Webhook('topggauth123') // add your Top.gg webhook authorization (not bot token)
 
 app.post('/dblwebhook', webhook.listener(vote => {
   // vote is your vote object
