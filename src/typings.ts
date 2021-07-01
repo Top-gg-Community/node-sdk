@@ -1,7 +1,7 @@
 /**
  * Discord ID
  */
-export type Snowflake = `${bigint}`;
+export type Snowflake = string;
 
 export interface BotInfo {
   /**
