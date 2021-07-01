@@ -31,6 +31,8 @@ export interface WebhookOptions {
  * // URL = http://your.server.ip:80/dblwebhook
  * // Authorization: webhookauth123
  * ```
+ * @link {@link https://docs.top.gg/resources/webhooks/#schema | Webhook Data Schema}
+ * @link {@link https://docs.top.gg/resources/webhoooks | Webhook Documentation}
  */
 export class Webhook {
   public options: WebhookOptions;
@@ -132,8 +134,8 @@ export class Webhook {
   }
 
   /**
-   * (Use the new .listener() function) Middleware function to pass to express, sets req.vote to the payload
-   * @deprecated
+   * Middleware function to pass to express, sets req.vote to the payload
+   * @deprecated Use the new {@link Webhook.listener | .listener()} function
    * @example
    * ```js
    * app.post('/dblwebhook', wh.middleware(), (req, res) => {

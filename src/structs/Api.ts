@@ -27,8 +27,8 @@ interface APIOptions {
  *
  * const api = new Topgg.Api('Your top.gg token')
  * ```
- * @link https://topgg.js.org <- Library docs
- * @link https://docs.top.gg <- API Reference
+ * @link {@link https://topgg.js.org | Library docs}
+ * @link {@link https://docs.top.gg | API Reference}
  */
 export class Api extends EventEmitter {
   private options: APIOptions;
