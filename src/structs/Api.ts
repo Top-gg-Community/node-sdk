@@ -12,13 +12,6 @@ import {
   BotsQuery,
 } from "../typings";
 
-interface APIOptions {
-  /**
-   * Top.gg Token
-   */
-  token?: string;
-}
-
 /**
  * Top.gg API Client for Posting stats or Fetching data
  * @example
@@ -31,18 +24,13 @@ interface APIOptions {
  * @link {@link https://docs.top.gg | API Reference}
  */
 export class Api extends EventEmitter {
-  private options: APIOptions;
   /**
    * Create Top.gg API instance
-   * @param {string} token Token or options
-   * @param {object?} options API Options
+   * @param {string} token Your top.gg token
    */
-  constructor(token: string, options: APIOptions = {}) {
+  constructor(private token: string) {
     super();
-    this.options = {
-      token: token,
-      ...options,
-    };
+    if (!token) throw new TypeError("Expected token to be defined");
   }
 
   private async _request(
@@ -51,7 +39,7 @@ export class Api extends EventEmitter {
     body?: Record<string, any>
   ): Promise<any> {
     const headers = new Headers();
-    if (this.options.token) headers.set("Authorization", this.options.token);
+    if (this.token) headers.set("Authorization", this.token);
     if (method !== "GET") headers.set("Content-Type", "application/json");
 
     let url = `https://top.gg/api/${path}`;
@@ -251,7 +239,7 @@ export class Api extends EventEmitter {
    * ```
    */
   public async getVotes(): Promise<ShortUser[]> {
-    if (!this.options.token) throw new Error("Missing token");
+    if (!this.token) throw new Error("Missing token");
     return this._request("GET", "/bots/votes");
   }
 
