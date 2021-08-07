@@ -54,7 +54,7 @@ export class Api extends EventEmitter {
     if (this.options.token) headers.set("Authorization", this.options.token);
     if (method !== "GET") headers.set("Content-Type", "application/json");
 
-    let url = `https://top.gg/api/${path}`;
+    let url = `https://top.gg/api${path}`;
 
     if (body && method === "GET") url += `?${new URLSearchParams(body)}`;
 
