@@ -97,7 +97,7 @@ export class Api extends EventEmitter {
     if (!stats || !stats.serverCount) throw new Error("Missing Server Count");
 
     /* eslint-disable camelcase */
-    await this._request("POST", "/bots/stats", {
+    await this._request("POST", "bots/stats", {
       server_count: stats.serverCount,
       shard_id: stats.shardId,
       shard_count: stats.shardCount,
@@ -124,7 +124,7 @@ export class Api extends EventEmitter {
    */
   public async getStats(id: Snowflake): Promise<BotStats> {
     if (!id) throw new Error("ID missing");
-    const result = await this._request("GET", `/bots/${id}/stats`);
+    const result = await this._request("GET", `bots/${id}/stats`);
     return {
       serverCount: result.server_count,
       shardCount: result.shard_count,
@@ -143,7 +143,7 @@ export class Api extends EventEmitter {
    */
   public async getBot(id: Snowflake): Promise<BotInfo> {
     if (!id) throw new Error("ID Missing");
-    return this._request("GET", `/bots/${id}`);
+    return this._request("GET", `bots/${id}`);
   }
 
   /**
@@ -159,7 +159,7 @@ export class Api extends EventEmitter {
    */
   public async getUser(id: Snowflake): Promise<UserInfo> {
     if (!id) throw new Error("ID Missing");
-    return this._request("GET", `/users/${id}`);
+    return this._request("GET", `users/${id}`);
   }
 
   /**
@@ -223,7 +223,7 @@ export class Api extends EventEmitter {
           .join(" ");
       }
     }
-    return this._request("GET", "/bots", query);
+    return this._request("GET", "bots", query);
   }
 
   /**
@@ -252,7 +252,7 @@ export class Api extends EventEmitter {
    */
   public async getVotes(): Promise<ShortUser[]> {
     if (!this.options.token) throw new Error("Missing token");
-    return this._request("GET", "/bots/votes");
+    return this._request("GET", "bots/votes");
   }
 
   /**
@@ -267,7 +267,7 @@ export class Api extends EventEmitter {
    */
   public async hasVoted(id: Snowflake): Promise<boolean> {
     if (!id) throw new Error("Missing ID");
-    return this._request("GET", "/bots/check", { userId: id }).then(
+    return this._request("GET", "bots/check", { userId: id }).then(
       (x) => !!x.voted
     );
   }
@@ -282,6 +282,6 @@ export class Api extends EventEmitter {
    * ```
    */
   public async isWeekend(): Promise<boolean> {
-    return this._request("GET", "/weekend").then((x) => x.is_weekend);
+    return this._request("GET", "weekend").then((x) => x.is_weekend);
   }
 }
