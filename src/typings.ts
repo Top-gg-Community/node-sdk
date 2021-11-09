@@ -283,7 +283,7 @@ export interface WebhookPayload {
   /**
    * The type of the vote (should always be "upvote" except when using the test button it's "test")
    */
-  type: string;
+  type: "upvote" | "test";
   /**
    * Whether the weekend multiplier is in effect, meaning users votes count as two
    */
