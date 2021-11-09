@@ -39,6 +39,8 @@ With this your server count and shard count will be posted to Top.<span>gg
 
 ## Webhook server
 
+To get the full webhook payloads references check the [webhook documentation](https://docs.top.gg/resources/webhooks/#bot-webhooks)
+
 ```js
 const express = require('express')
 const Topgg = require('@top-gg/sdk')
