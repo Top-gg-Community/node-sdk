@@ -126,7 +126,7 @@ export class Webhook {
           res.sendStatus(204);
         }
       } catch (err) {
-        this.options.error?.(err);
+        if (err instanceof Error) this.options.error?.(err);
 
         res.sendStatus(500);
       }
