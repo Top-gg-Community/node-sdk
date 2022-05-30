@@ -8,6 +8,7 @@
     "target": "ES2019",
     "outDir": "./dist",
     "module": "commonjs",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true,
   }
 }
