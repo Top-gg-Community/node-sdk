@@ -1,4 +1,6 @@
-import { fetch, Headers } from "undici";
+import { request } from "undici";
+import { HttpMethod } from "undici/types/dispatcher";
+import { IncomingHttpHeaders } from "http";
 import ApiError from "../utils/ApiError";
 import { EventEmitter } from "events";
 
@@ -46,35 +48,37 @@ export class Api extends EventEmitter {
   }
 
   private async _request(
-    method: string,
+    method: HttpMethod,
     path: string,
     body?: Record<string, any>
   ): Promise<any> {
-    const headers = new Headers();
-    if (this.options.token) headers.set("Authorization", this.options.token);
-    if (method !== "GET") headers.set("Content-Type", "application/json");
+    const headers: IncomingHttpHeaders = {};
+    if (this.options.token) headers.authorization = this.options.token;
+    if (method !== "GET") headers["content-type"] = "application/json";
 
     let url = `https://top.gg/api${path}`;
 
     if (body && method === "GET") url += `?${new URLSearchParams(body)}`;
 
-    const response = await fetch(url, {
+    const response = await request(url, {
       method,
       headers,
       body: body && method !== "GET" ? JSON.stringify(body) : undefined,
     });
 
     let responseBody;
-    if (response.headers.get("Content-Type")?.startsWith("application/json")) {
-      responseBody = await response.json();
+    const contentType = response.headers["content-type"] as string | undefined;
+    if (contentType?.startsWith("application/json")) {
+      responseBody = await response.body.json();
     } else {
-      responseBody = await response.text();
+      responseBody = await response.body.text();
     }
 
-    if (!response.ok) {
-      throw new ApiError(response.status, response.statusText, response);
+    // ok: greater than or equal to 200 but smaller than 300.
+    if (!(response.statusCode >= 200 && response.statusCode < 300)) {
+      throw new ApiError(response.statusCode, response);
     }
-
+    
     return responseBody;
   }
 
