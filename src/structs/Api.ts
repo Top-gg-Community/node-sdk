@@ -1,4 +1,4 @@
-import fetch, { Headers } from "node-fetch";
+import { fetch, Headers } from "undici";
 import ApiError from "../utils/ApiError";
 import { EventEmitter } from "events";
 
