@@ -27,32 +27,36 @@ You can also setup webhooks via Topgg.Webhook, look down below at the examples f
 If you're looking for an easy way to post your bot's stats (server count, shard count), check out [`topgg-autoposter`](https://npmjs.com/package/topgg-autoposter)
 
 ```js
-const client = Discord.Client() // Your discord.js client or any other
-const { AutoPoster } = require('topgg-autoposter')
+const client = Discord.Client(); // Your discord.js client or any other
+const { AutoPoster } = require("topgg-autoposter");
 
-AutoPoster('topgg-token', client)
-  .on('posted', () => {
-    console.log('Posted stats to Top.gg!')
-  })
+AutoPoster("topgg-token", client).on("posted", () => {
+  console.log("Posted stats to Top.gg!");
+});
 ```
+
 With this your server count and shard count will be posted to Top.<span>gg
 
 ## Webhook server
 
 ```js
-const express = require('express')
-const Topgg = require('@top-gg/sdk')
+const express = require("express");
+const Topgg = require("@top-gg/sdk");
 
-const app = express() // Your express app
+const app = express(); // Your express app
 
-const webhook = new Topgg.Webhook('topggauth123') // add your Top.gg webhook authorization (not bot token)
+const webhook = new Topgg.Webhook("topggauth123"); // add your Top.gg webhook authorization (not bot token)
 
-app.post('/dblwebhook', webhook.listener(vote => {
-  // vote is your vote object
-  console.log(vote.user) // 221221226561929217
-})) // attach the middleware
+app.post(
+  "/dblwebhook",
+  webhook.listener((vote) => {
+    // vote is your vote object
+    console.log(vote.user); // 221221226561929217
+  })
+); // attach the middleware
 
-app.listen(3000) // your port
+app.listen(3000); // your port
 ```
+
 With this example, your webhook dashboard should look like this:
 ![](https://i.imgur.com/wFlp4Hg.png)

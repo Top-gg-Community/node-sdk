@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [12, 14]
+        node: [14, 16, 18]
     steps:
-      - uses: actions/checkout@master
-      - name: Cache node modules
-        uses: actions/cache@v2
+      - uses: actions/checkout@v3
+      - name: Cache node_modules
+        uses: actions/cache@v3
         env:
           cache-name: cache-node-modules
         with:
@@ -25,12 +25,13 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - name: Setup node
-        uses: actions/setup-node@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
+          check-latest: true
           registry-url: https://registry.npmjs.org/
-      - name: Compile typescript
+      - name: Compile TypeScript
         run: npm run build:ci
-      - name: Lint typescript
+      - name: Lint TypeScript
         run: npm run lint:ci
