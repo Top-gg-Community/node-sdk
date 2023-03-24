@@ -27,7 +27,7 @@ You can also setup webhooks via Topgg.Webhook, look down below at the examples f
 If you're looking for an easy way to post your bot's stats (server count, shard count), check out [`topgg-autoposter`](https://npmjs.com/package/topgg-autoposter)
 
 ```js
-const client = Discord.Client(); // Your discord.js client or any other
+const client = Discord.Client({ intents: [Discord.GatewayIntentBits.Guilds] }); // Your discord.js client or any other
 const { AutoPoster } = require("topgg-autoposter");
 
 AutoPoster("topgg-token", client).on("posted", () => {
