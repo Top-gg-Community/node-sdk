@@ -150,8 +150,6 @@ export interface ShortUser {
   id: Snowflake;
   /** User's username */
   username: string;
-  /** User's discriminator */
-  discriminator: string;
   /** User's avatar hash */
   avatar: string;
 }
