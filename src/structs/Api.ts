@@ -252,13 +252,11 @@ export class Api extends EventEmitter {
    * [
    *   {
    *     username: 'Xignotic',
-   *     discriminator: '0001',
    *     id: '205680187394752512',
    *     avatar: '3b9335670c7213b3a2d4e990081900c7'
    *   },
    *   {
    *     username: 'iara',
-   *     discriminator: '0001',
    *     id: '395526710101278721',
    *     avatar: '3d1477390b8d7c3cec717ac5c778f5f4'
    *   }
