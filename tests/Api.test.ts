@@ -1,6 +1,7 @@
 import { resolve } from 'path';
 import { Api } from '../src/index';
 import ApiError from '../src/utils/ApiError';
+import { BOT, BOT_STATS, USER, VOTES } from './mocks/data';
 
 const is_owner = new Api('owner_token');
 const not_owner = new Api('not_owner_token');
@@ -63,7 +64,11 @@ describe('API getStats test', () => {
     })
 
     it('getStats should return 200 when bot is found', async () => {
-        expect(is_owner.getStats('1')).resolves.toBeInstanceOf(Object);
+        expect(is_owner.getStats('1')).resolves.toStrictEqual({ 
+            serverCount: BOT_STATS.server_count,
+             shardCount: BOT_STATS.shard_count, 
+             shards: BOT_STATS.shards
+            });
     })
 
     it('getStats should throw when no id is provided', () => {
@@ -81,7 +86,7 @@ describe('API getBot test', () => {
     })
     
     it('getBot should return 200 when bot is found', async () => {
-        expect(is_owner.getBot('1')).resolves.toBeInstanceOf(Object);
+        expect(is_owner.getBot('1')).resolves.toStrictEqual(BOT);
     })
     
     it('getBot should throw when no id is provided', () => {
@@ -99,7 +104,7 @@ describe('API getUser test', () => {
     })
     
     it('getUser should return 200 when user is found', async () => {
-        expect(is_owner.getUser('1')).resolves.toBeInstanceOf(Object);
+        expect(is_owner.getUser('1')).resolves.toStrictEqual(USER);
     })
     
     it('getUser should throw when no id is provided', () => {
@@ -114,7 +119,7 @@ describe('API getVotes test', () => {
     })
     
     it('getVotes should return 200 when token is provided', () => {
-        expect(is_owner.getVotes()).resolves.toBeInstanceOf(Object);
+        expect(is_owner.getVotes()).resolves.toEqual(VOTES);
     })
 });
 

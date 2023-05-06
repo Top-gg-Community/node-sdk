@@ -27,6 +27,12 @@ export const endpoints = [
         requireAuth: true
     },
     {
+        pattern: '/api/bots/votes',
+        method: 'GET',
+        data: VOTES,
+        requireAuth: true
+    }, // Undocumented
+    {
         pattern: '/api/bots/:bot_id/stats',
         method: 'GET',
         data: BOT_STATS,
