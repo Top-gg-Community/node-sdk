@@ -49,7 +49,6 @@ beforeEach(() => {
         const error = options.validate?.(request);
         if (error) return error;
     
-        console.log(request.path, data)
         return {
             statusCode,
             data: JSON.stringify(data),
