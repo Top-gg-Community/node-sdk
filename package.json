@@ -5,6 +5,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "test": "jest --verbose",
+    "test:coverage": "jest --coverage",
     "build": "tsc",
     "build:ci": "npm i --include=dev && tsc",
     "docs": "typedoc",

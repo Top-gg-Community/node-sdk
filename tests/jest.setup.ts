@@ -16,9 +16,18 @@ export const getIdInPath = (pattern: string, url: string) => {
 }
 
 export const isMatchingPath = (pattern: string, url: string) => {
+    // Remove query params
+    url = url.split("?")[0]
+
     if (pattern === url) {
         return true;
     }
+
+    // Check if there is an exact match
+    if(endpoints.some(({ pattern }) => pattern === url)) {
+        return false
+    };
+
     return getIdInPath(pattern, url) !== null;
 }
 
@@ -29,17 +38,18 @@ beforeEach(() => {
     
     
     const generateResponse = (request: MockInterceptor.MockResponseCallbackOptions, statusCode: number, data: any, headers = {}, options: IOptions) => {
-        const reuqestHeaders = request.headers as any;
+        const requestHeaders = request.headers as any;
     
         // Check if token is avaliable
-        if (options.requireAuth && (!reuqestHeaders['authorization'] || reuqestHeaders['authorization'] == '')) return { statusCode: 401 };
+        if (options.requireAuth && (!requestHeaders['authorization'] || requestHeaders['authorization'] == '')) return { statusCode: 401 };
     
         // Check that user is owner of bot
-        if (options.requireAuth && reuqestHeaders['authorization'] !== 'owner_token') return { statusCode: 403 }
+        if (options.requireAuth && requestHeaders['authorization'] !== 'owner_token') return { statusCode: 403 }
         
         const error = options.validate?.(request);
         if (error) return error;
-        
+    
+        console.log(request.path, data)
         return {
             statusCode,
             data: JSON.stringify(data),

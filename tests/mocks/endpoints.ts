@@ -1,5 +1,5 @@
 import { MockInterceptor } from 'undici/types/mock-interceptor';
-import { BOT, BOTS, BOT_STATS, USER, USER_VOTE, VOTES, WEEKEND } from './data';
+import { BOT, BOTS, BOT_STATS, USER, USER_VOTE, USER_VOTE_CHECK, VOTES, WEEKEND } from './data';
 import { getIdInPath } from '../jest.setup';
 
 export const endpoints = [
@@ -65,5 +65,16 @@ export const endpoints = [
             return null
         },
     },
-    { pattern: '/api/weekend', method: 'GET', data: WEEKEND, requireAuth: true },
+    {
+        pattern: '/api/bots/check',
+        method: 'GET',
+        data: USER_VOTE_CHECK,
+        requireAuth: true
+    },
+    { 
+        pattern: '/api/weekend', 
+        method: 'GET', 
+        data: WEEKEND, 
+        requireAuth: true 
+    },
 ];

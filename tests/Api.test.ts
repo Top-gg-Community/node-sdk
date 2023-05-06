@@ -1,3 +1,4 @@
+import { resolve } from 'path';
 import { Api } from '../src/index';
 import ApiError from '../src/utils/ApiError';
 
@@ -62,7 +63,7 @@ describe('API getStats test', () => {
     })
 
     it('getStats should return 200 when bot is found', async () => {
-        expect(is_owner.getStats('1')).toBeInstanceOf(Object);
+        expect(is_owner.getStats('1')).resolves.toBeInstanceOf(Object);
     })
 
     it('getStats should throw when no id is provided', () => {
@@ -80,7 +81,7 @@ describe('API getBot test', () => {
     })
     
     it('getBot should return 200 when bot is found', async () => {
-        expect(is_owner.getBot('1')).toBeInstanceOf(Object);
+        expect(is_owner.getBot('1')).resolves.toBeInstanceOf(Object);
     })
     
     it('getBot should throw when no id is provided', () => {
@@ -98,7 +99,7 @@ describe('API getUser test', () => {
     })
     
     it('getUser should return 200 when user is found', async () => {
-        expect(is_owner.getUser('1')).toBeInstanceOf(Object);
+        expect(is_owner.getUser('1')).resolves.toBeInstanceOf(Object);
     })
     
     it('getUser should throw when no id is provided', () => {
@@ -112,8 +113,8 @@ describe('API getVotes test', () => {
         expect(no_token.getVotes()).rejects.toThrowError(Error);
     })
     
-    it('getVotes should return 200 when token is provided', async () => {
-        expect(is_owner.getVotes()).toBeInstanceOf(Object);
+    it('getVotes should return 200 when token is provided', () => {
+        expect(is_owner.getVotes()).resolves.toBeInstanceOf(Object);
     })
 });
 
@@ -122,10 +123,13 @@ describe('API hasVoted test', () => {
         expect(no_token.hasVoted('1')).rejects.toThrowError(Error);
     })
 
-    it('hasVoted should return 200 when token is provided', async () => {
-        expect(is_owner.hasVoted('1')).toBeInstanceOf(Object);
+    it('hasVoted should return 200 when token is provided', () => {
+        expect(is_owner.hasVoted('1')).resolves.toBe(true);
     })
-    
+
+    it('hasVoted should throw error when no id is provided', () => {
+        expect(is_owner.hasVoted('')).rejects.toThrowError(Error);
+    })
 })
 
 describe('API isWeekend tests', () => {
