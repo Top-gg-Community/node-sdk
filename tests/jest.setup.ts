@@ -1,4 +1,4 @@
-import { Agent, MockAgent, setGlobalDispatcher } from 'undici';
+import { MockAgent, setGlobalDispatcher } from 'undici';
 import { MockInterceptor } from 'undici/types/mock-interceptor';
 import { endpoints } from './mocks/endpoints';
 
