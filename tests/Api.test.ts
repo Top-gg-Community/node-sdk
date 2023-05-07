@@ -1,4 +1,3 @@
-import { resolve } from 'path';
 import { Api } from '../src/index';
 import ApiError from '../src/utils/ApiError';
 import { BOT, BOT_STATS, USER, VOTES } from './mocks/data';
