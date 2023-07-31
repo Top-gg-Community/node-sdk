@@ -77,7 +77,7 @@ export class Api extends EventEmitter {
     if (response.statusCode < 200 || response.statusCode > 299) {
       /*
       * In the case that the server does not respond, the function simply doesn't care. If
-      * any other code is fired, the error is fired as usual.
+      * any other code is fired, the error is fired as usual. 
       */
       if (response.statusCode === 504) {
         return false;
