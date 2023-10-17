@@ -43,7 +43,9 @@ export class Webhook {
   /**
    * Create a new webhook client instance
    *
-   * @param authorization Webhook authorization to verify requests
+   * @param {string} authorization Webhook authorization to verify requests
+   * @param {WebhookOptions} options The webhook options
+   * @param {((error: Error) => void) | Promise<void>} [options.error] Handles an error created by the function passed to Webhook.listener()
    */
   constructor(private authorization?: string, options: WebhookOptions = {}) {
     this.options = {

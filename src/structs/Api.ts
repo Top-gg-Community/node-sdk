@@ -16,7 +16,7 @@ import {
 } from "../typings";
 
 /**
- * Top.gg API Client for Posting stats or Fetching data
+ * Top.gg API Client for posting stats or fetching data
  *
  * @example
  * ```js
@@ -86,7 +86,7 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Post bot stats to Top.gg
+   * Posts bot stats to Top.gg
    *
    * @example
    * ```js
@@ -96,11 +96,12 @@ export class Api extends EventEmitter {
    * });
    * ```
    *
-   * @param {object} stats Stats object
-   * @param {number} stats.serverCount Server count
-   * @param {number} [stats.shardCount] Shard count
+   * @param {BotStats} stats Stats object
+   * @param {number} [stats.serverCount] The amount of servers the bot is in
+   * @param {number} [stats.shards] The amount of servers the bot is in per shard.
+   * @param {number} [stats.shardCount] The amount of shards a bot has
    * @param {number} [stats.shardId] Posting shard (useful for process sharding)
-   * @returns {BotStats} Passed object
+   * @returns {Promise<BotStats>} Passed object
    */
   public async postStats(stats: BotStats): Promise<BotStats> {
     if (!stats?.serverCount) throw new Error("Missing Server Count");
@@ -131,7 +132,7 @@ export class Api extends EventEmitter {
    * ```
    *
    * @param {Snowflake} id Bot ID
-   * @returns {BotStats} Stats of bot requested
+   * @returns {Promise<BotStats>} Stats of bot requested
    */
   public async getStats(id: Snowflake): Promise<BotStats> {
     if (!id) throw new Error("ID missing");
@@ -152,7 +153,7 @@ export class Api extends EventEmitter {
    * ```
    *
    * @param {Snowflake} id Bot ID
-   * @returns {BotInfo} Info for bot
+   * @returns {Promise<BotInfo>} Info for bot
    */
   public async getBot(id: Snowflake): Promise<BotInfo> {
     if (!id) throw new Error("ID Missing");
@@ -160,7 +161,7 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Get user info
+   * Retrieves information about a particular user by their Discord user id.
    *
    * @example
    * ```js
@@ -170,7 +171,7 @@ export class Api extends EventEmitter {
    * ```
    *
    * @param {Snowflake} id User ID
-   * @returns {UserInfo} Info for user
+   * @returns {Promise<UserInfo>} Info for user
    */
   public async getUser(id: Snowflake): Promise<UserInfo> {
     if (!id) throw new Error("ID Missing");
@@ -178,7 +179,7 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Get a list of bots
+   * Gets a list of bots that match a specific query.
    *
    * @example
    * ```js
@@ -197,9 +198,9 @@ export class Api extends EventEmitter {
    *       username: 'Shiro',
    *       discriminator: '8764',
    *       lib: 'discord.js',
-   *       ...rest of bot object
+   *       // ...rest of bot object
    *     }
-   *     ...other shiro knockoffs B)
+   *     // ...other shiro knockoffs B)
    *   ],
    *   limit: 10,
    *   offset: 0,
@@ -221,14 +222,14 @@ export class Api extends EventEmitter {
    *       id: '493716749342998541',
    *       username: 'Mimu'
    *     },
-   *     ...
+   *     // ...
    *   ],
-   *   ...
+   *   // ...
    * }
    * ```
    *
    * @param {BotsQuery} query Bot Query
-   * @returns {BotsResponse} Return response
+   * @returns {Promise<BotsResponse>} Return response
    */
   public async getBots(query?: BotsQuery): Promise<BotsResponse> {
     if (query) {
@@ -243,7 +244,11 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Get users who've voted
+   * Gets the last 1000 voters for your bot
+   * 
+   * If your bot receives more than 1000 votes monthly you cannot use this endpoints and must use webhooks and implement your own caching instead.
+   * 
+   * This endpoint only returns unique votes, it does not include double votes (weekend votes).
    *
    * @example
    * ```js
@@ -260,11 +265,11 @@ export class Api extends EventEmitter {
    *     id: '395526710101278721',
    *     avatar: '3d1477390b8d7c3cec717ac5c778f5f4'
    *   }
-   *   ...more
+   *   // ...more
    * ]
    * ```
    *
-   * @returns {ShortUser[]} Array of users who've voted
+   * @returns {Promise<ShortUser[]>} Array of users who've voted
    */
   public async getVotes(): Promise<ShortUser[]> {
     if (!this.options.token) throw new Error("Missing token");
@@ -272,7 +277,7 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Get whether or not a user has voted in the last 12 hours
+   * Checking whether or not a user has voted for your bot in the last 12 hours. Safe to use even if you have over 1k monthly votes.
    *
    * @example
    * ```js
@@ -281,7 +286,7 @@ export class Api extends EventEmitter {
    * ```
    *
    * @param {Snowflake} id User ID
-   * @returns {boolean} Whether the user has voted in the last 12 hours
+   * @returns {Promise<boolean>} Whether the user has voted in the last 12 hours
    */
   public async hasVoted(id: Snowflake): Promise<boolean> {
     if (!id) throw new Error("Missing ID");
@@ -299,7 +304,7 @@ export class Api extends EventEmitter {
    * // => true/false
    * ```
    *
-   * @returns {boolean} Whether the multiplier is active
+   * @returns {Promise<boolean>} Whether the multiplier is active
    */
   public async isWeekend(): Promise<boolean> {
     return this._request("GET", "/weekend").then((x) => x.is_weekend);
