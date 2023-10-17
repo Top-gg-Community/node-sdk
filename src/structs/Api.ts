@@ -135,7 +135,7 @@ export class Api extends EventEmitter {
    * @returns {Promise<BotStats>} Stats of bot requested
    */
   public async getStats(id: Snowflake): Promise<BotStats> {
-    if (!id) throw new Error("ID missing");
+    if (!id) throw new Error("Missing parameter bot ID");
     const result = await this._request("GET", `/bots/${id}/stats`);
     return {
       serverCount: result.server_count,
@@ -156,7 +156,7 @@ export class Api extends EventEmitter {
    * @returns {Promise<BotInfo>} Info for bot
    */
   public async getBot(id: Snowflake): Promise<BotInfo> {
-    if (!id) throw new Error("ID Missing");
+    if (!id) throw new Error("Missing parameter bot ID");
     return this._request("GET", `/bots/${id}`);
   }
 
@@ -174,7 +174,7 @@ export class Api extends EventEmitter {
    * @returns {Promise<UserInfo>} Info for user
    */
   public async getUser(id: Snowflake): Promise<UserInfo> {
-    if (!id) throw new Error("ID Missing");
+    if (!id) throw new Error("Missing parameter user ID");
     return this._request("GET", `/users/${id}`);
   }
 
@@ -272,7 +272,7 @@ export class Api extends EventEmitter {
    * @returns {Promise<ShortUser[]>} Array of users who've voted
    */
   public async getVotes(): Promise<ShortUser[]> {
-    if (!this.options.token) throw new Error("Missing token");
+    if (!this.options.token) throw new Error("You must provide a token to the Top.gg API instance for this");
     return this._request("GET", "/bots/votes");
   }
 
@@ -289,7 +289,7 @@ export class Api extends EventEmitter {
    * @returns {Promise<boolean>} Whether the user has voted in the last 12 hours
    */
   public async hasVoted(id: Snowflake): Promise<boolean> {
-    if (!id) throw new Error("Missing ID");
+    if (!id) throw new Error("Missing parameter user ID");
     return this._request("GET", "/bots/check", { userId: id }).then(
       (x) => !!x.voted
     );
