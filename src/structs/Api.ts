@@ -161,7 +161,7 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Retrieves information about a particular user by their Discord user id.
+   * Retrieves information about a particular user by their top.gg user ID.
    *
    * @example
    * ```js
