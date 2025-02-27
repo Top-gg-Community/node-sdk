@@ -7,22 +7,36 @@ export interface APIOptions {
 export type Snowflake = string;
 
 export interface BotInfo {
-  /** The id of the bot */
+  /** The Top.gg ID of the bot */
   id: Snowflake;
+  /** The Discord ID of the bot */
+  clientid: Snowflake;
   /** The username of the bot */
   username: string;
-  /** The discriminator of the bot */
+  /**
+   * The discriminator of the bot
+   *
+   * @deprecated No longer supported by Top.gg API v0.
+   */
   discriminator: string;
-  /** The avatar hash of the bot's avatar */
-  avatar?: string;
-  /** The cdn hash of the bot's avatar if the bot has none */
+  /** The bot's avatar */
+  avatar: string;
+  /**
+   * The cdn hash of the bot's avatar if the bot has none
+   * 
+   * @deprecated No longer supported by Top.gg API v0.
+   */
   defAvatar: string;
-  /** The URL for the banner image */
+  /**
+   * The URL for the banner image
+   * 
+   * @deprecated No longer supported by Top.gg API v0.
+   */
   bannerUrl?: string;
   /**
    * The library of the bot
    *
-   * @deprecated
+   * @deprecated No longer supported by Top.gg API v0.
    */
   lib: string;
   /** The prefix of the bot */
@@ -30,33 +44,54 @@ export interface BotInfo {
   /** The short description of the bot */
   shortdesc: string;
   /** The long description of the bot. Can contain HTML and/or Markdown */
-  longdesc: string;
+  longdesc?: string;
   /** The tags of the bot */
   tags: string[];
   /** The website url of the bot */
   website?: string;
-  /** The support server invite code of the bot */
+  /** The support url of the bot */
   support?: string;
   /** The link to the github repo of the bot */
   github?: string;
   /** The owners of the bot. First one in the array is the main owner */
   owners: Snowflake[];
-  /** The guilds featured on the bot page */
+  /**
+   * The guilds featured on the bot page
+   * 
+   * @deprecated No longer supported by Top.gg API v0.
+   */
   guilds: Snowflake[];
   /** The custom bot invite url of the bot */
   invite?: string;
-  /** The date when the bot was approved (in ISO 8601) */
+  /** The date when the bot was submitted (in ISO 8601) */
   date: string;
-  /** The certified status of the bot */
+  /**
+   * The certified status of the bot
+   * 
+   * @deprecated No longer supported by Top.gg API v0.
+   */
   certifiedBot: boolean;
   /** The vanity url of the bot */
   vanity?: string;
-  /** The amount of upvotes the bot has */
+  /** The amount of votes the bot has */
   points: number;
-  /** The amount of upvotes the bot has this month */
+  /** The amount of votes the bot has this month */
   monthlyPoints: number;
-  /** The guild id for the donatebot setup */
+  /**
+   * The guild id for the donatebot setup
+   * 
+   * @deprecated No longer supported by Top.gg API v0.
+   */
   donatebotguildid: Snowflake;
+  /** The amount of servers the bot is in based on posted stats */
+  server_count?: number;
+  /** The bot's reviews on Top.gg */
+  reviews: {
+    /** This bot's average review score out of 5 */
+    averageScore: number;
+    /** This bot's review count */
+    count: number;
+  }
 }
 
 export interface BotStats {
@@ -65,14 +100,27 @@ export interface BotStats {
   /**
    * The amount of servers the bot is in per shard. Always present but can be
    * empty. (Only when receiving stats)
+   * 
+   * @deprecated No longer supported by Top.gg API v0.
    */
   shards?: number[];
-  /** The shard ID to post as (only when posting) */
+  /**
+   * The shard ID to post as (only when posting)
+   * 
+   * @deprecated No longer supported by Top.gg API v0.
+   */
   shardId?: number;
-  /** The amount of shards a bot has */
-  shardCount?: number;
+  /**
+   * The amount of shards a bot has
+   * 
+   * @deprecated No longer supported by Top.gg API v0.
+   */
+  shardCount?: number | null;
 }
 
+/**
+ * @deprecated No longer supported by Top.gg API v0.
+ */
 export interface UserInfo {
   /** The id of the user */
   id: Snowflake;
@@ -80,8 +128,8 @@ export interface UserInfo {
   username: string;
   /** The discriminator of the user */
   discriminator: string;
-  /** The avatar hash of the user's avatar */
-  avatar?: string;
+  /** The user's avatar url */
+  avatar: string;
   /** The cdn hash of the user's avatar if the user has none */
   defAvatar: string;
   /** The bio of the user */
@@ -126,8 +174,8 @@ export interface BotsQuery {
         [key in keyof BotInfo]: string;
       }
     | string;
-  /** The field to sort by. Prefix with "-"" to reverse the order */
-  sort?: string;
+  /** Sorts results from a specific criteria. Results will always be descending. */
+  sort?: 'monthlyPoints' | 'id' | 'date';
   /** A list of fields to show. */
   fields?: string[] | string;
 }
@@ -153,10 +201,10 @@ export interface ShortUser {
   /**
    * User's discriminator
    *
-   * @deprecated
+   * @deprecated No longer supported by Top.gg API v0.
    */
   discriminator: string;
-  /** User's avatar hash */
+  /** User's avatar url */
   avatar: string;
 }
 

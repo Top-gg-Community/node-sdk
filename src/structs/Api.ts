@@ -30,6 +30,7 @@ import {
  */
 export class Api extends EventEmitter {
   private options: APIOptions;
+  private id: Snowflake;
   /**
    * Create Top.gg API instance
    *
@@ -39,9 +40,10 @@ export class Api extends EventEmitter {
   constructor(token: string, options: APIOptions = {}) {
     super();
     this.options = {
-      token: token,
+      token,
       ...options,
     };
+    this.id = JSON.parse(atob(token.split('.')[1])).id;
   }
 
   private async _request(
@@ -91,25 +93,20 @@ export class Api extends EventEmitter {
    * @example
    * ```js
    * await api.postStats({
-   *   serverCount: 28199,
-   *   shardCount: 1,
+   *   serverCount: 28199
    * });
    * ```
    *
    * @param {object} stats Stats object
    * @param {number} stats.serverCount Server count
-   * @param {number} [stats.shardCount] Shard count
-   * @param {number} [stats.shardId] Posting shard (useful for process sharding)
    * @returns {BotStats} Passed object
    */
   public async postStats(stats: BotStats): Promise<BotStats> {
     if (!stats?.serverCount) throw new Error("Missing Server Count");
 
     /* eslint-disable camelcase */
-    await this._request("POST", "/bots/stats", {
-      server_count: stats.serverCount,
-      shard_id: stats.shardId,
-      shard_count: stats.shardCount,
+    await this._request("POST", `/bots/${this.id}/stats`, {
+      server_count: stats.serverCount
     });
     /* eslint-enable camelcase */
 
@@ -117,29 +114,28 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Get a bots stats
+   * Get your bot's stats
    *
    * @example
    * ```js
-   * await api.getStats("461521980492087297");
+   * await api.getStats();
    * // =>
    * {
    *   serverCount: 28199,
-   *   shardCount 1,
+   *   shardCount: null,
    *   shards: []
    * }
    * ```
    *
-   * @param {Snowflake} id Bot ID
-   * @returns {BotStats} Stats of bot requested
+   * @returns {BotStats} Your bot's stats
    */
-  public async getStats(id: Snowflake): Promise<BotStats> {
-    if (!id) throw new Error("ID missing");
-    const result = await this._request("GET", `/bots/${id}/stats`);
+  public async getStats(_id: Snowflake): Promise<BotStats> {
+    if (_id) console.warn('[DeprecationWaring] getStats() no longer needs an ID argument')
+    const result = await this._request("GET", `/bots/${this.id}/stats`);
     return {
       serverCount: result.server_count,
-      shardCount: result.shard_count,
-      shards: result.shards,
+      shardCount: null,
+      shards: []
     };
   }
 
@@ -160,6 +156,8 @@ export class Api extends EventEmitter {
   }
 
   /**
+   * @deprecated No longer supported by Top.gg API v0.
+   * 
    * Get user info
    *
    * @example
@@ -173,6 +171,8 @@ export class Api extends EventEmitter {
    * @returns {UserInfo} Info for user
    */
   public async getUser(id: Snowflake): Promise<UserInfo> {
+    console.warn('[DeprecationWarning] getUser is no longer supported by Top.gg API v0.')
+
     if (!id) throw new Error("ID Missing");
     return this._request("GET", `/users/${id}`);
   }
@@ -185,8 +185,7 @@ export class Api extends EventEmitter {
    * // Finding by properties
    * await api.getBots({
    *   search: {
-   *     username: "shiro",
-   *     certifiedBot: true,
+   *     username: "shiro"
    *   },
    * });
    * // =>
@@ -195,8 +194,6 @@ export class Api extends EventEmitter {
    *     {
    *       id: '461521980492087297',
    *       username: 'Shiro',
-   *       discriminator: '8764',
-   *       lib: 'discord.js',
    *       ...rest of bot object
    *     }
    *     ...other shiro knockoffs B)
@@ -267,8 +264,7 @@ export class Api extends EventEmitter {
    * @returns {ShortUser[]} Array of users who've voted
    */
   public async getVotes(): Promise<ShortUser[]> {
-    if (!this.options.token) throw new Error("Missing token");
-    return this._request("GET", "/bots/votes");
+    return this._request("GET", `/bots/${this.id}/votes`);
   }
 
   /**
@@ -285,7 +281,7 @@ export class Api extends EventEmitter {
    */
   public async hasVoted(id: Snowflake): Promise<boolean> {
     if (!id) throw new Error("Missing ID");
-    return this._request("GET", "/bots/check", { userId: id }).then(
+    return this._request("GET", `/bots/${this.id}/check`, { userId: id }).then(
       (x) => !!x.voted
     );
   }
