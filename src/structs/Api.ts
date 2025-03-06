@@ -171,10 +171,7 @@ export class Api extends EventEmitter {
    * @returns {UserInfo} Info for user
    */
   public async getUser(id: Snowflake): Promise<UserInfo> {
-    console.warn('[DeprecationWarning] getUser is no longer supported by Top.gg API v0.')
-
-    if (!id) throw new Error("ID Missing");
-    return this._request("GET", `/users/${id}`);
+    throw new Error('[Deprecated] getUser is no longer supported by Top.gg API v0.');
   }
 
   /**
