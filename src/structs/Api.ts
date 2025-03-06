@@ -240,7 +240,7 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Get users who've voted
+   * Get recent unique users who've voted
    *
    * @example
    * ```js
@@ -250,18 +250,18 @@ export class Api extends EventEmitter {
    *   {
    *     username: 'Xignotic',
    *     id: '205680187394752512',
-   *     avatar: '3b9335670c7213b3a2d4e990081900c7'
+   *     avatar: 'https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png'
    *   },
    *   {
    *     username: 'iara',
    *     id: '395526710101278721',
-   *     avatar: '3d1477390b8d7c3cec717ac5c778f5f4'
+   *     avatar: 'https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png'
    *   }
    *   ...more
    * ]
    * ```
    *
-   * @returns {ShortUser[]} Array of users who've voted
+   * @returns {ShortUser[]} Array of unique users who've voted
    */
   public async getVotes(): Promise<ShortUser[]> {
     return this._request("GET", `/bots/${this.id}/votes`);
