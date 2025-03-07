@@ -43,7 +43,7 @@ export class Api extends EventEmitter {
       token,
       ...options,
     };
-    this.id = JSON.parse(atob(token.split('.')[1])).id;
+    this.id = JSON.parse(atob(token.split(".")[1])).id;
   }
 
   private async _request(
@@ -130,7 +130,7 @@ export class Api extends EventEmitter {
    * @returns {BotStats} Your bot's stats
    */
   public async getStats(_id: Snowflake): Promise<BotStats> {
-    if (_id) console.warn('[DeprecationWaring] getStats() no longer needs an ID argument')
+    if (_id) console.warn("[DeprecationWaring] getStats() no longer needs an ID argument");
     const result = await this._request("GET", `/bots/${this.id}/stats`);
     return {
       serverCount: result.server_count,
@@ -171,7 +171,9 @@ export class Api extends EventEmitter {
    * @returns {UserInfo} Info for user
    */
   public async getUser(id: Snowflake): Promise<UserInfo> {
-    throw new Error('[Deprecated] getUser is no longer supported by Top.gg API v0.');
+    console.warn("[Deprecated] getUser is no longer supported by Top.gg API v0.");
+
+    return this._request("GET", `/users/${id}`);
   }
 
   /**
@@ -258,10 +260,11 @@ export class Api extends EventEmitter {
    * ]
    * ```
    *
+   * @param {number} [page] The page number. Each page can only have at most 100 voters.
    * @returns {ShortUser[]} Array of unique users who've voted
    */
-  public async getVotes(): Promise<ShortUser[]> {
-    return this._request("GET", `/bots/${this.id}/votes`);
+  public async getVotes(page?: number): Promise<ShortUser[]> {
+    return this._request("GET", `/bots/${this.id}/votes`, { page: page ?? 1 });
   }
 
   /**

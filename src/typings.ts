@@ -175,7 +175,7 @@ export interface BotsQuery {
       }
     | string;
   /** Sorts results from a specific criteria. Results will always be descending. */
-  sort?: 'monthlyPoints' | 'id' | 'date';
+  sort?: "monthlyPoints" | "id" | "date";
   /** A list of fields to show. */
   fields?: string[] | string;
 }
