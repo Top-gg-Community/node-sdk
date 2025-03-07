@@ -30,7 +30,7 @@ import {
  */
 export class Api extends EventEmitter {
   private options: APIOptions;
-  private id: Snowflake;
+  
   /**
    * Create Top.gg API instance
    *
@@ -39,11 +39,25 @@ export class Api extends EventEmitter {
    */
   constructor(token: string, options: APIOptions = {}) {
     super();
+
+    const tokenSegments = token.split(".");
+    
+    if (tokenSegments.length !== 3) {
+      throw new Error("Got a malformed API token.");
+    }
+    
+    const tokenData = atob(token[1]);
+    
+    try {
+      JSON.parse(tokenData).id;
+    } catch {
+      throw new Error("Invalid API token state, this should not happen! Please report!");
+    }
+  
     this.options = {
       token,
       ...options,
     };
-    this.id = JSON.parse(atob(token.split(".")[1])).id;
   }
 
   private async _request(
@@ -105,7 +119,7 @@ export class Api extends EventEmitter {
     if (!stats?.serverCount) throw new Error("Missing Server Count");
 
     /* eslint-disable camelcase */
-    await this._request("POST", `/bots/${this.id}/stats`, {
+    await this._request("POST", "/bots/stats", {
       server_count: stats.serverCount
     });
     /* eslint-enable camelcase */
@@ -114,7 +128,7 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Get your bot's stats
+   * Get your bot"s stats
    *
    * @example
    * ```js
@@ -127,11 +141,11 @@ export class Api extends EventEmitter {
    * }
    * ```
    *
-   * @returns {BotStats} Your bot's stats
+   * @returns {BotStats} Your bot"s stats
    */
   public async getStats(_id: Snowflake): Promise<BotStats> {
-    if (_id) console.warn("[DeprecationWaring] getStats() no longer needs an ID argument");
-    const result = await this._request("GET", `/bots/${this.id}/stats`);
+    if (_id) console.warn("[DeprecationWarning] getStats() no longer needs an ID argument");
+    const result = await this._request("GET", "/bots/stats");
     return {
       serverCount: result.server_count,
       shardCount: null,
@@ -171,7 +185,7 @@ export class Api extends EventEmitter {
    * @returns {UserInfo} Info for user
    */
   public async getUser(id: Snowflake): Promise<UserInfo> {
-    console.warn("[Deprecated] getUser is no longer supported by Top.gg API v0.");
+    console.warn("[DeprecationWarning] getUser is no longer supported by Top.gg API v0.");
 
     return this._request("GET", `/users/${id}`);
   }
@@ -191,8 +205,8 @@ export class Api extends EventEmitter {
    * {
    *   results: [
    *     {
-   *       id: '461521980492087297',
-   *       username: 'Shiro',
+   *       id: "461521980492087297",
+   *       username: "Shiro",
    *       ...rest of bot object
    *     }
    *     ...other shiro knockoffs B)
@@ -210,12 +224,12 @@ export class Api extends EventEmitter {
    * {
    *   results: [
    *     {
-   *       id: '461521980492087297',
-   *       username: 'Shiro'
+   *       id: "461521980492087297",
+   *       username: "Shiro"
    *     },
    *     {
-   *       id: '493716749342998541',
-   *       username: 'Mimu'
+   *       id: "493716749342998541",
+   *       username: "Mimu"
    *     },
    *     ...
    *   ],
@@ -239,7 +253,7 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Get recent unique users who've voted
+   * Get recent unique users who"ve voted
    *
    * @example
    * ```js
@@ -247,24 +261,24 @@ export class Api extends EventEmitter {
    * // =>
    * [
    *   {
-   *     username: 'Xignotic',
-   *     id: '205680187394752512',
-   *     avatar: 'https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png'
+   *     username: "Xignotic",
+   *     id: "205680187394752512",
+   *     avatar: "https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png"
    *   },
    *   {
-   *     username: 'iara',
-   *     id: '395526710101278721',
-   *     avatar: 'https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png'
+   *     username: "iara",
+   *     id: "395526710101278721",
+   *     avatar: "https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png"
    *   }
    *   ...more
    * ]
    * ```
    *
    * @param {number} [page] The page number. Each page can only have at most 100 voters.
-   * @returns {ShortUser[]} Array of unique users who've voted
+   * @returns {ShortUser[]} Array of unique users who"ve voted
    */
   public async getVotes(page?: number): Promise<ShortUser[]> {
-    return this._request("GET", `/bots/${this.id}/votes`, { page: page ?? 1 });
+    return this._request("GET", "/bots/votes", { page: page ?? 1 });
   }
 
   /**
@@ -281,7 +295,7 @@ export class Api extends EventEmitter {
    */
   public async hasVoted(id: Snowflake): Promise<boolean> {
     if (!id) throw new Error("Missing ID");
-    return this._request("GET", `/bots/${this.id}/check`, { userId: id }).then(
+    return this._request("GET", "/bots/check", { userId: id }).then(
       (x) => !!x.voted
     );
   }
