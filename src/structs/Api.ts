@@ -128,7 +128,7 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Get your bot"s stats
+   * Get your bot's stats
    *
    * @example
    * ```js
@@ -141,7 +141,7 @@ export class Api extends EventEmitter {
    * }
    * ```
    *
-   * @returns {BotStats} Your bot"s stats
+   * @returns {BotStats} Your bot's stats
    */
   public async getStats(_id: Snowflake): Promise<BotStats> {
     if (_id) console.warn("[DeprecationWarning] getStats() no longer needs an ID argument");
@@ -253,7 +253,7 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Get recent unique users who"ve voted
+   * Get recent unique users who've voted
    *
    * @example
    * ```js
@@ -275,7 +275,7 @@ export class Api extends EventEmitter {
    * ```
    *
    * @param {number} [page] The page number. Each page can only have at most 100 voters.
-   * @returns {ShortUser[]} Array of unique users who"ve voted
+   * @returns {ShortUser[]} Array of unique users who've voted
    */
   public async getVotes(page?: number): Promise<ShortUser[]> {
     return this._request("GET", "/bots/votes", { page: page ?? 1 });
