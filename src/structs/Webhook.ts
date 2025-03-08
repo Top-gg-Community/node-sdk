@@ -45,14 +45,17 @@ export class Webhook {
    *
    * @param authorization Webhook authorization to verify requests
    */
-  constructor(private authorization?: string, options: WebhookOptions = {}) {
+  constructor(
+    private authorization?: string,
+    options: WebhookOptions = {},
+  ) {
     this.options = {
       error: options.error ?? console.error,
     };
   }
 
   private _formatIncoming(
-    body: WebhookPayload & { query: string }
+    body: WebhookPayload & { query: string },
   ): WebhookPayload {
     const out: WebhookPayload = { ...body };
     if (body?.query?.length > 0)
@@ -62,7 +65,7 @@ export class Webhook {
 
   private _parseRequest(
     req: Request,
-    res: Response
+    res: Response,
   ): Promise<WebhookPayload | false> {
     return new Promise((resolve) => {
       if (
@@ -116,13 +119,13 @@ export class Webhook {
       payload: WebhookPayload,
       req?: Request,
       res?: Response,
-      next?: NextFunction
-    ) => void | Promise<void>
+      next?: NextFunction,
+    ) => void | Promise<void>,
   ) {
     return async (
       req: Request,
       res: Response,
-      next: NextFunction
+      next: NextFunction,
     ): Promise<void> => {
       const response = await this._parseRequest(req, res);
       if (!response) return;
@@ -157,7 +160,7 @@ export class Webhook {
     return async (
       req: Request,
       res: Response,
-      next: NextFunction
+      next: NextFunction,
     ): Promise<void> => {
       const response = await this._parseRequest(req, res);
       if (!response) return;

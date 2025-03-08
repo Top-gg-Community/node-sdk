@@ -23,13 +23,13 @@ export interface BotInfo {
   avatar: string;
   /**
    * The cdn hash of the bot's avatar if the bot has none
-   * 
+   *
    * @deprecated No longer supported by Top.gg API v0.
    */
   defAvatar: string;
   /**
    * The URL for the banner image
-   * 
+   *
    * @deprecated No longer supported by Top.gg API v0.
    */
   bannerUrl?: string;
@@ -57,7 +57,7 @@ export interface BotInfo {
   owners: Snowflake[];
   /**
    * The guilds featured on the bot page
-   * 
+   *
    * @deprecated No longer supported by Top.gg API v0.
    */
   guilds: Snowflake[];
@@ -67,7 +67,7 @@ export interface BotInfo {
   date: string;
   /**
    * The certified status of the bot
-   * 
+   *
    * @deprecated No longer supported by Top.gg API v0.
    */
   certifiedBot: boolean;
@@ -79,7 +79,7 @@ export interface BotInfo {
   monthlyPoints: number;
   /**
    * The guild id for the donatebot setup
-   * 
+   *
    * @deprecated No longer supported by Top.gg API v0.
    */
   donatebotguildid: Snowflake;
@@ -91,7 +91,7 @@ export interface BotInfo {
     averageScore: number;
     /** This bot's review count */
     count: number;
-  }
+  };
 }
 
 export interface BotStats {
@@ -100,19 +100,19 @@ export interface BotStats {
   /**
    * The amount of servers the bot is in per shard. Always present but can be
    * empty. (Only when receiving stats)
-   * 
+   *
    * @deprecated No longer supported by Top.gg API v0.
    */
   shards?: number[];
   /**
    * The shard ID to post as (only when posting)
-   * 
+   *
    * @deprecated No longer supported by Top.gg API v0.
    */
   shardId?: number;
   /**
    * The amount of shards a bot has
-   * 
+   *
    * @deprecated No longer supported by Top.gg API v0.
    */
   shardCount?: number | null;

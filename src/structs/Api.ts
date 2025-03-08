@@ -30,7 +30,7 @@ import {
  */
 export class Api extends EventEmitter {
   private options: APIOptions;
-  
+
   /**
    * Create Top.gg API instance
    *
@@ -41,19 +41,21 @@ export class Api extends EventEmitter {
     super();
 
     const tokenSegments = token.split(".");
-    
+
     if (tokenSegments.length !== 3) {
       throw new Error("Got a malformed API token.");
     }
-    
+
     const tokenData = atob(tokenSegments[1]);
-    
+
     try {
       JSON.parse(tokenData).id;
     } catch {
-      throw new Error("Invalid API token state, this should not happen! Please report!");
+      throw new Error(
+        "Invalid API token state, this should not happen! Please report!",
+      );
     }
-  
+
     this.options = {
       token,
       ...options,
@@ -63,7 +65,7 @@ export class Api extends EventEmitter {
   private async _request(
     method: Dispatcher.HttpMethod,
     path: string,
-    body?: Record<string, any>
+    body?: Record<string, any>,
   ): Promise<any> {
     const headers: IncomingHttpHeaders = {};
     if (this.options.token) headers["authorization"] = this.options.token;
@@ -82,7 +84,7 @@ export class Api extends EventEmitter {
     let responseBody;
     if (
       (response.headers["content-type"] as string)?.startsWith(
-        "application/json"
+        "application/json",
       )
     ) {
       responseBody = await response.body.json();
@@ -94,7 +96,7 @@ export class Api extends EventEmitter {
       throw new ApiError(
         response.statusCode,
         STATUS_CODES[response.statusCode] ?? "",
-        response
+        response,
       );
     }
 
@@ -120,7 +122,7 @@ export class Api extends EventEmitter {
 
     /* eslint-disable camelcase */
     await this._request("POST", "/bots/stats", {
-      server_count: stats.serverCount
+      server_count: stats.serverCount,
     });
     /* eslint-enable camelcase */
 
@@ -144,12 +146,15 @@ export class Api extends EventEmitter {
    * @returns {BotStats} Your bot's stats
    */
   public async getStats(_id: Snowflake): Promise<BotStats> {
-    if (_id) console.warn("[DeprecationWarning] getStats() no longer needs an ID argument");
+    if (_id)
+      console.warn(
+        "[DeprecationWarning] getStats() no longer needs an ID argument",
+      );
     const result = await this._request("GET", "/bots/stats");
     return {
       serverCount: result.server_count,
       shardCount: null,
-      shards: []
+      shards: [],
     };
   }
 
@@ -171,7 +176,7 @@ export class Api extends EventEmitter {
 
   /**
    * @deprecated No longer supported by Top.gg API v0.
-   * 
+   *
    * Get user info
    *
    * @example
@@ -185,7 +190,9 @@ export class Api extends EventEmitter {
    * @returns {UserInfo} Info for user
    */
   public async getUser(id: Snowflake): Promise<UserInfo> {
-    console.warn("[DeprecationWarning] getUser is no longer supported by Top.gg API v0.");
+    console.warn(
+      "[DeprecationWarning] getUser is no longer supported by Top.gg API v0.",
+    );
 
     return this._request("GET", `/users/${id}`);
   }
@@ -296,7 +303,7 @@ export class Api extends EventEmitter {
   public async hasVoted(id: Snowflake): Promise<boolean> {
     if (!id) throw new Error("Missing ID");
     return this._request("GET", "/bots/check", { userId: id }).then(
-      (x) => !!x.voted
+      (x) => !!x.voted,
     );
   }
 
