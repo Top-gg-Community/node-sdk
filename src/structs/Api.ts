@@ -46,7 +46,7 @@ export class Api extends EventEmitter {
       throw new Error("Got a malformed API token.");
     }
     
-    const tokenData = atob(token[1]);
+    const tokenData = atob(tokenSegments[1]);
     
     try {
       JSON.parse(tokenData).id;
