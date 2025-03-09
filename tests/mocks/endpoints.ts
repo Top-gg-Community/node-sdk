@@ -49,11 +49,6 @@ export const endpoints = [
   {
     pattern: "/api/bots/stats",
     method: "POST",
-    requireAuth: true,
-  },
-  {
-    pattern: "/api/bots/stats",
-    method: "POST",
     data: {},
     requireAuth: true,
   },

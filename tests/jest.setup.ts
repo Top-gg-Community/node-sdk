@@ -43,23 +43,6 @@ beforeEach(() => {
     headers = {},
     options: IOptions,
   ) => {
-    const requestHeaders = request.headers as any;
-
-    // Check if token is avaliable
-    if (
-      options.requireAuth &&
-      (!requestHeaders["authorization"] ||
-        requestHeaders["authorization"] == "")
-    )
-      return { statusCode: 401 };
-
-    // Check that user is owner of bot
-    if (
-      options.requireAuth &&
-      requestHeaders["authorization"] !== "owner_token"
-    )
-      return { statusCode: 403 };
-
     const error = options.validate?.(request);
     if (error) return error;
 
@@ -84,7 +67,7 @@ beforeEach(() => {
           200,
           data,
           {},
-          { pattern, requireAuth, validate: validate },
+          { pattern, requireAuth, validate },
         );
       });
   });

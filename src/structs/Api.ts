@@ -82,6 +82,7 @@ export class Api extends EventEmitter {
     });
 
     let responseBody;
+
     if (
       (response.headers["content-type"] as string)?.startsWith(
         "application/json",
@@ -118,7 +119,7 @@ export class Api extends EventEmitter {
    * @returns {BotStats} Passed object
    */
   public async postStats(stats: BotStats): Promise<BotStats> {
-    if (!stats?.serverCount) throw new Error("Missing Server Count");
+    if ((stats?.serverCount ?? 0) <= 0) throw new Error("Missing server count");
 
     /* eslint-disable camelcase */
     await this._request("POST", "/bots/stats", {
@@ -145,7 +146,7 @@ export class Api extends EventEmitter {
    *
    * @returns {BotStats} Your bot's stats
    */
-  public async getStats(_id: Snowflake): Promise<BotStats> {
+  public async getStats(_id?: Snowflake): Promise<BotStats> {
     if (_id)
       console.warn(
         "[DeprecationWarning] getStats() no longer needs an ID argument",
