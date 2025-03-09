@@ -16,7 +16,7 @@ describe("API postStats test", () => {
     expect(client.postStats({ serverCount: -1 })).rejects.toThrow(Error);
   });
 
-  it("postStats should return 200 when token is owner of bot", async () => {
+  it("postStats should return 200", async () => {
     await expect(client.postStats({ serverCount: 1 })).resolves.toBeInstanceOf(
       Object,
     );
