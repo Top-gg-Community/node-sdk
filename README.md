@@ -58,5 +58,5 @@ app.post(
 app.listen(3000); // your port
 ```
 
-With this example, your webhook dashboard should look like this:
-![](https://i.imgur.com/wFlp4Hg.png)
+With this example, your webhook dashboard (`https://top.gg/bot/{your bot's id}/webhooks`) should look like this:
+![](https://i.imgur.com/cZfZgK5.png)
