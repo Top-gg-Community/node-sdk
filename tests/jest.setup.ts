@@ -41,7 +41,7 @@ beforeEach(() => {
     statusCode: number,
     data: any,
     headers = {},
-    options: IOptions,
+    options: IOptions
   ) => {
     const error = options.validate?.(request);
     if (error) return error;
@@ -50,8 +50,8 @@ beforeEach(() => {
       statusCode,
       data: JSON.stringify(data),
       responseOptions: {
-        headers: { "content-type": "application/json", ...headers },
-      },
+        headers: { "content-type": "application/json", ...headers }
+      }
     };
   };
 
@@ -59,7 +59,7 @@ beforeEach(() => {
     client
       .intercept({
         path: (path) => isMatchingPath(pattern, path),
-        method,
+        method
       })
       .reply((request) => {
         return generateResponse(
@@ -67,7 +67,7 @@ beforeEach(() => {
           200,
           data,
           {},
-          { pattern, requireAuth, validate },
+          { pattern, requireAuth, validate }
         );
       });
   });
@@ -76,7 +76,7 @@ beforeEach(() => {
     .intercept({
       path: (path) =>
         !endpoints.some(({ pattern }) => isMatchingPath(pattern, path)),
-      method: (_) => true,
+      method: (_) => true
     })
     .reply((request) => {
       throw Error(`No endpoint found for ${request.method} ${request.path}`);

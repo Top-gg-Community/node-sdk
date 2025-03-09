@@ -4,7 +4,7 @@ import { BOT, BOT_STATS, VOTES } from "./mocks/data";
 
 /* mock token */
 const client = new Api(
-  ".eyJpZCI6IjEwMjY1MjU1NjgzNDQyNjQ3MjQiLCJib3QiOnRydWV9.",
+  ".eyJpZCI6IjEwMjY1MjU1NjgzNDQyNjQ3MjQiLCJib3QiOnRydWV9."
 );
 
 describe("API postStats test", () => {
@@ -18,7 +18,7 @@ describe("API postStats test", () => {
 
   it("postStats should return 200", async () => {
     await expect(client.postStats({ serverCount: 1 })).resolves.toBeInstanceOf(
-      Object,
+      Object
     );
   });
 });
@@ -28,7 +28,7 @@ describe("API getStats test", () => {
     expect(client.getStats("1")).resolves.toStrictEqual({
       serverCount: BOT_STATS.server_count,
       shardCount: BOT_STATS.shard_count,
-      shards: BOT_STATS.shards,
+      shards: BOT_STATS.shards
     });
   });
 });

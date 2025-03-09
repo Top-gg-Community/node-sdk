@@ -6,7 +6,7 @@ import {
   USER_VOTE,
   USER_VOTE_CHECK,
   VOTES,
-  WEEKEND,
+  WEEKEND
 } from "./data";
 import { getIdInPath } from "../jest.setup";
 
@@ -15,7 +15,7 @@ export const endpoints = [
     pattern: "/api/bots",
     method: "GET",
     data: BOTS,
-    requireAuth: true,
+    requireAuth: true
   },
   {
     pattern: "/api/bots/:bot_id",
@@ -26,42 +26,42 @@ export const endpoints = [
       const bot_id = getIdInPath("/api/bots/:bot_id", request.path);
       if (Number(bot_id) === 0) return { statusCode: 404 };
       return null;
-    },
+    }
   },
   {
     pattern: "/api/bots/votes",
     method: "GET",
     data: VOTES,
-    requireAuth: true,
+    requireAuth: true
   },
   {
     pattern: "/api/bots/check",
     method: "GET",
     data: USER_VOTE,
-    requireAuth: true,
+    requireAuth: true
   },
   {
     pattern: "/api/bots/stats",
     method: "GET",
     data: BOT_STATS,
-    requireAuth: true,
+    requireAuth: true
   },
   {
     pattern: "/api/bots/stats",
     method: "POST",
     data: {},
-    requireAuth: true,
+    requireAuth: true
   },
   {
     pattern: "/api/bots/check",
     method: "GET",
     data: USER_VOTE_CHECK,
-    requireAuth: true,
+    requireAuth: true
   },
   {
     pattern: "/api/weekend",
     method: "GET",
     data: WEEKEND,
-    requireAuth: true,
-  },
+    requireAuth: true
+  }
 ];
