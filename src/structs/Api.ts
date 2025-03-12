@@ -12,7 +12,7 @@ import {
   UserInfo,
   BotsResponse,
   ShortUser,
-  BotsQuery
+  BotsQuery,
 } from "../typings";
 
 /**
@@ -58,7 +58,7 @@ export class Api extends EventEmitter {
 
     this.options = {
       token,
-      ...options
+      ...options,
     };
   }
 
@@ -78,7 +78,7 @@ export class Api extends EventEmitter {
     const response = await request(url, {
       method,
       headers,
-      body: body && method !== "GET" ? JSON.stringify(body) : undefined
+      body: body && method !== "GET" ? JSON.stringify(body) : undefined,
     });
 
     let responseBody;
@@ -110,7 +110,7 @@ export class Api extends EventEmitter {
    * @example
    * ```js
    * await api.postStats({
-   *   serverCount: 28199
+   *   serverCount: 28199,
    * });
    * ```
    *
@@ -123,7 +123,7 @@ export class Api extends EventEmitter {
 
     /* eslint-disable camelcase */
     await this._request("POST", "/bots/stats", {
-      server_count: stats.serverCount
+      server_count: stats.serverCount,
     });
     /* eslint-enable camelcase */
 
@@ -155,7 +155,7 @@ export class Api extends EventEmitter {
     return {
       serverCount: result.server_count,
       shardCount: null,
-      shards: []
+      shards: [],
     };
   }
 
@@ -232,12 +232,12 @@ export class Api extends EventEmitter {
    * {
    *   results: [
    *     {
-   *       id: "461521980492087297",
-   *       username: "Shiro"
+   *       id: '461521980492087297',
+   *       username: 'Shiro'
    *     },
    *     {
-   *       id: "493716749342998541",
-   *       username: "Mimu"
+   *       id: '493716749342998541',
+   *       username: 'Mimu'
    *     },
    *     ...
    *   ],
@@ -269,14 +269,14 @@ export class Api extends EventEmitter {
    * // =>
    * [
    *   {
-   *     username: "Xignotic",
-   *     id: "205680187394752512",
-   *     avatar: "https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png"
+   *     username: 'Xignotic',
+   *     id: '205680187394752512',
+   *     avatar: 'https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png'
    *   },
    *   {
-   *     username: "iara",
-   *     id: "395526710101278721",
-   *     avatar: "https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png"
+   *     username: 'iara',
+   *     id: '395526710101278721',
+   *     avatar: 'https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png'
    *   }
    *   ...more
    * ]

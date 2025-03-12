@@ -10,8 +10,7 @@ export const BOT = {
   shortdesc: "API access for Top.gg Library Developers",
   prefix: "/",
   clientid: "1026525568344264724",
-  avatar:
-    "https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png",
+  avatar: "https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png",
   id: "1026525568344264724",
   username: "Top.gg Lib Dev API Access",
   date: "2022-10-03T16:08:55.000Z",
@@ -21,7 +20,7 @@ export const BOT = {
   owners: ["491002268401926145"],
   tags: ["api", "library", "topgg"],
   reviews: { averageScore: 5, count: 2 }
-};
+}
 
 // https://docs.top.gg/api/bot/#search-bots
 export const BOTS = {
@@ -29,36 +28,31 @@ export const BOTS = {
   offset: 0,
   count: 1,
   total: 1,
-  results: [BOT]
-};
+  results: [BOT],
+}
 
 // https://docs.top.gg/api/bot/#last-1000-votes
 export const VOTES = [
   {
     username: "Xetera",
     id: "140862798832861184",
-    avatar:
-      "https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png"
+    avatar: "https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png"
   }
-];
+]
 
 // https://docs.top.gg/api/bot/#bot-stats
 export const BOT_STATS = {
   server_count: 0,
   shards: [],
   shard_count: null
-};
+}
 
 // https://docs.top.gg/api/bot/#individual-user-vote
 export const USER_VOTE = {
   voted: 1
-};
-
-export const USER_VOTE_CHECK = {
-  voted: 1
-};
+}
 
 // Undocumented 😢
 export const WEEKEND = {
   is_weekend: true
-};
+}

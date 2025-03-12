@@ -1,86 +1,67 @@
-import { MockAgent, setGlobalDispatcher } from "undici";
-import { MockInterceptor } from "undici/types/mock-interceptor";
-import { endpoints } from "./mocks/endpoints";
+import { MockAgent, setGlobalDispatcher } from 'undici';
+import { MockInterceptor } from 'undici/types/mock-interceptor';
+import { endpoints } from './mocks/endpoints';
 
 interface IOptions {
-  pattern: string;
-  requireAuth?: boolean;
-  validate?: (request: MockInterceptor.MockResponseCallbackOptions) => void;
+    pattern: string;
+    requireAuth?: boolean;
+    validate?: (request: MockInterceptor.MockResponseCallbackOptions) => void;
 }
 
 export const getIdInPath = (pattern: string, url: string) => {
-  const regex = new RegExp(`^${pattern.replace(/:[^/]+/g, "([^/]+)")}$`);
-  const match = url.match(regex);
+    const regex = new RegExp(`^${pattern.replace(/:[^/]+/g, '([^/]+)')}$`);
+    const match = url.match(regex);
 
-  return match ? match[1] : null;
+    return match ? match[1] : null;
 };
 
 export const isMatchingPath = (pattern: string, url: string) => {
-  // Remove query params
-  url = url.split("?")[0];
+    // Remove query params
+    url = url.split("?")[0];
 
-  if (pattern === url) {
-    return true;
-  }
+    if (pattern === url) {
+        return true;
+    }
 
-  // Check if there is an exact match
-  if (endpoints.some(({ pattern }) => pattern === url)) {
-    return false;
-  }
+    // Check if there is an exact match
+    if (endpoints.some(({ pattern }) => pattern === url)) {
+        return false;
+    }
 
-  return getIdInPath(pattern, url) !== null;
+    return getIdInPath(pattern, url) !== null;
 };
 
 beforeEach(() => {
-  const mockAgent = new MockAgent();
-  mockAgent.disableNetConnect();
-  const client = mockAgent.get("https://top.gg");
+    const mockAgent = new MockAgent();
+    mockAgent.disableNetConnect();
+    const client = mockAgent.get('https://top.gg');
 
-  const generateResponse = (
-    request: MockInterceptor.MockResponseCallbackOptions,
-    statusCode: number,
-    data: any,
-    headers = {},
-    options: IOptions
-  ) => {
-    const error = options.validate?.(request);
-    if (error) return error;
+    const generateResponse = (request: MockInterceptor.MockResponseCallbackOptions, statusCode: number, data: any, headers = {}, options: IOptions) => {
+        const error = options.validate?.(request);
+        if (error) return error;
 
-    return {
-      statusCode,
-      data: JSON.stringify(data),
-      responseOptions: {
-        headers: { "content-type": "application/json", ...headers }
-      }
-    };
-  };
+        return {
+            statusCode,
+            data: JSON.stringify(data),
+            responseOptions: {
+                headers: { 'content-type': 'application/json', ...headers },
+            }
+        }
+    }
 
-  endpoints.forEach(({ pattern, method, data, requireAuth, validate }) => {
-    client
-      .intercept({
-        path: (path) => isMatchingPath(pattern, path),
-        method
-      })
-      .reply((request) => {
-        return generateResponse(
-          request,
-          200,
-          data,
-          {},
-          { pattern, requireAuth, validate }
-        );
-      });
-  });
-
-  client
-    .intercept({
-      path: (path) =>
-        !endpoints.some(({ pattern }) => isMatchingPath(pattern, path)),
-      method: (_) => true
+    endpoints.forEach(({ pattern, method, data, requireAuth, validate }) => {
+        client.intercept({
+            path: (path) => isMatchingPath(pattern, path),
+            method,
+        }).reply((request) => {return generateResponse(request, 200, data, {}, { pattern, requireAuth, validate })});
     })
-    .reply((request) => {
-      throw Error(`No endpoint found for ${request.method} ${request.path}`);
-    });
+    
+    client.intercept({
+        path: (path) => !endpoints.some(({ pattern }) => isMatchingPath(pattern, path)),
+        method: (_) => true,
+    }).reply((request) => {
+        throw Error(`No endpoint found for ${request.method} ${request.path}`)
+    })
 
-  setGlobalDispatcher(mockAgent);
+    setGlobalDispatcher(mockAgent);
 });

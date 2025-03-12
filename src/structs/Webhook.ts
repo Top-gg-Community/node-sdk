@@ -45,12 +45,9 @@ export class Webhook {
    *
    * @param authorization Webhook authorization to verify requests
    */
-  constructor(
-    private authorization?: string,
-    options: WebhookOptions = {}
-  ) {
+  constructor(private authorization?: string, options: WebhookOptions = {}) {
     this.options = {
-      error: options.error ?? console.error
+      error: options.error ?? console.error,
     };
   }
 
