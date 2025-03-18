@@ -1,29 +1,25 @@
 // https://docs.top.gg/api/bot/#find-one-bot
 export const BOT = {
-  "defAvatar": "6debd47ed13483642cf09e832ed0bc1b",
-  "invite": "",
-  "website": "https://discordbots.org",
-  "support": "KYZsaFb",
-  "github": "https://github.com/DiscordBotList/Luca",
-  "longdesc": "Luca only works in the **Discord Bot List** server.    \r\nPrepend commands with the prefix `-` or `@Luca#1375`.    \r\n**Please refrain from using these commands in non testing channels.**\r\n- `botinfo @bot` Shows bot info, title redirects to site listing.\r\n- `bots @user`* Shows all bots of that user, includes bots in the queue.\r\n- `owner / -owners @bot`* Shows all owners of that bot.\r\n- `prefix @bot`* Shows the prefix of that bot.\r\n* Mobile friendly version exists. Just add `noembed` to the end of the command.\r\n",
-  "shortdesc": "Luca is a bot for managing and informing members of the server",
-  "prefix": "- or @Luca#1375",
-  "lib": "discord.js",
-  "clientid": "264811613708746752",
-  "avatar": "7edcc4c6fbb0b23762455ca139f0e1c9",
-  "id": "264811613708746752",
-  "discriminator": "1375",
-  "username": "Luca",
-  "date": "2017-04-26T18:08:17.125Z",
-  "server_count": 2,
-  "guilds": ["417723229721853963", "264445053596991498"],
-  "shards": [],
-  "monthlyPoints": 19,
-  "points": 397,
-  "certifiedBot": false,
-  "owners": ["129908908096487424"],
-  "tags": ["Moderation", "Role Management", "Logging"],
-  "donatebotguildid": ""
+  invite: "https://top.gg/discord",
+  support: "https://discord.gg/dbl",
+  github: "https://github.com/top-gg",
+  longdesc:
+    "A bot to grant API access to our Library Developers on the Top.gg site without them needing to submit a bot to pass verification just to be able to access the API. \n" +
+    "\n" +
+    "Access to this bot's team can be requested by contacting a Community Manager in [our Discord server](https://top.gg/discord).",
+  shortdesc: "API access for Top.gg Library Developers",
+  prefix: "/",
+  clientid: "1026525568344264724",
+  avatar: "https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png",
+  id: "1026525568344264724",
+  username: "Top.gg Lib Dev API Access",
+  date: "2022-10-03T16:08:55.000Z",
+  server_count: 2,
+  monthlyPoints: 4,
+  points: 18,
+  owners: ["491002268401926145"],
+  tags: ["api", "library", "topgg"],
+  reviews: { averageScore: 5, count: 2 }
 }
 
 // https://docs.top.gg/api/bot/#search-bots
@@ -38,45 +34,25 @@ export const BOTS = {
 // https://docs.top.gg/api/bot/#last-1000-votes
 export const VOTES = [
   {
-    "username": "Xetera",
-    "id": "140862798832861184",
-    "avatar": "a_1241439d430def25c100dd28add2d42f"
+    username: "Xetera",
+    id: "140862798832861184",
+    avatar: "https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png"
   }
 ]
 
 // https://docs.top.gg/api/bot/#bot-stats
 export const BOT_STATS = {
   server_count: 0,
-  shards: ['200'],
-  shard_count: 1
+  shards: [],
+  shard_count: null
 }
 
 // https://docs.top.gg/api/bot/#individual-user-vote
 export const USER_VOTE = {
-  "voted": 1
-}
-
-// https://docs.top.gg/api/user/#structure
-export const USER = {
-  "discriminator": "0001",
-  "avatar": "a_1241439d430def25c100dd28add2d42f",
-  "id": "140862798832861184",
-  "username": "Xetera",
-  "defAvatar": "322c936a8c8be1b803cd94861bdfa868",
-  "admin": true,
-  "webMod": true,
-  "mod": true,
-  "certifiedDev": false,
-  "supporter": false,
-  "social": {}
-}
-
-export const USER_VOTE_CHECK = { 
-  voted: 1 
+  voted: 1
 }
 
 // Undocumented 😢
 export const WEEKEND = {
   is_weekend: true
 }
-

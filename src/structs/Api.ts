@@ -30,6 +30,7 @@ import {
  */
 export class Api extends EventEmitter {
   private options: APIOptions;
+
   /**
    * Create Top.gg API instance
    *
@@ -38,8 +39,25 @@ export class Api extends EventEmitter {
    */
   constructor(token: string, options: APIOptions = {}) {
     super();
+
+    const tokenSegments = token.split(".");
+
+    if (tokenSegments.length !== 3) {
+      throw new Error("Got a malformed API token.");
+    }
+
+    const tokenData = atob(tokenSegments[1]);
+
+    try {
+      JSON.parse(tokenData).id;
+    } catch {
+      throw new Error(
+        "Invalid API token state, this should not happen! Please report!"
+      );
+    }
+
     this.options = {
-      token: token,
+      token,
       ...options,
     };
   }
@@ -64,6 +82,7 @@ export class Api extends EventEmitter {
     });
 
     let responseBody;
+
     if (
       (response.headers["content-type"] as string)?.startsWith(
         "application/json"
@@ -92,24 +111,19 @@ export class Api extends EventEmitter {
    * ```js
    * await api.postStats({
    *   serverCount: 28199,
-   *   shardCount: 1,
    * });
    * ```
    *
    * @param {object} stats Stats object
    * @param {number} stats.serverCount Server count
-   * @param {number} [stats.shardCount] Shard count
-   * @param {number} [stats.shardId] Posting shard (useful for process sharding)
    * @returns {BotStats} Passed object
    */
   public async postStats(stats: BotStats): Promise<BotStats> {
-    if (!stats?.serverCount) throw new Error("Missing Server Count");
+    if ((stats?.serverCount ?? 0) <= 0) throw new Error("Missing server count");
 
     /* eslint-disable camelcase */
     await this._request("POST", "/bots/stats", {
       server_count: stats.serverCount,
-      shard_id: stats.shardId,
-      shard_count: stats.shardCount,
     });
     /* eslint-enable camelcase */
 
@@ -117,29 +131,31 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Get a bots stats
+   * Get your bot's stats
    *
    * @example
    * ```js
-   * await api.getStats("461521980492087297");
+   * await api.getStats();
    * // =>
    * {
    *   serverCount: 28199,
-   *   shardCount 1,
+   *   shardCount: null,
    *   shards: []
    * }
    * ```
    *
-   * @param {Snowflake} id Bot ID
-   * @returns {BotStats} Stats of bot requested
+   * @returns {BotStats} Your bot's stats
    */
-  public async getStats(id: Snowflake): Promise<BotStats> {
-    if (!id) throw new Error("ID missing");
-    const result = await this._request("GET", `/bots/${id}/stats`);
+  public async getStats(_id?: Snowflake): Promise<BotStats> {
+    if (_id)
+      console.warn(
+        "[DeprecationWarning] getStats() no longer needs an ID argument"
+      );
+    const result = await this._request("GET", "/bots/stats");
     return {
       serverCount: result.server_count,
-      shardCount: result.shard_count,
-      shards: result.shards,
+      shardCount: null,
+      shards: [],
     };
   }
 
@@ -160,6 +176,8 @@ export class Api extends EventEmitter {
   }
 
   /**
+   * @deprecated No longer supported by Top.gg API v0.
+   *
    * Get user info
    *
    * @example
@@ -173,7 +191,10 @@ export class Api extends EventEmitter {
    * @returns {UserInfo} Info for user
    */
   public async getUser(id: Snowflake): Promise<UserInfo> {
-    if (!id) throw new Error("ID Missing");
+    console.warn(
+      "[DeprecationWarning] getUser is no longer supported by Top.gg API v0."
+    );
+
     return this._request("GET", `/users/${id}`);
   }
 
@@ -185,18 +206,15 @@ export class Api extends EventEmitter {
    * // Finding by properties
    * await api.getBots({
    *   search: {
-   *     username: "shiro",
-   *     certifiedBot: true,
+   *     username: "shiro"
    *   },
    * });
    * // =>
    * {
    *   results: [
    *     {
-   *       id: '461521980492087297',
-   *       username: 'Shiro',
-   *       discriminator: '8764',
-   *       lib: 'discord.js',
+   *       id: "461521980492087297",
+   *       username: "Shiro",
    *       ...rest of bot object
    *     }
    *     ...other shiro knockoffs B)
@@ -243,7 +261,7 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Get users who've voted
+   * Get recent unique users who've voted
    *
    * @example
    * ```js
@@ -253,22 +271,22 @@ export class Api extends EventEmitter {
    *   {
    *     username: 'Xignotic',
    *     id: '205680187394752512',
-   *     avatar: '3b9335670c7213b3a2d4e990081900c7'
+   *     avatar: 'https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png'
    *   },
    *   {
    *     username: 'iara',
    *     id: '395526710101278721',
-   *     avatar: '3d1477390b8d7c3cec717ac5c778f5f4'
+   *     avatar: 'https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png'
    *   }
    *   ...more
    * ]
    * ```
    *
-   * @returns {ShortUser[]} Array of users who've voted
+   * @param {number} [page] The page number. Each page can only have at most 100 voters.
+   * @returns {ShortUser[]} Array of unique users who've voted
    */
-  public async getVotes(): Promise<ShortUser[]> {
-    if (!this.options.token) throw new Error("Missing token");
-    return this._request("GET", "/bots/votes");
+  public async getVotes(page?: number): Promise<ShortUser[]> {
+    return this._request("GET", "/bots/votes", { page: page ?? 1 });
   }
 
   /**

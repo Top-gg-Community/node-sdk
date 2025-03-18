@@ -8,9 +8,9 @@ An official module for interacting with the Top.<span>gg API
 
 # Introduction
 
-The base client is Topgg.Api, and it takes your Top.<span>gg token and provides you with plenty of methods to interact with the API.
+The base client is Topgg.Api, and it takes your Top.gg token and provides you with plenty of methods to interact with the API.
 
-Your Top.<span>gg token can be found at `top.gg/bot/(BOT_ID)/webhooks` and copying the token.
+See [this tutorial](https://github.com/top-gg/rust-sdk/assets/60427892/d2df5bd3-bc48-464c-b878-a04121727bff) on how to retrieve your API token.
 
 You can also setup webhooks via Topgg.Webhook, look down below at the examples for how to do so!
 
@@ -58,5 +58,5 @@ app.post(
 app.listen(3000); // your port
 ```
 
-With this example, your webhook dashboard should look like this:
-![](https://i.imgur.com/wFlp4Hg.png)
+With this example, your webhook dashboard (`https://top.gg/bot/{your bot's id}/webhooks`) should look like this:
+![](https://i.imgur.com/cZfZgK5.png)
