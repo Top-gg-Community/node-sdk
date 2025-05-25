@@ -46,10 +46,11 @@ export class Api extends EventEmitter {
       throw new Error("Got a malformed API token.");
     }
 
-    const tokenData = atob(tokenSegments[1]);
-
     try {
-      JSON.parse(tokenData).id;
+      const tokenData = atob(tokenSegments[1]);
+      const tokenId = JSON.parse(tokenData).id;
+
+      options.id ??= tokenId;
     } catch {
       throw new Error(
         "Invalid API token state, this should not happen! Please report!"
@@ -286,7 +287,7 @@ export class Api extends EventEmitter {
    * @returns {ShortUser[]} Array of unique users who've voted
    */
   public async getVotes(page?: number): Promise<ShortUser[]> {
-    return this._request("GET", "/bots/votes", { page: page ?? 1 });
+    return this._request("GET", `/bots/${this.options.id}/votes`, { page: page ?? 1 });
   }
 
   /**

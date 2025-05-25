@@ -1,6 +1,9 @@
 export interface APIOptions {
   /** Top.gg token */
   token?: string;
+
+  /** Discord bot ID */
+  id?: string;
 }
 
 /** Discord ID */
