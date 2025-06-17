@@ -171,7 +171,11 @@ export interface BotsQuery {
   limit?: number;
   /** Amount of bots to skip */
   offset?: number;
-  /** A search string in the format of "field: value field2: value2" */
+  /**
+   * A search string in the format of "field: value field2: value2"
+   * 
+   * @deprecated No longer supported by Top.gg API v1.
+   */
   search?:
     | {
         [key in keyof BotInfo]: string;

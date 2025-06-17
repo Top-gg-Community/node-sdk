@@ -72,7 +72,7 @@ export class Api extends EventEmitter {
     if (this.options.token) headers["authorization"] = this.options.token;
     if (method !== "GET") headers["content-type"] = "application/json";
 
-    let url = `https://top.gg/api${path}`;
+    let url = `https://top.gg/api/v1${path}`;
 
     if (body && method === "GET") url += `?${new URLSearchParams(body)}`;
 
@@ -204,12 +204,7 @@ export class Api extends EventEmitter {
    *
    * @example
    * ```js
-   * // Finding by properties
-   * await api.getBots({
-   *   search: {
-   *     username: "shiro"
-   *   },
-   * });
+   * await api.getBots();
    * // =>
    * {
    *   results: [
@@ -252,11 +247,6 @@ export class Api extends EventEmitter {
   public async getBots(query?: BotsQuery): Promise<BotsResponse> {
     if (query) {
       if (Array.isArray(query.fields)) query.fields = query.fields.join(", ");
-      if (query.search instanceof Object) {
-        query.search = Object.entries(query.search)
-          .map(([key, value]) => `${key}: ${value}`)
-          .join(" ");
-      }
     }
     return this._request("GET", "/bots", query);
   }

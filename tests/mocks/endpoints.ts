@@ -21,10 +21,15 @@ export const endpoints = [
         }
     },
     {
-        pattern: '/api/bots/votes',
+        pattern: '/api/bots/:bot_id/votes',
         method: 'GET',
         data: VOTES,
-        requireAuth: true
+        requireAuth: true,
+        validate: (request: MockInterceptor.MockResponseCallbackOptions) => {
+            const bot_id = getIdInPath('/api/bots/:bot_id/votes', request.path);
+            if (Number(bot_id) === 0) return { statusCode: 404 };
+            return null;
+        }
     },
     {
         pattern: '/api/bots/check',

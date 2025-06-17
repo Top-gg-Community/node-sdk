@@ -23,7 +23,7 @@ describe('API postStats test', () => {
 
 describe('API getStats test', () => {
     it('getStats should return 200 when bot is found', async () => {
-        expect(client.getStats('1')).resolves.toStrictEqual({
+        expect(client.getStats()).resolves.toStrictEqual({
             serverCount: BOT_STATS.server_count,
             shardCount: BOT_STATS.shard_count,
             shards: BOT_STATS.shards

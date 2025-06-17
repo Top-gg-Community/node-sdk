@@ -10,7 +10,7 @@ interface IOptions {
 
 export const getIdInPath = (pattern: string, url: string) => {
     const regex = new RegExp(`^${pattern.replace(/:[^/]+/g, '([^/]+)')}$`);
-    const match = url.match(regex);
+    const match = url.split('?')[0].match(regex);
 
     return match ? match[1] : null;
 };
