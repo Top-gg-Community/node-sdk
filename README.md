@@ -1,62 +1,159 @@
-# Top.gg Node SDK
+# Top.gg Node.js SDK
 
-An official module for interacting with the Top.<span>gg API
+The community-maintained Node.js library for Top.gg.
 
-# Installation
+## Installation
 
-`yarn add @top-gg/sdk` or `npm i @top-gg/sdk`
+### NPM
 
-# Introduction
+```sh
+$ npm i @top-gg/sdk
+```
 
-The base client is Topgg.Api, and it takes your Top.gg token and provides you with plenty of methods to interact with the API.
+### Yarn
 
-See [this tutorial](https://github.com/top-gg/rust-sdk/assets/60427892/d2df5bd3-bc48-464c-b878-a04121727bff) on how to retrieve your API token.
+```sh
+$ yarn add @top-gg/sdk
+```
 
-You can also setup webhooks via Topgg.Webhook, look down below at the examples for how to do so!
+## Setting up
 
-# Links
-
-[Documentation](https://topgg.js.org)
-
-[API Reference](https://docs.top.gg) | [GitHub](https://github.com/top-gg/node-sdk) | [NPM](https://npmjs.com/package/@top-gg/sdk) | [Discord Server](https://discord.gg/EYHTgJX)
-
-# Popular Examples
-
-## Auto-Posting stats
-
-If you're looking for an easy way to post your bot's stats (server count, shard count), check out [`topgg-autoposter`](https://npmjs.com/package/topgg-autoposter)
+### CommonJS
 
 ```js
-const client = Discord.Client(); // Your discord.js client or any other
+const Topgg = require("@top-gg/sdk");
+
+const client = new Topgg.Api(process.env.TOPGG_TOKEN);
+```
+
+### ES module
+
+```js
+import Topgg from "@top-gg/sdk";
+
+const client = new Topgg.Api(process.env.TOPGG_TOKEN);
+```
+
+## Usage
+
+### Getting a bot
+
+```js
+const bot = await client.getBot("461521980492087297");
+```
+
+### Getting several bots
+
+```js
+const bots = await client.getBots();
+```
+
+### Getting your bot's voters
+
+#### First page
+
+```js
+const voters = await client.getVotes();
+```
+
+#### Subsequent pages
+
+```js
+const voters = await client.getVotes(2);
+```
+
+### Check if a user has voted for your bot
+
+```js
+const hasVoted = await client.hasVoted("205680187394752512");
+```
+
+### Getting your bot's server count
+
+```js
+const { serverCount } = await client.getStats();
+```
+
+### Posting your bot's server count
+
+```js
+await client.postStats({
+  serverCount: bot.getServerCount()
+});
+```
+
+### Automatically posting your bot's server count every few minutes
+
+You would need to use the third-party `topgg-autoposter` package to be able to autopost. Install it in your terminal like so:
+
+#### NPM
+
+```sh
+$ npm i topgg-autoposter
+```
+
+#### Yarn
+
+```sh
+$ yarn add topgg-autoposter
+```
+
+Then in your code:
+
+#### CommonJS
+
+```js
 const { AutoPoster } = require("topgg-autoposter");
 
-AutoPoster("topgg-token", client).on("posted", () => {
+// Your discord.js client or any other
+const client = Discord.Client();
+
+AutoPoster(process.env.TOPGG_TOKEN, client).on("posted", () => {
   console.log("Posted stats to Top.gg!");
 });
 ```
 
-With this your server count and shard count will be posted to Top.<span>gg
-
-## Webhook server
+#### ES module
 
 ```js
-const express = require("express");
-const Topgg = require("@top-gg/sdk");
+import { AutoPoster } from "topgg-autoposter";
 
-const app = express(); // Your express app
+// Your discord.js client or any other
+const client = Discord.Client();
 
-const webhook = new Topgg.Webhook("topggauth123"); // add your Top.gg webhook authorization (not bot token)
-
-app.post(
-  "/dblwebhook",
-  webhook.listener((vote) => {
-    // vote is your vote object
-    console.log(vote.user); // 221221226561929217
-  })
-); // attach the middleware
-
-app.listen(3000); // your port
+AutoPoster(process.env.TOPGG_TOKEN, client).on("posted", () => {
+  console.log("Posted stats to Top.gg!");
+});
 ```
 
-With this example, your webhook dashboard (`https://top.gg/bot/{your bot's id}/webhooks`) should look like this:
-![](https://i.imgur.com/cZfZgK5.png)
+### Checking if the weekend vote multiplier is active
+
+```js
+const isWeekend = await client.isWeekend();
+```
+
+### Generating widget URLs
+
+#### Large
+
+```js
+const widgetUrl = Topgg.Widget.large(Topgg.WidgetType.DiscordBot, "574652751745777665");
+```
+
+#### Votes
+
+```js
+const widgetUrl = Topgg.Widget.votes(Topgg.WidgetType.DiscordBot, "574652751745777665");
+```
+
+#### Owner
+
+```js
+const widgetUrl = Topgg.Widget.owner(Topgg.WidgetType.DiscordBot, "574652751745777665");
+```
+
+#### Social
+
+```js
+const widgetUrl = Topgg.Widget.social(Topgg.WidgetType.DiscordBot, "574652751745777665");
+```
