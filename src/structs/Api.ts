@@ -111,7 +111,7 @@ export class Api extends EventEmitter {
    * @example
    * ```js
    * await api.postStats({
-   *   serverCount: 28199,
+   *   serverCount: 28199
    * });
    * ```
    *
