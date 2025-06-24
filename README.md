@@ -109,7 +109,7 @@ const { AutoPoster } = require("topgg-autoposter");
 const client = Discord.Client();
 
 AutoPoster(process.env.TOPGG_TOKEN, client).on("posted", () => {
-  console.log("Posted stats to Top.gg!");
+  console.log("Successfully posted server count to Top.gg!");
 });
 ```
 
@@ -122,7 +122,7 @@ import { AutoPoster } from "topgg-autoposter";
 const client = Discord.Client();
 
 AutoPoster(process.env.TOPGG_TOKEN, client).on("posted", () => {
-  console.log("Posted stats to Top.gg!");
+  console.log("Successfully posted server count to Top.gg!");
 });
 ```
 

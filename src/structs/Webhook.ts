@@ -16,22 +16,17 @@ export interface WebhookOptions {
  *
  * @example
  * ```js
- * const express = require("express");
  * const { Webhook } = require("@top-gg/sdk");
- *
+ * const express = require("express");
+ * 
  * const app = express();
- * const wh = new Webhook("webhookauth123");
- *
- * app.post("/votes", wh.voteListener((vote) => {
- *   // vote is your vote object e.g
- *   console.log(vote.voterId); // => 321714991050784770
+ * const webhook = new Webhook(process.env.MY_TOPGG_WEBHOOK_SECRET);
+ * 
+ * app.post("/votes", webhook.voteListener(vote => {
+ *   console.log(`A user with the ID of ${vote.voterId} has voted us on Top.gg!`);
  * }));
- *
+ * 
  * app.listen(8080);
- *
- * // In this situation, your Top.gg Webhook dashboard should look like
- * // URL = http://your.server.ip:8080/votes
- * // Authorization: webhookauth123
  * ```
  *
  * @link {@link https://docs.top.gg/resources/webhooks/#schema | Webhook Data Schema}
@@ -43,7 +38,7 @@ export class Webhook {
   /**
    * Create a new webhook client instance
    *
-   * @param authorization Webhook authorization to verify requests
+   * @param {?string} authorization Webhook authorization to verify requests
    */
   constructor(
     private authorization?: string,
@@ -58,7 +53,7 @@ export class Webhook {
     return {
       receiverId: (body.bot ?? body.guild)!,
       voterId: body.user,
-      type: body.type,
+      isTest: body.type === "test",
       isWeekend: body.isWeekend,
       query: body.query ?? Object.fromEntries(new URLSearchParams(body.query))
     };
@@ -125,21 +120,21 @@ export class Webhook {
    *
    * @example
    * ```js
-   * app.post("/webhook", wh.voteListener((vote) => {
-   *   console.log(vote.voterId); // => 395526710101278721
+   * app.post("/votes", webhook.voteListener(vote => {
+   *   console.log(`A user with the ID of ${vote.voterId} has voted us on Top.gg!`);
    * }));
    * ```
    *
    * @example
    * ```js
    * // Throwing an error to resend the webhook
-   * app.post("/webhook/", wh.voteListener((vote) => {
-   *   // for example, if your bot is offline, you should probably not handle votes and try again
+   * app.post("/votes", webhook.voteListener(vote => {
+   *   // For example, if your bot is offline, you should probably not handle votes and try again.
    *   if (bot.offline) throw new Error('Bot offline');
    * }));
    * ```
    *
-   * @param fn Vote handling function, this function can also throw an error to
+   * @param {(payload: WebhookVotePayload, req?: Request, res?: Response, next?: NextFunction) => void | Promise<void>} fn Vote handling function, this function can also throw an error to
    *   allow for the webhook to resend from Top.gg
    * @returns An express request handler
    */

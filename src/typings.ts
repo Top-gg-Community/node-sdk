@@ -16,32 +16,8 @@ export interface BotInfo {
   clientid: Snowflake;
   /** The username of the bot */
   username: string;
-  /**
-   * The discriminator of the bot
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  discriminator: string;
   /** The bot's avatar */
   avatar: string;
-  /**
-   * The cdn hash of the bot's avatar if the bot has none
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  defAvatar: string;
-  /**
-   * The URL for the banner image
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  bannerUrl?: string;
-  /**
-   * The library of the bot
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  lib: string;
   /** The prefix of the bot */
   prefix: string;
   /** The short description of the bot */
@@ -58,34 +34,16 @@ export interface BotInfo {
   github?: string;
   /** The owners of the bot. First one in the array is the main owner */
   owners: Snowflake[];
-  /**
-   * The guilds featured on the bot page
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  guilds: Snowflake[];
   /** The custom bot invite url of the bot */
   invite?: string;
   /** The date when the bot was submitted (in ISO 8601) */
   date: string;
-  /**
-   * The certified status of the bot
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  certifiedBot: boolean;
   /** The vanity url of the bot */
   vanity?: string;
   /** The amount of votes the bot has */
   points: number;
   /** The amount of votes the bot has this month */
   monthlyPoints: number;
-  /**
-   * The guild id for the donatebot setup
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  donatebotguildid: Snowflake;
   /** The amount of servers the bot is in based on posted stats */
   server_count?: number;
   /** The bot's reviews on Top.gg */
@@ -100,70 +58,6 @@ export interface BotInfo {
 export interface BotStats {
   /** The amount of servers the bot is in */
   serverCount?: number;
-  /**
-   * The amount of servers the bot is in per shard. Always present but can be
-   * empty. (Only when receiving stats)
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  shards?: number[];
-  /**
-   * The shard ID to post as (only when posting)
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  shardId?: number;
-  /**
-   * The amount of shards a bot has
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  shardCount?: number | null;
-}
-
-/**
- * @deprecated No longer supported by Top.gg API v0.
- */
-export interface UserInfo {
-  /** The id of the user */
-  id: Snowflake;
-  /** The username of the user */
-  username: string;
-  /** The discriminator of the user */
-  discriminator: string;
-  /** The user's avatar url */
-  avatar: string;
-  /** The cdn hash of the user's avatar if the user has none */
-  defAvatar: string;
-  /** The bio of the user */
-  bio?: string;
-  /** The banner image url of the user */
-  banner?: string;
-  /** The social usernames of the user */
-  social: {
-    /** The youtube channel id of the user */
-    youtube?: string;
-    /** The reddit username of the user */
-    reddit?: string;
-    /** The twitter username of the user */
-    twitter?: string;
-    /** The instagram username of the user */
-    instagram?: string;
-    /** The github username of the user */
-    github?: string;
-  };
-  /** The custom hex color of the user */
-  color: string;
-  /** The supporter status of the user */
-  supporter: boolean;
-  /** The certified status of the user */
-  certifiedDev: boolean;
-  /** The mod status of the user */
-  mod: boolean;
-  /** The website moderator status of the user */
-  webMod: boolean;
-  /** The admin status of the user */
-  admin: boolean;
 }
 
 export interface BotsQuery {
@@ -205,12 +99,6 @@ export interface ShortUser {
   id: Snowflake;
   /** User's username */
   username: string;
-  /**
-   * User's discriminator
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  discriminator: string;
   /** User's avatar url */
   avatar: string;
 }
@@ -221,10 +109,9 @@ export interface WebhookVotePayload {
   /** The ID of the Top.gg user who voted. */
   voterId: Snowflake;
   /**
-   * The type of the vote (should always be "upvote" except when using the test
-   * button it's "test")
+   * Whether this vote is just a test done from the page settings.
    */
-  type: string;
+  isTest: boolean;
   /**
    * Whether the weekend multiplier is in effect, meaning users votes count as
    * two

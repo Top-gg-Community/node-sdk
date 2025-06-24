@@ -9,7 +9,6 @@ import {
   Snowflake,
   BotStats,
   BotInfo,
-  UserInfo,
   BotsResponse,
   ShortUser,
   BotsQuery,
@@ -21,8 +20,8 @@ import {
  * @example
  * ```js
  * const Topgg = require("@top-gg/sdk");
- *
- * const api = new Topgg.Api("Your top.gg token");
+ * 
+ * const client = new Topgg.Api(process.env.TOPGG_TOKEN);
  * ```
  *
  * @link {@link https://topgg.js.org | Library docs}
@@ -106,12 +105,12 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Post bot stats to Top.gg
+   * Post your bot's server count to Top.gg
    *
    * @example
    * ```js
-   * await api.postStats({
-   *   serverCount: 28199
+   * await client.postStats({
+   *   serverCount: bot.getServerCount()
    * });
    * ```
    *
@@ -132,31 +131,20 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Get your bot's stats
+   * Get your bot's server count
    *
    * @example
    * ```js
-   * await api.getStats();
-   * // =>
-   * {
-   *   serverCount: 28199,
-   *   shardCount: null,
-   *   shards: []
-   * }
+   * const { serverCount } = await client.getStats();
    * ```
    *
    * @returns {BotStats} Your bot's stats
    */
-  public async getStats(_id?: Snowflake): Promise<BotStats> {
-    if (_id)
-      console.warn(
-        "[DeprecationWarning] getStats() no longer needs an ID argument"
-      );
+  public async getStats(): Promise<BotStats> {
     const result = await this._request("GET", "/bots/stats");
+
     return {
-      serverCount: result.server_count,
-      shardCount: null,
-      shards: [],
+      serverCount: result.server_count
     };
   }
 
@@ -165,7 +153,7 @@ export class Api extends EventEmitter {
    *
    * @example
    * ```js
-   * await api.getBot("461521980492087297"); // returns bot info
+   * const bot = await client.getBot("461521980492087297");
    * ```
    *
    * @param {Snowflake} id Bot ID
@@ -177,68 +165,11 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * @deprecated No longer supported by Top.gg API v0.
-   *
-   * Get user info
-   *
-   * @example
-   * ```js
-   * await api.getUser("205680187394752512");
-   * // =>
-   * user.username; // Xignotic
-   * ```
-   *
-   * @param {Snowflake} id User ID
-   * @returns {UserInfo} Info for user
-   */
-  public async getUser(id: Snowflake): Promise<UserInfo> {
-    console.warn(
-      "[DeprecationWarning] getUser is no longer supported by Top.gg API v0."
-    );
-
-    return this._request("GET", `/users/${id}`);
-  }
-
-  /**
    * Get a list of bots
    *
    * @example
    * ```js
-   * await api.getBots();
-   * // =>
-   * {
-   *   results: [
-   *     {
-   *       id: "461521980492087297",
-   *       username: "Shiro",
-   *       ...rest of bot object
-   *     }
-   *     ...other shiro knockoffs B)
-   *   ],
-   *   limit: 10,
-   *   offset: 0,
-   *   count: 1,
-   *   total: 1
-   * }
-   * // Restricting fields
-   * await api.getBots({
-   *   fields: ["id", "username"],
-   * });
-   * // =>
-   * {
-   *   results: [
-   *     {
-   *       id: '461521980492087297',
-   *       username: 'Shiro'
-   *     },
-   *     {
-   *       id: '493716749342998541',
-   *       username: 'Mimu'
-   *     },
-   *     ...
-   *   ],
-   *   ...
-   * }
+   * const bots = await client.getBots();
    * ```
    *
    * @param {BotsQuery} query Bot Query
@@ -256,21 +187,11 @@ export class Api extends EventEmitter {
    *
    * @example
    * ```js
-   * await api.getVotes();
-   * // =>
-   * [
-   *   {
-   *     username: 'Xignotic',
-   *     id: '205680187394752512',
-   *     avatar: 'https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png'
-   *   },
-   *   {
-   *     username: 'iara',
-   *     id: '395526710101278721',
-   *     avatar: 'https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png'
-   *   }
-   *   ...more
-   * ]
+   * // First page
+   * const voters1 = await client.getVotes();
+   * 
+   * // Subsequent pages
+   * const voters2 = await client.getVotes(2);
    * ```
    *
    * @param {number} [page] The page number. Each page can only have at most 100 voters.
@@ -285,8 +206,7 @@ export class Api extends EventEmitter {
    *
    * @example
    * ```js
-   * await api.hasVoted("205680187394752512");
-   * // => true/false
+   * const hasVoted = await client.hasVoted("205680187394752512");
    * ```
    *
    * @param {Snowflake} id User ID
@@ -304,8 +224,7 @@ export class Api extends EventEmitter {
    *
    * @example
    * ```js
-   * await api.isWeekend();
-   * // => true/false
+   * const isWeekend = await client.isWeekend();
    * ```
    *
    * @returns {boolean} Whether the multiplier is active
