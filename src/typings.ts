@@ -215,13 +215,11 @@ export interface ShortUser {
   avatar: string;
 }
 
-export interface WebhookPayload {
-  /** If webhook is a bot: ID of the bot that received a vote */
-  bot?: Snowflake;
-  /** If webhook is a server: ID of the server that received a vote */
-  guild?: Snowflake;
-  /** ID of the user who voted */
-  user: Snowflake;
+export interface WebhookVotePayload {
+  /** The ID of the Discord bot/server that received a vote. */
+  receiverId: Snowflake;
+  /** The ID of the Top.gg user who voted. */
+  voterId: Snowflake;
   /**
    * The type of the vote (should always be "upvote" except when using the test
    * button it's "test")
@@ -238,10 +236,4 @@ export interface WebhookPayload {
         [key: string]: string;
       }
     | string;
-}
-
-declare module "express" {
-  export interface Request {
-    vote?: WebhookPayload;
-  }
 }

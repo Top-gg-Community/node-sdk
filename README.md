@@ -157,3 +157,41 @@ const widgetUrl = Topgg.Widget.owner(Topgg.WidgetType.DiscordBot, "5746527517457
 ```js
 const widgetUrl = Topgg.Widget.social(Topgg.WidgetType.DiscordBot, "574652751745777665");
 ```
+
+### Webhooks
+
+#### Being notified whenever someone voted for your bot
+
+With express:
+
+##### CommonJS
+
+```js
+const { Webhook } = require("@top-gg/sdk");
+const express = require("express");
+
+const app = express();
+const webhook = new Webhook(process.env.MY_TOPGG_WEBHOOK_SECRET);
+
+app.post("/votes", webhook.voteListener(vote => {
+  console.log(`A user with the ID of ${vote.voterId} has voted us on Top.gg!`);
+}));
+
+app.listen(8080);
+```
+
+##### ES module
+
+```js
+import { Webhook } from "@top-gg/sdk";
+import express from "express";
+
+const app = express();
+const webhook = new Webhook(process.env.MY_TOPGG_WEBHOOK_SECRET);
+
+app.post("/votes", webhook.voteListener(vote => {
+  console.log(`A user with the ID of ${vote.voterId} has voted us on Top.gg!`);
+}));
+
+app.listen(8080);
+```

@@ -4,53 +4,53 @@ import { getIdInPath } from '../jest.setup';
 
 export const endpoints = [
     {
-        pattern: '/api/bots',
+        pattern: '/api/v1/bots',
         method: 'GET',
         data: BOTS,
         requireAuth: true
     },
     {
-        pattern: '/api/bots/:bot_id',
+        pattern: '/api/v1/bots/:bot_id',
         method: 'GET',
         data: BOT,
         requireAuth: true,
         validate: (request: MockInterceptor.MockResponseCallbackOptions) => {
-            const bot_id = getIdInPath('/api/bots/:bot_id', request.path);
+            const bot_id = getIdInPath('/api/v1/bots/:bot_id', request.path);
             if (Number(bot_id) === 0) return { statusCode: 404 };
             return null;
         }
     },
     {
-        pattern: '/api/bots/:bot_id/votes',
+        pattern: '/api/v1/bots/:bot_id/votes',
         method: 'GET',
         data: VOTES,
         requireAuth: true,
         validate: (request: MockInterceptor.MockResponseCallbackOptions) => {
-            const bot_id = getIdInPath('/api/bots/:bot_id/votes', request.path);
+            const bot_id = getIdInPath('/api/v1/bots/:bot_id/votes', request.path);
             if (Number(bot_id) === 0) return { statusCode: 404 };
             return null;
         }
     },
     {
-        pattern: '/api/bots/check',
+        pattern: '/api/v1/bots/check',
         method: 'GET',
         data: USER_VOTE,
         requireAuth: true
     },
     {
-        pattern: '/api/bots/stats',
+        pattern: '/api/v1/bots/stats',
         method: 'GET',
         data: BOT_STATS,
         requireAuth: true
     },
     {
-        pattern: '/api/bots/stats',
+        pattern: '/api/v1/bots/stats',
         method: 'POST',
         data: {},
         requireAuth: true
     },
     {
-        pattern: '/api/weekend',
+        pattern: '/api/v1/weekend',
         method: 'GET',
         data: WEEKEND,
         requireAuth: true
