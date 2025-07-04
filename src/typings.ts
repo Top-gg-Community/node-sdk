@@ -55,11 +55,6 @@ export interface BotInfo {
   };
 }
 
-export interface BotStats {
-  /** The amount of servers the bot is in */
-  serverCount?: number;
-}
-
 export interface BotsQuery {
   /** The amount of bots to return. Max. 500 */
   limit?: number;

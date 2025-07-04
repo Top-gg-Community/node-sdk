@@ -5,29 +5,19 @@ import { BOT, BOT_STATS, VOTES } from './mocks/data';
 /* mock token */
 const client = new Api('.eyJpZCI6IjEwMjY1MjU1NjgzNDQyNjQ3MjQiLCJib3QiOnRydWV9.');
 
-describe('API postStats test', () => {
-    it('postStats without server count should throw error', async () => {
-        await expect(client.postStats({ shardCount: 0 })).rejects.toThrow(Error);
+describe('API postServerCount test', () => {
+    it('postServerCount with invalid negative server count should throw error', () => {
+        expect(client.postServerCount(-1)).rejects.toThrow(Error);
     });
 
-    it('postStats with invalid negative server count should throw error', () => {
-        expect(client.postStats({ serverCount: -1 })).rejects.toThrow(Error);
-    });
-
-    it('postStats should return 200', async () => {
-        await expect(client.postStats({ serverCount: 1 })).resolves.toBeInstanceOf(
-            Object
-        );
+    it('postServerCount should return 200', async () => {
+        await expect(client.postServerCount(1)).resolves.toBeUndefined();
     });
 });
 
-describe('API getStats test', () => {
-    it('getStats should return 200 when bot is found', async () => {
-        expect(client.getStats()).resolves.toStrictEqual({
-            serverCount: BOT_STATS.server_count,
-            shardCount: BOT_STATS.shard_count,
-            shards: BOT_STATS.shards
-        });
+describe('API getServerCount test', () => {
+    it('getServerCount should return 200 when bot is found', async () => {
+        expect(client.getServerCount()).resolves.toStrictEqual(BOT_STATS.server_count);
     });
 });
 
@@ -45,9 +35,9 @@ describe('API getBot test', () => {
     });
 });
 
-describe('API getVotes test', () => {
-    it('getVotes should return 200 when token is provided', () => {
-        expect(client.getVotes()).resolves.toEqual(VOTES);
+describe('API getVoters test', () => {
+    it('getVoters should return 200 when token is provided', () => {
+        expect(client.getVoters()).resolves.toEqual(VOTES);
     });
 });
 

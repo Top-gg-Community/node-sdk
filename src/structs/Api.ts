@@ -7,7 +7,6 @@ import { STATUS_CODES } from "http";
 import {
   APIOptions,
   Snowflake,
-  BotStats,
   BotInfo,
   BotsResponse,
   ShortUser,
@@ -109,25 +108,19 @@ export class Api extends EventEmitter {
    *
    * @example
    * ```js
-   * await client.postStats({
-   *   serverCount: bot.getServerCount()
-   * });
+   * await client.postServerCount(bot.getServerCount());
    * ```
    *
-   * @param {object} stats Stats object
-   * @param {number} stats.serverCount Server count
-   * @returns {BotStats} Passed object
+   * @param {number} serverCount Server count
    */
-  public async postStats(stats: BotStats): Promise<BotStats> {
-    if ((stats?.serverCount ?? 0) <= 0) throw new Error("Missing server count");
+  public async postServerCount(serverCount: number): Promise<void> {
+    if ((serverCount ?? 0) <= 0) throw new Error("Missing server count");
 
     /* eslint-disable camelcase */
     await this._request("POST", "/bots/stats", {
-      server_count: stats.serverCount,
+      server_count: serverCount,
     });
     /* eslint-enable camelcase */
-
-    return stats;
   }
 
   /**
@@ -135,17 +128,13 @@ export class Api extends EventEmitter {
    *
    * @example
    * ```js
-   * const { serverCount } = await client.getStats();
+   * const serverCount = await client.getServerCount();
    * ```
    *
-   * @returns {BotStats} Your bot's stats
+   * @returns {number} Your bot's server count
    */
-  public async getStats(): Promise<BotStats> {
-    const result = await this._request("GET", "/bots/stats");
-
-    return {
-      serverCount: result.server_count
-    };
+  public async getServerCount(): Promise<number> {
+    return (await this._request("GET", "/bots/stats")).server_count;
   }
 
   /**
@@ -188,16 +177,16 @@ export class Api extends EventEmitter {
    * @example
    * ```js
    * // First page
-   * const voters1 = await client.getVotes();
+   * const voters1 = await client.getVoters();
    * 
    * // Subsequent pages
-   * const voters2 = await client.getVotes(2);
+   * const voters2 = await client.getVoters(2);
    * ```
    *
    * @param {number} [page] The page number. Each page can only have at most 100 voters.
    * @returns {ShortUser[]} Array of unique users who've voted
    */
-  public async getVotes(page?: number): Promise<ShortUser[]> {
+  public async getVoters(page?: number): Promise<ShortUser[]> {
     return this._request("GET", `/bots/${this.options.id}/votes`, { page: page ?? 1 });
   }
 

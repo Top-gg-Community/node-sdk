@@ -53,13 +53,13 @@ const bots = await client.getBots();
 #### First page
 
 ```js
-const voters = await client.getVotes();
+const voters = await client.getVoters();
 ```
 
 #### Subsequent pages
 
 ```js
-const voters = await client.getVotes(2);
+const voters = await client.getVoters(2);
 ```
 
 ### Check if a user has voted for your bot
@@ -71,15 +71,13 @@ const hasVoted = await client.hasVoted("205680187394752512");
 ### Getting your bot's server count
 
 ```js
-const { serverCount } = await client.getStats();
+const serverCount = await client.getServerCount();
 ```
 
 ### Posting your bot's server count
 
 ```js
-await client.postStats({
-  serverCount: bot.getServerCount()
-});
+await client.postServerCount(bot.getServerCount());
 ```
 
 ### Automatically posting your bot's server count every few minutes
