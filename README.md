@@ -2,6 +2,23 @@
 
 The community-maintained Node.js library for Top.gg.
 
+## Chapters
+
+- [Installation](#installation)
+- [Setting up](#setting-up)
+- [Usage](#usage)
+  - [Getting a bot](#getting-a-bot)
+  - [Getting several bots](#getting-several-bots)
+  - [Getting your bot's voters](#getting-your-bots-voters)
+  - [Check if a user has voted for your bot](#check-if-a-user-has-voted-for-your-bot)
+  - [Getting your bot's server count](#getting-your-bots-server-count)
+  - [Posting your bot's server count](#posting-your-bots-server-count)
+  - [Automatically posting your bot's server count every few minutes]#automatically-posting-your-bots-server-count-every-few-minutes)
+  - [Checking if the weekend vote multiplier is active](#checking-if-the-weekend-vote-multiplier-is-active)
+  - [Generating widget URLs](#generating-widget-urls)
+  - [Webhooks](#webhooks)
+    - [Being notified whenever someone voted for your bot](#being-notified-whenever-someone-voted-for-your-bot)
+
 ## Installation
 
 ### NPM
