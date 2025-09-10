@@ -1,6 +1,6 @@
 import { Snowflake } from "../typings";
 
-const BASE_URL: string = "https://top.gg/api/v1";
+const BASE_URL: string = "https://top.gg/api/v1/widgets";
 
 /**
  * Widget type.
@@ -22,7 +22,7 @@ export class Widget {
    * @returns {string} The widget URL.
    */
   public static large(ty: WidgetType, id: Snowflake): string {
-    return `${BASE_URL}/widgets/large/${ty}/${id}`;
+    return `${BASE_URL}/large/${ty}/${id}`;
   }
 
   /**
@@ -33,18 +33,18 @@ export class Widget {
    * @returns {string} The widget URL.
    */
   public static votes(ty: WidgetType, id: Snowflake): string {
-    return `${BASE_URL}/widgets/small/votes/${ty}/${id}`;
+    return `${BASE_URL}/small/votes/${ty}/${id}`;
   }
 
   /**
-   * Generates a small widget URL for displaying an entity's owner.
+   * Generates a small widget URL for displaying a project's owner.
    *
    * @param {WidgetType} ty The widget type.
    * @param {Snowflake} id The ID.
    * @returns {string} The widget URL.
    */
   public static owner(ty: WidgetType, id: Snowflake): string {
-    return `${BASE_URL}/widgets/small/owner/${ty}/${id}`;
+    return `${BASE_URL}/small/owner/${ty}/${id}`;
   }
 
   /**
@@ -55,6 +55,6 @@ export class Widget {
    * @returns {string} The widget URL.
    */
   public static social(ty: WidgetType, id: Snowflake): string {
-    return `${BASE_URL}/widgets/small/social/${ty}/${id}`;
+    return `${BASE_URL}/small/social/${ty}/${id}`;
   }
 }

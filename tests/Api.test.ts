@@ -1,23 +1,37 @@
 import { Api } from '../src/index';
 import ApiError from '../src/utils/ApiError';
-import { BOT, BOT_STATS, VOTES } from './mocks/data';
+import { BOT, BOT_STATS, VOTE, VOTES } from './mocks/data';
 
 /* mock token */
-const client = new Api('.eyJpZCI6IjEwMjY1MjU1NjgzNDQyNjQ3MjQiLCJib3QiOnRydWV9.');
+const client = new Api('.eyJfdCI6IiIsImlkIjoiMzY0ODA2MDI5ODc2NTU1Nzc2In0=.');
 
-describe('API postServerCount test', () => {
-    it('postServerCount with invalid negative server count should throw error', () => {
-        expect(client.postServerCount(-1)).rejects.toThrow(Error);
-    });
-
-    it('postServerCount should return 200', async () => {
-        await expect(client.postServerCount(1)).resolves.toBeUndefined();
+describe('API postBotCommands test', () => {
+    it('postBotCommands should work', () => {
+        expect(client.postBotCommands([{
+            id: '1',
+            type: 1,
+            application_id: '1',
+            name: 'test',
+            description: 'command description',
+            default_member_permissions: '',
+            version: '1'
+        }])).resolves.toBeUndefined();
     });
 });
 
-describe('API getServerCount test', () => {
-    it('getServerCount should return 200 when bot is found', async () => {
-        expect(client.getServerCount()).resolves.toStrictEqual(BOT_STATS.server_count);
+describe('API postBotServerCount test', () => {
+    it('postBotServerCount with invalid negative server count should throw error', () => {
+        expect(client.postBotServerCount(-1)).rejects.toThrow(Error);
+    });
+
+    it('postBotServerCount should return 200', async () => {
+        await expect(client.postBotServerCount(1)).resolves.toBeUndefined();
+    });
+});
+
+describe('API getBotServerCount test', () => {
+    it('getBotServerCount should return 200 when bot is found', async () => {
+        expect(client.getBotServerCount()).resolves.toStrictEqual(BOT_STATS.server_count);
     });
 });
 
@@ -37,17 +51,17 @@ describe('API getBot test', () => {
 
 describe('API getVoters test', () => {
     it('getVoters should return 200 when token is provided', () => {
-        expect(client.getVoters()).resolves.toEqual(VOTES);
+        expect(client.getVoters()).resolves.toStrictEqual(VOTES);
     });
 });
 
-describe('API hasVoted test', () => {
-    it('hasVoted should return 200 when token is provided', () => {
-        expect(client.hasVoted('1')).resolves.toBe(true);
+describe('API getVote test', () => {
+    it('getVote should return 200 when token is provided', () => {
+        expect(client.getVote('1')).resolves.toStrictEqual(VOTE);
     });
 
-    it('hasVoted should throw error when no id is provided', () => {
-        expect(client.hasVoted('')).rejects.toThrow(Error);
+    it('getVote should throw error when no id is provided', () => {
+        expect(client.getVote('')).rejects.toThrow(Error);
     });
 });
 

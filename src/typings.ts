@@ -1,8 +1,8 @@
 export interface APIOptions {
-  /** Top.gg token */
+  /** Top.gg API token */
   token?: string;
 
-  /** Discord bot ID */
+  /** Client ID to use */
   id?: string;
 }
 
@@ -60,16 +60,6 @@ export interface BotsQuery {
   limit?: number;
   /** Amount of bots to skip */
   offset?: number;
-  /**
-   * A search string in the format of "field: value field2: value2"
-   * 
-   * @deprecated No longer supported by Top.gg API v1.
-   */
-  search?:
-    | {
-        [key in keyof BotInfo]: string;
-      }
-    | string;
   /** Sorts results from a specific criteria. Results will always be descending. */
   sort?: "monthlyPoints" | "id" | "date";
   /** A list of fields to show. */
@@ -89,6 +79,15 @@ export interface BotsResponse {
   total: number;
 }
 
+export interface Vote {
+  /** When this vote was cast */
+  votedAt?: string;
+  /** When this vote expires and the user is required to vote again */
+  expiresAt?: string;
+  /** This vote's weight */
+  weight?: number;
+}
+
 export interface ShortUser {
   /** User's ID */
   id: Snowflake;
@@ -99,7 +98,7 @@ export interface ShortUser {
 }
 
 export interface WebhookVotePayload {
-  /** The ID of the Discord bot/server that received a vote. */
+  /** The ID of the project that received a vote. */
   receiverId: Snowflake;
   /** The ID of the Top.gg user who voted. */
   voterId: Snowflake;

@@ -1,6 +1,7 @@
-import { request, type Dispatcher } from "undici";
+import type { APIApplicationCommand } from "discord-api-types/v10";
 import type { IncomingHttpHeaders } from "undici/types/header";
-import ApiError from "../utils/ApiError";
+import { request, type Dispatcher } from "undici";
+import TopGGAPIError from "../utils/ApiError";
 import { EventEmitter } from "events";
 import { STATUS_CODES } from "http";
 
@@ -11,6 +12,7 @@ import {
   BotsResponse,
   ShortUser,
   BotsQuery,
+  Vote,
 } from "../typings";
 
 /**
@@ -28,6 +30,7 @@ import {
  */
 export class Api extends EventEmitter {
   private options: APIOptions;
+  private legacy: boolean;
 
   /**
    * Create Top.gg API instance
@@ -45,10 +48,11 @@ export class Api extends EventEmitter {
     }
 
     try {
-      const tokenData = atob(tokenSegments[1]);
-      const tokenId = JSON.parse(tokenData).id;
+      const tokenData = JSON.parse(atob(tokenSegments[1]));
+      const tokenId = tokenData.id;
 
       options.id ??= tokenId;
+      this.legacy = !("_t" in tokenData);
     } catch {
       throw new Error(
         "Invalid API token state, this should not happen! Please report!"
@@ -67,10 +71,10 @@ export class Api extends EventEmitter {
     body?: Record<string, any>
   ): Promise<any> {
     const headers: IncomingHttpHeaders = {};
-    if (this.options.token) headers["authorization"] = this.options.token;
+    if (this.options.token) headers["authorization"] = `Bearer ${this.options.token}`;
     if (method !== "GET") headers["content-type"] = "application/json";
 
-    let url = `https://top.gg/api/v1${path}`;
+    let url = `https://top.gg/api${path}`;
 
     if (body && method === "GET") url += `?${new URLSearchParams(body)}`;
 
@@ -80,23 +84,23 @@ export class Api extends EventEmitter {
       body: body && method !== "GET" ? JSON.stringify(body) : undefined,
     });
 
-    let responseBody;
+    let responseBody: string | object | undefined;
 
     if (
       (response.headers["content-type"] as string)?.startsWith(
         "application/json"
       )
     ) {
-      responseBody = await response.body.json();
+      responseBody = await response.body.json() as object;
     } else {
       responseBody = await response.body.text();
     }
 
     if (response.statusCode < 200 || response.statusCode > 299) {
-      throw new ApiError(
+      throw new TopGGAPIError(
         response.statusCode,
         STATUS_CODES[response.statusCode] ?? "",
-        response
+        responseBody
       );
     }
 
@@ -104,16 +108,51 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Post your bot's server count to Top.gg
+   * Updates the application commands list in your Discord bot's Top.gg page.
    *
    * @example
    * ```js
-   * await client.postServerCount(bot.getServerCount());
+   * // Discord.js:
+   * const commands = (await bot.application.commands.fetch()).map(cmd => cmd.toJSON());
+   * 
+   * // Eris:
+   * const commands = await bot.getCommands();
+   * 
+   * // Discordeno:
+   * import { getApplicationCommands } from "discordeno";
+   * 
+   * const commands = await getApplicationCommands(bot);
+   * 
+   * // Harmony:
+   * const commands = await bot.interactions.commands.all();
+   * 
+   * // Oceanic:
+   * const commands = await bot.application.getGlobalCommands();
+   * 
+   * await client.postBotCommands(commands);
+   * ```
+   *
+   * @param {APIApplicationCommand[]} commands A list of application commands in raw Discord API JSON dicts. This cannot be empty.
+   */
+  public async postBotCommands(commands: APIApplicationCommand[]): Promise<void> {
+    if (this.legacy) {
+      throw new Error("This endpoint is inaccessible with legacy API tokens.");
+    }
+
+    await this._request("POST", "/v1/projects/@me/commands", commands);
+  }
+
+  /**
+   * Post your Discord bot's server count to Top.gg
+   *
+   * @example
+   * ```js
+   * await client.postBotServerCount(bot.getServerCount());
    * ```
    *
    * @param {number} serverCount Server count
    */
-  public async postServerCount(serverCount: number): Promise<void> {
+  public async postBotServerCount(serverCount: number): Promise<void> {
     if ((serverCount ?? 0) <= 0) throw new Error("Missing server count");
 
     /* eslint-disable camelcase */
@@ -124,16 +163,16 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Get your bot's server count
+   * Get your Discord bot's server count
    *
    * @example
    * ```js
-   * const serverCount = await client.getServerCount();
+   * const serverCount = await client.getBotServerCount();
    * ```
    *
    * @returns {number} Your bot's server count
    */
-  public async getServerCount(): Promise<number> {
+  public async getBotServerCount(): Promise<number> {
     return (await this._request("GET", "/bots/stats")).server_count;
   }
 
@@ -172,7 +211,7 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Get recent unique users who've voted
+   * Get recent 100 unique voters
    *
    * @example
    * ```js
@@ -184,13 +223,15 @@ export class Api extends EventEmitter {
    * ```
    *
    * @param {number} [page] The page number. Each page can only have at most 100 voters.
-   * @returns {ShortUser[]} Array of unique users who've voted
+   * @returns {ShortUser[]} Array of 100 unique voters
    */
   public async getVoters(page?: number): Promise<ShortUser[]> {
     return this._request("GET", `/bots/${this.options.id}/votes`, { page: page ?? 1 });
   }
 
   /**
+   * @deprecated Use a v1 API token with `getVote()` instead.
+   * 
    * Get whether or not a user has voted in the last 12 hours
    *
    * @example
@@ -203,9 +244,49 @@ export class Api extends EventEmitter {
    */
   public async hasVoted(id: Snowflake): Promise<boolean> {
     if (!id) throw new Error("Missing ID");
+
+    console.warn("`hasVoted()` is deprecated. Use a v1 API token with `getVote()` instead.");
+
     return this._request("GET", "/bots/check", { userId: id }).then(
       (x) => !!x.voted
     );
+  }
+
+  /**
+   * Get the latest vote information of a Top.gg user on your project.
+   *
+   * @example
+   * ```js
+   * const vote = await client.getVote("8226924471638491136");
+   * ```
+   *
+   * @param {Snowflake} id The Top.gg user's ID.
+   * @returns {?Vote} The user's latest vote information on your project or null if the user has not voted for your project in the past 12 hours.
+   */
+  public async getVote(id: Snowflake): Promise<Vote | null> {
+    if (!id) throw new Error("Missing ID");
+
+    if (this.legacy) {
+      throw new Error("This endpoint is inaccessible with legacy API tokens.");
+    }
+
+    try {
+      const response = await this._request("GET", `/v1/projects/@me/votes/${id}`);
+
+      return {
+        votedAt: response.created_at,
+        expiresAt: response.expires_at,
+        weight: response.weight
+      };
+    } catch (err) {
+      const topggError = err as TopGGAPIError;
+
+      if ((topggError?.body as { title?: string })?.title === "Vote expired") {
+        return null;
+      }
+
+      throw err;
+    }
   }
 
   /**

@@ -1,58 +1,75 @@
 import { MockInterceptor } from 'undici/types/mock-interceptor';
-import { BOT, BOTS, BOT_STATS, USER_VOTE, VOTES, WEEKEND } from './data';
+import { BOT, BOTS, BOT_STATS, RAW_VOTE, USER_VOTE, VOTES, WEEKEND } from './data';
 import { getIdInPath } from '../jest.setup';
 
 export const endpoints = [
     {
-        pattern: '/api/v1/bots',
+        pattern: '/api/bots',
         method: 'GET',
         data: BOTS,
         requireAuth: true
     },
     {
-        pattern: '/api/v1/bots/:bot_id',
+        pattern: '/api/bots/:bot_id',
         method: 'GET',
         data: BOT,
         requireAuth: true,
         validate: (request: MockInterceptor.MockResponseCallbackOptions) => {
-            const bot_id = getIdInPath('/api/v1/bots/:bot_id', request.path);
+            const bot_id = getIdInPath('/api/bots/:bot_id', request.path);
             if (Number(bot_id) === 0) return { statusCode: 404 };
             return null;
         }
     },
     {
-        pattern: '/api/v1/bots/:bot_id/votes',
+        pattern: '/api/bots/:bot_id/votes',
         method: 'GET',
         data: VOTES,
         requireAuth: true,
         validate: (request: MockInterceptor.MockResponseCallbackOptions) => {
-            const bot_id = getIdInPath('/api/v1/bots/:bot_id/votes', request.path);
+            const bot_id = getIdInPath('/api/bots/:bot_id/votes', request.path);
             if (Number(bot_id) === 0) return { statusCode: 404 };
             return null;
         }
     },
     {
-        pattern: '/api/v1/bots/check',
+        pattern: '/api/bots/check',
         method: 'GET',
         data: USER_VOTE,
         requireAuth: true
     },
     {
-        pattern: '/api/v1/bots/stats',
+        pattern: '/api/bots/stats',
         method: 'GET',
         data: BOT_STATS,
         requireAuth: true
     },
     {
-        pattern: '/api/v1/bots/stats',
+        pattern: '/api/bots/stats',
         method: 'POST',
         data: {},
         requireAuth: true
     },
     {
-        pattern: '/api/v1/weekend',
+        pattern: '/api/weekend',
         method: 'GET',
         data: WEEKEND,
+        requireAuth: true
+    },
+    {
+        pattern: '/api/v1/projects/@me/votes/:user_id',
+        method: 'GET',
+        data: RAW_VOTE,
+        requireAuth: true,
+        validate: (request: MockInterceptor.MockResponseCallbackOptions) => {
+            const user_id = getIdInPath('/api/v1/projects/@me/votes/:user_id', request.path);
+            if (Number(user_id) === 0) return { statusCode: 404 };
+            return null;
+        }
+    },
+    {
+        pattern: '/api/v1/projects/@me/commands',
+        method: 'POST',
+        data: {},
         requireAuth: true
     }
 ]

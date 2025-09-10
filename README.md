@@ -9,15 +9,15 @@ The community-maintained Node.js library for Top.gg.
 - [Usage](#usage)
   - [Getting a bot](#getting-a-bot)
   - [Getting several bots](#getting-several-bots)
-  - [Getting your bot's voters](#getting-your-bots-voters)
-  - [Check if a user has voted for your bot](#check-if-a-user-has-voted-for-your-bot)
+  - [Getting your project's voters](#getting-your-projects-voters)
+  - [Check if a user has voted for your project](#check-if-a-user-has-voted-for-your-project)
   - [Getting your bot's server count](#getting-your-bots-server-count)
   - [Posting your bot's server count](#posting-your-bots-server-count)
   - [Automatically posting your bot's server count every few minutes]#automatically-posting-your-bots-server-count-every-few-minutes)
   - [Checking if the weekend vote multiplier is active](#checking-if-the-weekend-vote-multiplier-is-active)
   - [Generating widget URLs](#generating-widget-urls)
   - [Webhooks](#webhooks)
-    - [Being notified whenever someone voted for your bot](#being-notified-whenever-someone-voted-for-your-bot)
+    - [Being notified whenever someone voted for your project](#being-notified-whenever-someone-voted-for-your-project)
 
 ## Installation
 
@@ -65,7 +65,7 @@ const bot = await client.getBot("461521980492087297");
 const bots = await client.getBots();
 ```
 
-### Getting your bot's voters
+### Getting your project's voters
 
 #### First page
 
@@ -79,22 +79,45 @@ const voters = await client.getVoters();
 const voters = await client.getVoters(2);
 ```
 
-### Check if a user has voted for your bot
+### Getting your project's vote information of a user
 
 ```js
-const hasVoted = await client.hasVoted("205680187394752512");
+const vote = await client.getVote("8226924471638491136");
 ```
 
 ### Getting your bot's server count
 
 ```js
-const serverCount = await client.getServerCount();
+const serverCount = await client.getBotServerCount();
 ```
 
 ### Posting your bot's server count
 
 ```js
-await client.postServerCount(bot.getServerCount());
+await client.postBotServerCount(bot.getServerCount());
+```
+
+### Posting your bot's application commands list
+
+```js
+// Discord.js:
+const commands = (await bot.application.commands.fetch()).map(cmd => cmd.toJSON());
+
+// Eris:
+const commands = await bot.getCommands();
+
+// Discordeno:
+import { getApplicationCommands } from "discordeno";
+
+const commands = await getApplicationCommands(bot);
+
+// Harmony:
+const commands = await bot.interactions.commands.all();
+
+// Oceanic:
+const commands = await bot.application.getGlobalCommands();
+
+await client.postBotCommands(commands);
 ```
 
 ### Automatically posting your bot's server count every few minutes
@@ -175,7 +198,7 @@ const widgetUrl = Topgg.Widget.social(Topgg.WidgetType.DiscordBot, "574652751745
 
 ### Webhooks
 
-#### Being notified whenever someone voted for your bot
+#### Being notified whenever someone voted for your project
 
 With express:
 
