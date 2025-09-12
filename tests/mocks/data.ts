@@ -38,7 +38,6 @@ export const RAW_VOTE = {
 };
 
 export const VOTE = {
-  voted: true,
   votedAt: "2025-09-09T08:55:16.218761+00:00",
   expiresAt: "2025-09-09T20:55:16.218761+00:00",
   weight: 1

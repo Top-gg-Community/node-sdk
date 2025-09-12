@@ -9,6 +9,9 @@ export interface APIOptions {
 /** Discord ID */
 export type Snowflake = string;
 
+/** A user account from an external platform that is linked to a Top.gg user account. */
+export type UserSource = "discord" | "topgg";
+
 export interface BotInfo {
   /** The Top.gg ID of the bot */
   id: Snowflake;
@@ -80,9 +83,9 @@ export interface BotsResponse {
 }
 
 export interface Vote {
-  /** When this vote was cast */
+  /** When the vote was cast */
   votedAt?: string;
-  /** When this vote expires and the user is required to vote again */
+  /** When the vote expires and the user is required to vote again */
   expiresAt?: string;
   /** This vote's weight */
   weight?: number;

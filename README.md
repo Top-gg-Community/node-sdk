@@ -10,10 +10,11 @@ The community-maintained Node.js library for Top.gg.
   - [Getting a bot](#getting-a-bot)
   - [Getting several bots](#getting-several-bots)
   - [Getting your project's voters](#getting-your-projects-voters)
-  - [Check if a user has voted for your project](#check-if-a-user-has-voted-for-your-project)
+  - [Getting your project's vote information of a user](#getting-your-projects-vote-information-of-a-user)
   - [Getting your bot's server count](#getting-your-bots-server-count)
   - [Posting your bot's server count](#posting-your-bots-server-count)
-  - [Automatically posting your bot's server count every few minutes]#automatically-posting-your-bots-server-count-every-few-minutes)
+  - [Posting your bot's application commands list](#posting-your-bots-application-commands-list)
+  - [Automatically posting your bot's server count every few minutes](#automatically-posting-your-bots-server-count-every-few-minutes)
   - [Checking if the weekend vote multiplier is active](#checking-if-the-weekend-vote-multiplier-is-active)
   - [Generating widget URLs](#generating-widget-urls)
   - [Webhooks](#webhooks)
@@ -81,8 +82,16 @@ const voters = await client.getVoters(2);
 
 ### Getting your project's vote information of a user
 
+#### Discord ID
+
 ```js
-const vote = await client.getVote("8226924471638491136");
+const vote = await client.getVote("661200758510977084");
+```
+
+#### Top.gg ID
+
+```js
+const vote = await client.getVote("8226924471638491136", "topgg");
 ```
 
 ### Getting your bot's server count
@@ -99,22 +108,43 @@ await client.postBotServerCount(bot.getServerCount());
 
 ### Posting your bot's application commands list
 
+#### Discord.js
+
 ```js
-// Discord.js:
 const commands = (await bot.application.commands.fetch()).map(cmd => cmd.toJSON());
 
-// Eris:
+await client.postBotCommands(commands);
+```
+
+#### Eris
+
+```js
 const commands = await bot.getCommands();
 
-// Discordeno:
+await client.postBotCommands(commands);
+```
+
+#### Discordeno
+
+```js
 import { getApplicationCommands } from "discordeno";
 
 const commands = await getApplicationCommands(bot);
 
-// Harmony:
+await client.postBotCommands(commands);
+```
+
+#### Harmony
+
+```js
 const commands = await bot.interactions.commands.all();
 
-// Oceanic:
+await client.postBotCommands(commands);
+```
+
+#### Oceanic
+
+```js
 const commands = await bot.application.getGlobalCommands();
 
 await client.postBotCommands(commands);

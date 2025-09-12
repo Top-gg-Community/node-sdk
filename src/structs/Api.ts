@@ -13,10 +13,11 @@ import {
   ShortUser,
   BotsQuery,
   Vote,
+  UserSource,
 } from "../typings";
 
 /**
- * Top.gg API Client for Posting stats or Fetching data
+ * Top.gg API Client
  *
  * @example
  * ```js
@@ -87,8 +88,8 @@ export class Api extends EventEmitter {
     let responseBody: string | object | undefined;
 
     if (
-      (response.headers["content-type"] as string)?.startsWith(
-        "application/json"
+      (response.headers["content-type"] as string)?.includes(
+        "json"
       )
     ) {
       responseBody = await response.body.json() as object;
@@ -222,7 +223,7 @@ export class Api extends EventEmitter {
    * const voters2 = await client.getVoters(2);
    * ```
    *
-   * @param {number} [page] The page number. Each page can only have at most 100 voters.
+   * @param {number} [page] The page number. Page numbers start at 1. Each page can only have at most 100 voters.
    * @returns {ShortUser[]} Array of 100 unique voters
    */
   public async getVoters(page?: number): Promise<ShortUser[]> {
@@ -257,21 +258,28 @@ export class Api extends EventEmitter {
    *
    * @example
    * ```js
-   * const vote = await client.getVote("8226924471638491136");
+   * // Discord ID
+   * const vote = await client.getVote("661200758510977084");
+   * 
+   * // Top.gg ID
+   * const vote = await client.getVote("8226924471638491136", "topgg");
    * ```
    *
-   * @param {Snowflake} id The Top.gg user's ID.
-   * @returns {?Vote} The user's latest vote information on your project or null if the user has not voted for your project in the past 12 hours.
+   * @param {Snowflake} id The user's ID.
+   * @param {UserSource} source The ID type to use. Defaults to "discord".
+   * 
+   * @returns {Vote | null} The user's latest vote information on your project or null if the user has not voted for your project in the past 12 hours.
    */
-  public async getVote(id: Snowflake): Promise<Vote | null> {
+  public async getVote(id: Snowflake, source: UserSource = "discord"): Promise<Vote | null> {
     if (!id) throw new Error("Missing ID");
+    if (!source) source = "discord";
 
     if (this.legacy) {
       throw new Error("This endpoint is inaccessible with legacy API tokens.");
     }
 
     try {
-      const response = await this._request("GET", `/v1/projects/@me/votes/${id}`);
+      const response = await this._request("GET", `/v1/projects/@me/votes/${id}?source=${source}`);
 
       return {
         votedAt: response.created_at,
