@@ -87,7 +87,7 @@ export interface Vote {
   votedAt?: string;
   /** When the vote expires and the user is required to vote again */
   expiresAt?: string;
-  /** This vote's weight */
+  /** This vote's weight. 1 during weekdays, 2 during weekends. */
   weight?: number;
 }
 
@@ -100,7 +100,7 @@ export interface ShortUser {
   avatar: string;
 }
 
-export interface WebhookVotePayload {
+export interface WebhookPayload {
   /** The ID of the project that received a vote. */
   receiverId: Snowflake;
   /** The ID of the Top.gg user who voted. */

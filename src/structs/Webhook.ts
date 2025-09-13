@@ -1,6 +1,6 @@
 import getBody from "raw-body";
 import { Request, Response, NextFunction } from "express";
-import { WebhookVotePayload } from "../typings";
+import { WebhookPayload } from "../typings";
 
 export interface WebhookOptions {
   /**
@@ -49,7 +49,7 @@ export class Webhook {
     };
   }
 
-  private _formatVotePayload(body: any): WebhookVotePayload {
+  private _formatVotePayload(body: any): WebhookPayload {
     return {
       receiverId: (body.bot ?? body.guild)!,
       voterId: body.user,
@@ -134,13 +134,13 @@ export class Webhook {
    * }));
    * ```
    *
-   * @param {(payload: WebhookVotePayload, req?: Request, res?: Response, next?: NextFunction) => void | Promise<void>} fn Vote handling function, this function can also throw an error to
+   * @param {(payload: WebhookPayload, req?: Request, res?: Response, next?: NextFunction) => void | Promise<void>} fn Vote handling function, this function can also throw an error to
    *   allow for the webhook to resend from Top.gg
    * @returns An express request handler
    */
   public voteListener(
     fn: (
-      payload: WebhookVotePayload,
+      payload: WebhookPayload,
       req?: Request,
       res?: Response,
       next?: NextFunction

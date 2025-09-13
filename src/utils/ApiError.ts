@@ -4,7 +4,7 @@ const tips = {
 };
 
 /** API Error */
-export default class TopGGAPIError extends Error {
+export default class APIError extends Error {
   /** Response status code */
   public statusCode: number;
 

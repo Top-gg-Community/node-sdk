@@ -1,7 +1,7 @@
 import type { APIApplicationCommand } from "discord-api-types/v10";
 import type { IncomingHttpHeaders } from "undici/types/header";
 import { request, type Dispatcher } from "undici";
-import TopGGAPIError from "../utils/ApiError";
+import APIError from "../utils/ApiError";
 import { EventEmitter } from "events";
 import { STATUS_CODES } from "http";
 
@@ -98,7 +98,7 @@ export class Api extends EventEmitter {
     }
 
     if (response.statusCode < 200 || response.statusCode > 299) {
-      throw new TopGGAPIError(
+      throw new APIError(
         response.statusCode,
         STATUS_CODES[response.statusCode] ?? "",
         responseBody
@@ -287,7 +287,7 @@ export class Api extends EventEmitter {
         weight: response.weight
       };
     } catch (err) {
-      const topggError = err as TopGGAPIError;
+      const topggError = err as APIError;
 
       if ((topggError?.body as { title?: string })?.title === "Vote expired") {
         return null;
