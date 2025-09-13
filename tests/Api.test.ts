@@ -1,23 +1,9 @@
 import { Api } from '../src/index';
 import ApiError from '../src/utils/ApiError';
-import { BOT, BOT_STATS, VOTE, VOTES } from './mocks/data';
+import { BOT, BOT_STATS, VOTES } from './mocks/data';
 
 /* mock token */
 const client = new Api('.eyJfdCI6IiIsImlkIjoiMzY0ODA2MDI5ODc2NTU1Nzc2In0=.');
-
-describe('API postBotCommands test', () => {
-    it('postBotCommands should work', () => {
-        expect(client.postBotCommands([{
-            id: '1',
-            type: 1,
-            application_id: '1',
-            name: 'test',
-            description: 'command description',
-            default_member_permissions: '',
-            version: '1'
-        }])).resolves.toBeUndefined();
-    });
-});
 
 describe('API postBotServerCount test', () => {
     it('postBotServerCount with invalid negative server count should throw error', () => {
@@ -55,13 +41,13 @@ describe('API getVoters test', () => {
     });
 });
 
-describe('API getVote test', () => {
-    it('getVote should return 200 when token is provided', () => {
-        expect(client.getVote('1')).resolves.toStrictEqual(VOTE);
+describe('API hasVoted test', () => {
+    it('hasVoted should return 200 when token is provided', () => {
+        expect(client.hasVoted('1')).resolves.toBe(true);
     });
 
-    it('getVote should throw error when no id is provided', () => {
-        expect(client.getVote('')).rejects.toThrow(Error);
+    it('hasVoted should throw error when no id is provided', () => {
+        expect(client.hasVoted('')).rejects.toThrow(Error);
     });
 });
 

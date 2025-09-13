@@ -17,7 +17,7 @@ import {
 } from "../typings";
 
 /**
- * Top.gg API Client
+ * Top.gg v0 API Client
  *
  * @example
  * ```js
@@ -30,8 +30,7 @@ import {
  * @link {@link https://docs.top.gg | API Reference}
  */
 export class Api extends EventEmitter {
-  private options: APIOptions;
-  private legacy: boolean;
+  protected options: APIOptions;
 
   /**
    * Create Top.gg API instance
@@ -53,7 +52,6 @@ export class Api extends EventEmitter {
       const tokenId = tokenData.id;
 
       options.id ??= tokenId;
-      this.legacy = !("_t" in tokenData);
     } catch {
       throw new Error(
         "Invalid API token state, this should not happen! Please report!"
@@ -66,13 +64,13 @@ export class Api extends EventEmitter {
     };
   }
 
-  private async _request(
+  protected async _request(
     method: Dispatcher.HttpMethod,
     path: string,
     body?: Record<string, any>
   ): Promise<any> {
     const headers: IncomingHttpHeaders = {};
-    if (this.options.token) headers["authorization"] = `Bearer ${this.options.token}`;
+    if (this.options.token) headers["authorization"] = this.options.token;
     if (method !== "GET") headers["content-type"] = "application/json";
 
     let url = `https://top.gg/api${path}`;
@@ -106,41 +104,6 @@ export class Api extends EventEmitter {
     }
 
     return responseBody;
-  }
-
-  /**
-   * Updates the application commands list in your Discord bot's Top.gg page.
-   *
-   * @example
-   * ```js
-   * // Discord.js:
-   * const commands = (await bot.application.commands.fetch()).map(cmd => cmd.toJSON());
-   * 
-   * // Eris:
-   * const commands = await bot.getCommands();
-   * 
-   * // Discordeno:
-   * import { getApplicationCommands } from "discordeno";
-   * 
-   * const commands = await getApplicationCommands(bot);
-   * 
-   * // Harmony:
-   * const commands = await bot.interactions.commands.all();
-   * 
-   * // Oceanic:
-   * const commands = await bot.application.getGlobalCommands();
-   * 
-   * await client.postBotCommands(commands);
-   * ```
-   *
-   * @param {APIApplicationCommand[]} commands A list of application commands in raw Discord API JSON dicts. This cannot be empty.
-   */
-  public async postBotCommands(commands: APIApplicationCommand[]): Promise<void> {
-    if (this.legacy) {
-      throw new Error("This endpoint is inaccessible with legacy API tokens.");
-    }
-
-    await this._request("POST", "/v1/projects/@me/commands", commands);
   }
 
   /**
@@ -231,8 +194,6 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * @deprecated Use a v1 API token with `getVote()` instead.
-   * 
    * Get whether or not a user has voted in the last 12 hours
    *
    * @example
@@ -246,11 +207,79 @@ export class Api extends EventEmitter {
   public async hasVoted(id: Snowflake): Promise<boolean> {
     if (!id) throw new Error("Missing ID");
 
-    console.warn("`hasVoted()` is deprecated. Use a v1 API token with `getVote()` instead.");
-
     return this._request("GET", "/bots/check", { userId: id }).then(
       (x) => !!x.voted
     );
+  }
+
+  /**
+   * Whether or not the weekend multiplier is active
+   *
+   * @example
+   * ```js
+   * const isWeekend = await client.isWeekend();
+   * ```
+   *
+   * @returns {boolean} Whether the multiplier is active
+   */
+  public async isWeekend(): Promise<boolean> {
+    return this._request("GET", "/weekend").then((x) => x.is_weekend);
+  }
+}
+
+/**
+ * Top.gg v1 API Client
+ *
+ * @example
+ * ```js
+ * const Topgg = require("@top-gg/sdk");
+ * 
+ * const client = new Topgg.V1Api(process.env.TOPGG_TOKEN);
+ * ```
+ *
+ * @link {@link https://topgg.js.org | Library docs}
+ * @link {@link https://docs.top.gg | API Reference}
+ */
+export class V1Api extends Api {
+    /**
+   * Create Top.gg API instance
+   *
+   * @param {string} token Token or options
+   * @param {APIOptions} [options] API Options
+   */
+  constructor(token: string, options: APIOptions = {}) {
+    super(`Bearer ${token}`, options);
+  }
+
+  /**
+   * Updates the application commands list in your Discord bot's Top.gg page.
+   *
+   * @example
+   * ```js
+   * // Discord.js:
+   * const commands = (await bot.application.commands.fetch()).map(cmd => cmd.toJSON());
+   * 
+   * // Eris:
+   * const commands = await bot.getCommands();
+   * 
+   * // Discordeno:
+   * import { getApplicationCommands } from "discordeno";
+   * 
+   * const commands = await getApplicationCommands(bot);
+   * 
+   * // Harmony:
+   * const commands = await bot.interactions.commands.all();
+   * 
+   * // Oceanic:
+   * const commands = await bot.application.getGlobalCommands();
+   * 
+   * await client.postBotCommands(commands);
+   * ```
+   *
+   * @param {APIApplicationCommand[]} commands A list of application commands in raw Discord API JSON dicts. This cannot be empty.
+   */
+  public async postBotCommands(commands: APIApplicationCommand[]): Promise<void> {
+    await this._request("POST", "/v1/projects/@me/commands", commands);
   }
 
   /**
@@ -273,10 +302,6 @@ export class Api extends EventEmitter {
   public async getVote(id: Snowflake, source: UserSource = "discord"): Promise<Vote | null> {
     if (!id) throw new Error("Missing ID");
 
-    if (this.legacy) {
-      throw new Error("This endpoint is inaccessible with legacy API tokens.");
-    }
-
     try {
       const response = await this._request("GET", `/v1/projects/@me/votes/${id}?source=${source}`);
 
@@ -294,19 +319,5 @@ export class Api extends EventEmitter {
 
       throw err;
     }
-  }
-
-  /**
-   * Whether or not the weekend multiplier is active
-   *
-   * @example
-   * ```js
-   * const isWeekend = await client.isWeekend();
-   * ```
-   *
-   * @returns {boolean} Whether the multiplier is active
-   */
-  public async isWeekend(): Promise<boolean> {
-    return this._request("GET", "/weekend").then((x) => x.is_weekend);
   }
 }
