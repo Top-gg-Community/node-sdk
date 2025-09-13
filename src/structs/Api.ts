@@ -272,7 +272,6 @@ export class Api extends EventEmitter {
    */
   public async getVote(id: Snowflake, source: UserSource = "discord"): Promise<Vote | null> {
     if (!id) throw new Error("Missing ID");
-    if (!source) source = "discord";
 
     if (this.legacy) {
       throw new Error("This endpoint is inaccessible with legacy API tokens.");
@@ -289,7 +288,7 @@ export class Api extends EventEmitter {
     } catch (err) {
       const topggError = err as APIError;
 
-      if ((topggError?.body as { title?: string })?.title === "Vote expired") {
+      if (topggError.statusCode === 404) {
         return null;
       }
 
