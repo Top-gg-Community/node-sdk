@@ -7,16 +7,19 @@ The community-maintained Node.js library for Top.gg.
 - [Installation](#installation)
 - [Setting up](#setting-up)
 - [Usage](#usage)
-  - [Getting a bot](#getting-a-bot)
-  - [Getting several bots](#getting-several-bots)
-  - [Getting your project's voters](#getting-your-projects-voters)
-  - [Getting your project's vote information of a user](#getting-your-projects-vote-information-of-a-user)
-  - [Getting your bot's server count](#getting-your-bots-server-count)
-  - [Posting your bot's server count](#posting-your-bots-server-count)
-  - [Posting your bot's application commands list](#posting-your-bots-application-commands-list)
-  - [Automatically posting your bot's server count every few minutes](#automatically-posting-your-bots-server-count-every-few-minutes)
-  - [Checking if the weekend vote multiplier is active](#checking-if-the-weekend-vote-multiplier-is-active)
-  - [Generating widget URLs](#generating-widget-urls)
+  - [API v1](#api-v1)
+    - [Getting your project's vote information of a user](#getting-your-projects-vote-information-of-a-user)
+    - [Posting your bot's application commands list](#posting-your-bots-application-commands-list)
+  - [API v0](#api-v0)
+    - [Getting a bot](#getting-a-bot)
+    - [Getting several bots](#getting-several-bots)
+    - [Getting your project's voters](#getting-your-projects-voters)
+    - [Check if a user has voted for your project](#check-if-a-user-has-voted-for-your-project)
+    - [Getting your bot's server count](#getting-your-bots-server-count)
+    - [Posting your bot's server count](#posting-your-bots-server-count)
+    - [Automatically posting your bot's server count every few minutes](#automatically-posting-your-bots-server-count-every-few-minutes)
+    - [Checking if the weekend vote multiplier is active](#checking-if-the-weekend-vote-multiplier-is-active)
+    - [Generating widget URLs](#generating-widget-urls)
   - [Webhooks](#webhooks)
     - [Being notified whenever someone voted for your project](#being-notified-whenever-someone-voted-for-your-project)
 
@@ -36,15 +39,15 @@ $ yarn add @top-gg/sdk
 
 ## Setting up
 
-### CommonJS
+### v1
 
 ```js
-const Topgg = require("@top-gg/sdk");
+import Topgg from "@top-gg/sdk";
 
-const client = new Topgg.Api(process.env.TOPGG_TOKEN);
+const client = new Topgg.V1Api(process.env.TOPGG_TOKEN);
 ```
 
-### ES module
+### v0
 
 ```js
 import Topgg from "@top-gg/sdk";
@@ -54,61 +57,25 @@ const client = new Topgg.Api(process.env.TOPGG_TOKEN);
 
 ## Usage
 
-### Getting a bot
+### API v1
 
-```js
-const bot = await client.getBot("461521980492087297");
-```
+#### Getting your project's vote information of a user
 
-### Getting several bots
-
-```js
-const bots = await client.getBots();
-```
-
-### Getting your project's voters
-
-#### First page
-
-```js
-const voters = await client.getVoters();
-```
-
-#### Subsequent pages
-
-```js
-const voters = await client.getVoters(2);
-```
-
-### Getting your project's vote information of a user
-
-#### Discord ID
+##### Discord ID
 
 ```js
 const vote = await client.getVote("661200758510977084");
 ```
 
-#### Top.gg ID
+##### Top.gg ID
 
 ```js
 const vote = await client.getVote("8226924471638491136", "topgg");
 ```
 
-### Getting your bot's server count
+#### Posting your bot's application commands list
 
-```js
-const serverCount = await client.getBotServerCount();
-```
-
-### Posting your bot's server count
-
-```js
-await client.postBotServerCount(bot.getServerCount());
-```
-
-### Posting your bot's application commands list
-
-#### Discord.js
+##### Discord.js
 
 ```js
 const commands = (await bot.application.commands.fetch()).map(cmd => cmd.toJSON());
@@ -116,7 +83,7 @@ const commands = (await bot.application.commands.fetch()).map(cmd => cmd.toJSON(
 await client.postBotCommands(commands);
 ```
 
-#### Eris
+##### Eris
 
 ```js
 const commands = await bot.getCommands();
@@ -124,7 +91,7 @@ const commands = await bot.getCommands();
 await client.postBotCommands(commands);
 ```
 
-#### Discordeno
+##### Discordeno
 
 ```js
 import { getApplicationCommands } from "discordeno";
@@ -134,7 +101,7 @@ const commands = await getApplicationCommands(bot);
 await client.postBotCommands(commands);
 ```
 
-#### Harmony
+##### Harmony
 
 ```js
 const commands = await bot.interactions.commands.all();
@@ -142,7 +109,7 @@ const commands = await bot.interactions.commands.all();
 await client.postBotCommands(commands);
 ```
 
-#### Oceanic
+##### Oceanic
 
 ```js
 const commands = await bot.application.getGlobalCommands();
@@ -150,38 +117,69 @@ const commands = await bot.application.getGlobalCommands();
 await client.postBotCommands(commands);
 ```
 
-### Automatically posting your bot's server count every few minutes
+### API v0
+
+#### Getting a bot
+
+```js
+const bot = await client.getBot("461521980492087297");
+```
+
+#### Getting several bots
+
+```js
+const bots = await client.getBots();
+```
+
+#### Getting your project's voters
+
+##### First page
+
+```js
+const voters = await client.getVoters();
+```
+
+##### Subsequent pages
+
+```js
+const voters = await client.getVoters(2);
+```
+
+#### Check if a user has voted for your project
+
+```js
+const hasVoted = await client.hasVoted("661200758510977084");
+```
+
+#### Getting your bot's server count
+
+```js
+const serverCount = await client.getBotServerCount();
+```
+
+#### Posting your bot's server count
+
+```js
+await client.postBotServerCount(bot.getServerCount());
+```
+
+#### Automatically posting your bot's server count every few minutes
 
 You would need to use the third-party `topgg-autoposter` package to be able to autopost. Install it in your terminal like so:
 
-#### NPM
+##### NPM
 
 ```sh
 $ npm i topgg-autoposter
 ```
 
-#### Yarn
+##### Yarn
 
 ```sh
 $ yarn add topgg-autoposter
 ```
 
 Then in your code:
-
-#### CommonJS
-
-```js
-const { AutoPoster } = require("topgg-autoposter");
-
-// Your discord.js client or any other
-const client = Discord.Client();
-
-AutoPoster(process.env.TOPGG_TOKEN, client).on("posted", () => {
-  console.log("Successfully posted server count to Top.gg!");
-});
-```
-
-#### ES module
 
 ```js
 import { AutoPoster } from "topgg-autoposter";
@@ -194,33 +192,33 @@ AutoPoster(process.env.TOPGG_TOKEN, client).on("posted", () => {
 });
 ```
 
-### Checking if the weekend vote multiplier is active
+#### Checking if the weekend vote multiplier is active
 
 ```js
 const isWeekend = await client.isWeekend();
 ```
 
-### Generating widget URLs
+#### Generating widget URLs
 
-#### Large
+##### Large
 
 ```js
 const widgetUrl = Topgg.Widget.large(Topgg.WidgetType.DiscordBot, "574652751745777665");
 ```
 
-#### Votes
+##### Votes
 
 ```js
 const widgetUrl = Topgg.Widget.votes(Topgg.WidgetType.DiscordBot, "574652751745777665");
 ```
 
-#### Owner
+##### Owner
 
 ```js
 const widgetUrl = Topgg.Widget.owner(Topgg.WidgetType.DiscordBot, "574652751745777665");
 ```
 
-#### Social
+##### Social
 
 ```js
 const widgetUrl = Topgg.Widget.social(Topgg.WidgetType.DiscordBot, "574652751745777665");
@@ -231,24 +229,6 @@ const widgetUrl = Topgg.Widget.social(Topgg.WidgetType.DiscordBot, "574652751745
 #### Being notified whenever someone voted for your project
 
 With express:
-
-##### CommonJS
-
-```js
-const { Webhook } = require("@top-gg/sdk");
-const express = require("express");
-
-const app = express();
-const webhook = new Webhook(process.env.MY_TOPGG_WEBHOOK_SECRET);
-
-app.post("/votes", webhook.voteListener(vote => {
-  console.log(`A user with the ID of ${vote.voterId} has voted us on Top.gg!`);
-}));
-
-app.listen(8080);
-```
-
-##### ES module
 
 ```js
 import { Webhook } from "@top-gg/sdk";

@@ -198,7 +198,7 @@ export class Api extends EventEmitter {
    *
    * @example
    * ```js
-   * const hasVoted = await client.hasVoted("205680187394752512");
+   * const hasVoted = await client.hasVoted("661200758510977084");
    * ```
    *
    * @param {Snowflake} id User ID
