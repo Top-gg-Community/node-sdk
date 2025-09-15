@@ -70,7 +70,7 @@ export class Api extends EventEmitter {
     body?: Record<string, any>
   ): Promise<any> {
     const headers: IncomingHttpHeaders = {};
-    if (this.options.token) headers["authorization"] = this.options.token;
+    if (this.options.token) headers["authorization"] = `Bearer ${this.options.token}`;
     if (method !== "GET") headers["content-type"] = "application/json";
 
     let url = `https://top.gg/api${path}`;
@@ -248,7 +248,7 @@ export class V1Api extends Api {
    * @param {APIOptions} [options] API Options
    */
   constructor(token: string, options: APIOptions = {}) {
-    super(`Bearer ${token}`, options);
+    super(token, options);
   }
 
   /**
