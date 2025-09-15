@@ -6,6 +6,7 @@ export interface WebhookOptions {
   /**
    * Handles an error created by the function passed to webhook listeners
    *
+   * @see Webhook#voteListener
    * @default console.error
    */
   error?: (error: Error) => void | Promise<void>;
