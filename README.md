@@ -237,8 +237,8 @@ import express from "express";
 const app = express();
 const webhook = new Webhook(process.env.MY_TOPGG_WEBHOOK_SECRET);
 
-app.post("/votes", webhook.voteListener(vote => {
-  console.log(`A user with the ID of ${vote.voterId} has voted us on Top.gg!`);
+app.post("/votes", webhook.listener(vote => {
+  console.log(`A user with the ID of ${vote.user} has voted us on Top.gg!`);
 }));
 
 app.listen(8080);

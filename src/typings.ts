@@ -101,18 +101,15 @@ export interface ShortUser {
 }
 
 export interface WebhookPayload {
-  /** The ID of the project that received a vote. */
-  receiverId: Snowflake;
-  /** The ID of the Top.gg user who voted. */
-  voterId: Snowflake;
-  /**
-   * Whether this vote is just a test done from the page settings.
-   */
-  isTest: boolean;
-  /**
-   * Whether the weekend multiplier is in effect, meaning users votes count as
-   * two
-   */
+  /** If webhook is a Discord bot: ID of the bot that received a vote */
+  bot?: Snowflake;
+  /** If webhook is a server: ID of the server that received a vote */
+  guild?: Snowflake;
+  /** ID of the user who voted */
+  user: Snowflake;
+  /** The type of the vote (should always be "upvote" except when using the test button it's "test") */
+  type: string;
+  /** Whether the weekend multiplier is in effect, meaning users votes count as two */
   isWeekend?: boolean;
   /** Query parameters in vote page in a key to value object */
   query:
@@ -120,4 +117,10 @@ export interface WebhookPayload {
         [key: string]: string;
       }
     | string;
+}
+
+declare module "express" {
+  export interface Request {
+    vote?: WebhookPayload;
+  }
 }
