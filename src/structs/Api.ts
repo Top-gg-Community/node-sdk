@@ -10,9 +10,11 @@ import {
   Snowflake,
   BotInfo,
   BotsResponse,
+  BotStats,
   ShortUser,
   BotsQuery,
   Vote,
+  UserInfo,
   UserSource,
 } from "../typings";
 
@@ -107,37 +109,58 @@ export class Api extends EventEmitter {
   }
 
   /**
-   * Post your Discord bot's server count to Top.gg
+   * Post your bot's stats to Top.gg
    *
    * @example
    * ```js
-   * await client.postBotServerCount(bot.getServerCount());
+   * await api.postStats({
+   *   serverCount: 28199,
+   * });
    * ```
    *
-   * @param {number} serverCount Server count
+   * @param {object} stats Stats object
+   * @param {number} stats.serverCount Server count
+   * @returns {BotStats} Passed object
    */
-  public async postBotServerCount(serverCount: number): Promise<void> {
-    if ((serverCount ?? 0) <= 0) throw new Error("Missing server count");
+  public async postStats(stats: BotStats): Promise<BotStats> {
+    if ((stats?.serverCount ?? 0) <= 0) throw new Error("Missing server count");
 
     /* eslint-disable camelcase */
     await this._request("POST", "/bots/stats", {
-      server_count: serverCount,
+      server_count: stats.serverCount,
     });
     /* eslint-enable camelcase */
+
+    return stats;
   }
 
   /**
-   * Get your Discord bot's server count
+   * Get your bot's stats
    *
    * @example
    * ```js
-   * const serverCount = await client.getBotServerCount();
+   * await api.getStats();
+   * // =>
+   * {
+   *   serverCount: 28199,
+   *   shardCount: null,
+   *   shards: []
+   * }
    * ```
    *
-   * @returns {number} Your bot's server count
+   * @returns {BotStats} Your bot's stats
    */
-  public async getBotServerCount(): Promise<number> {
-    return (await this._request("GET", "/bots/stats")).server_count;
+  public async getStats(_id?: Snowflake): Promise<BotStats> {
+    if (_id)
+      console.warn(
+        "[DeprecationWarning] getStats() no longer needs an ID argument"
+      );
+    const result = await this._request("GET", "/bots/stats");
+    return {
+      serverCount: result.server_count,
+      shardCount: null,
+      shards: [],
+    };
   }
 
   /**
@@ -154,6 +177,29 @@ export class Api extends EventEmitter {
   public async getBot(id: Snowflake): Promise<BotInfo> {
     if (!id) throw new Error("ID Missing");
     return this._request("GET", `/bots/${id}`);
+  }
+
+  /**
+   * @deprecated No longer supported by Top.gg API v0.
+   *
+   * Get user info
+   *
+   * @example
+   * ```js
+   * await api.getUser("205680187394752512");
+   * // =>
+   * user.username; // Xignotic
+   * ```
+   *
+   * @param {Snowflake} _id User ID
+   * @returns {UserInfo} Info for user
+   */ // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public async getUser(_id: Snowflake): Promise<UserInfo> {
+    throw new APIError(
+      404,
+      STATUS_CODES[404]!,
+      "getUser is no longer supported by Top.gg API v0."
+    );
   }
 
   /**
@@ -189,7 +235,7 @@ export class Api extends EventEmitter {
    * @param {number} [page] The page number. Page numbers start at 1. Each page can only have at most 100 voters.
    * @returns {ShortUser[]} Array of 100 unique voters
    */
-  public async getVoters(page?: number): Promise<ShortUser[]> {
+  public async getVotes(page?: number): Promise<ShortUser[]> {
     return this._request("GET", `/bots/${this.options.id}/votes`, { page: page ?? 1 });
   }
 
