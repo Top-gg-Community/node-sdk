@@ -1,11 +1,17 @@
 # Top.gg Node.js SDK
 
+> For more information, see the documentation here: https://topgg.js.org.
+
 The community-maintained Node.js library for Top.gg.
 
 ## Chapters
 
 - [Installation](#installation)
+  - [NPM](#npm)
+  - [Yarn](#yarn)
 - [Setting up](#setting-up)
+  - [v1](#v1)
+  - [v0](#v0)
 - [Usage](#usage)
   - [API v1](#api-v1)
     - [Getting your project's vote information of a user](#getting-your-projects-vote-information-of-a-user)
@@ -15,15 +21,17 @@ The community-maintained Node.js library for Top.gg.
     - [Getting several bots](#getting-several-bots)
     - [Getting your project's voters](#getting-your-projects-voters)
     - [Check if a user has voted for your project](#check-if-a-user-has-voted-for-your-project)
-    - [Getting your bot's server count](#getting-your-bots-server-count)
-    - [Posting your bot's server count](#posting-your-bots-server-count)
-    - [Automatically posting your bot's server count every few minutes](#automatically-posting-your-bots-server-count-every-few-minutes)
+    - [Getting your bot's statistics](#getting-your-bots-statistics)
+    - [Posting your bot's statistics](#posting-your-bots-statistics)
+    - [Automatically posting your bot's statistics every few minutes](#automatically-posting-your-bots-statistics-every-few-minutes)
     - [Checking if the weekend vote multiplier is active](#checking-if-the-weekend-vote-multiplier-is-active)
     - [Generating widget URLs](#generating-widget-urls)
   - [Webhooks](#webhooks)
     - [Being notified whenever someone voted for your project](#being-notified-whenever-someone-voted-for-your-project)
 
+
 ## Installation
+
 
 ### NPM
 
@@ -38,6 +46,7 @@ $ yarn add @top-gg/sdk
 ```
 
 ## Setting up
+
 
 ### v1
 
@@ -61,6 +70,7 @@ const client = new Topgg.Api(process.env.TOPGG_TOKEN);
 
 #### Getting your project's vote information of a user
 
+
 ##### Discord ID
 
 ```js
@@ -74,6 +84,7 @@ const vote = await client.getVote("8226924471638491136", "topgg");
 ```
 
 #### Posting your bot's application commands list
+
 
 ##### Discord.js
 
@@ -133,6 +144,7 @@ const bots = await client.getBots();
 
 #### Getting your project's voters
 
+
 ##### First page
 
 ```js
@@ -151,21 +163,25 @@ const voters = await client.getVoters(2);
 const hasVoted = await client.hasVoted("661200758510977084");
 ```
 
-#### Getting your bot's server count
+#### Getting your bot's statistics
 
 ```js
-const serverCount = await client.getBotServerCount();
+const stats = await client.getStats();
 ```
 
-#### Posting your bot's server count
+#### Posting your bot's statistics
 
 ```js
-await client.postBotServerCount(bot.getServerCount());
+
+await api.postStats({
+  serverCount: bot.getServerCount(),
+});
 ```
 
-#### Automatically posting your bot's server count every few minutes
+#### Automatically posting your bot's statistics every few minutes
 
 You would need to use the third-party `topgg-autoposter` package to be able to autopost. Install it in your terminal like so:
+
 
 ##### NPM
 
@@ -188,7 +204,7 @@ import { AutoPoster } from "topgg-autoposter";
 const client = Discord.Client();
 
 AutoPoster(process.env.TOPGG_TOKEN, client).on("posted", () => {
-  console.log("Successfully posted server count to Top.gg!");
+  console.log("Successfully posted statistics to Top.gg!");
 });
 ```
 
@@ -199,6 +215,7 @@ const isWeekend = await client.isWeekend();
 ```
 
 #### Generating widget URLs
+
 
 ##### Large
 
@@ -235,7 +252,7 @@ import { Webhook } from "@top-gg/sdk";
 import express from "express";
 
 const app = express();
-const webhook = new Webhook(process.env.MY_TOPGG_WEBHOOK_SECRET);
+const webhook = new Webhook(process.env.TOPGG_WEBHOOK_PASSWORD);
 
 app.post("/votes", webhook.listener(vote => {
   console.log(`A user with the ID of ${vote.user} has voted us on Top.gg!`);
