@@ -19,7 +19,7 @@ import {
 } from "../typings";
 
 /**
- * Top.gg API v0 Client
+ * Top.gg API v0 client
  *
  * @example
  * ```js
@@ -274,7 +274,7 @@ export class Api extends EventEmitter {
 }
 
 /**
- * Top.gg API v1 Client
+ * Top.gg API v1 client
  *
  * @example
  * ```js
@@ -320,6 +320,23 @@ export class V1Api extends Api {
    * const commands = await bot.application.getGlobalCommands();
    * 
    * await client.postBotCommands(commands);
+   * 
+   * // Raw:
+   * await client.postBotCommands([
+   *   {
+   *     options: [],
+   *     name: 'test',
+   *     name_localizations: null,
+   *     description: 'command description',
+   *     description_localizations: null,
+   *     contexts: [],
+   *     default_permission: null,
+   *     default_member_permissions: null,
+   *     dm_permission: false,
+   *     integration_types: [],
+   *     nsfw: false
+   *   }
+   * ]);
    * ```
    *
    * @param {APIApplicationCommand[]} commands A list of application commands in raw Discord API JSON objects. This cannot be empty.

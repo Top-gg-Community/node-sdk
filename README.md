@@ -7,11 +7,7 @@ The community-maintained Node.js library for Top.gg.
 ## Chapters
 
 - [Installation](#installation)
-  - [NPM](#npm)
-  - [Yarn](#yarn)
 - [Setting up](#setting-up)
-  - [v1](#v1)
-  - [v0](#v0)
 - [Usage](#usage)
   - [API v1](#api-v1)
     - [Getting your project's vote information of a user](#getting-your-projects-vote-information-of-a-user)
@@ -29,9 +25,7 @@ The community-maintained Node.js library for Top.gg.
   - [Webhooks](#webhooks)
     - [Being notified whenever someone voted for your project](#being-notified-whenever-someone-voted-for-your-project)
 
-
 ## Installation
-
 
 ### NPM
 
@@ -47,8 +41,9 @@ $ yarn add @top-gg/sdk
 
 ## Setting up
 
+### API v1
 
-### v1
+Note that API v1 also includes API v0.
 
 ```js
 import Topgg from "@top-gg/sdk";
@@ -56,7 +51,7 @@ import Topgg from "@top-gg/sdk";
 const client = new Topgg.V1Api(process.env.TOPGG_TOKEN);
 ```
 
-### v0
+### API v0
 
 ```js
 import Topgg from "@top-gg/sdk";
@@ -69,7 +64,6 @@ const client = new Topgg.Api(process.env.TOPGG_TOKEN);
 ### API v1
 
 #### Getting your project's vote information of a user
-
 
 ##### Discord ID
 
@@ -84,7 +78,6 @@ const vote = await client.getVote("8226924471638491136", "topgg");
 ```
 
 #### Posting your bot's application commands list
-
 
 ##### Discord.js
 
@@ -128,6 +121,26 @@ const commands = await bot.application.getGlobalCommands();
 await client.postBotCommands(commands);
 ```
 
+##### Raw
+
+```js
+await client.postBotCommands([
+  {
+    options: [],
+    name: 'test',
+    name_localizations: null,
+    description: 'command description',
+    description_localizations: null,
+    contexts: [],
+    default_permission: null,
+    default_member_permissions: null,
+    dm_permission: false,
+    integration_types: [],
+    nsfw: false
+  }
+]);
+```
+
 ### API v0
 
 #### Getting a bot
@@ -143,7 +156,6 @@ const bots = await client.getBots();
 ```
 
 #### Getting your project's voters
-
 
 ##### First page
 
@@ -182,7 +194,6 @@ await api.postStats({
 
 You would need to use the third-party `topgg-autoposter` package to be able to autopost. Install it in your terminal like so:
 
-
 ##### NPM
 
 ```sh
@@ -215,7 +226,6 @@ const isWeekend = await client.isWeekend();
 ```
 
 #### Generating widget URLs
-
 
 ##### Large
 
