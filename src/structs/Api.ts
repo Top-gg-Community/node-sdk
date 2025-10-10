@@ -319,10 +319,10 @@ export class V1Api extends Api {
    * // Oceanic:
    * const commands = await bot.application.getGlobalCommands();
    * 
-   * await client.postBotCommands(commands);
+   * await client.postCommands(commands);
    * 
    * // Raw:
-   * await client.postBotCommands([
+   * await client.postCommands([
    *   {
    *     options: [],
    *     name: 'test',
@@ -341,7 +341,7 @@ export class V1Api extends Api {
    *
    * @param {APIApplicationCommand[]} commands A list of application commands in raw Discord API JSON objects. This cannot be empty.
    */
-  public async postBotCommands(commands: APIApplicationCommand[]): Promise<void> {
+  public async postCommands(commands: APIApplicationCommand[]): Promise<void> {
     await this._request("POST", "/v1/projects/@me/commands", commands);
   }
 

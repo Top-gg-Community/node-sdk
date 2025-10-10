@@ -84,7 +84,7 @@ const vote = await client.getVote("8226924471638491136", "topgg");
 ```js
 const commands = (await bot.application.commands.fetch()).map(cmd => cmd.toJSON());
 
-await client.postBotCommands(commands);
+await client.postCommands(commands);
 ```
 
 ##### Eris
@@ -92,7 +92,7 @@ await client.postBotCommands(commands);
 ```js
 const commands = await bot.getCommands();
 
-await client.postBotCommands(commands);
+await client.postCommands(commands);
 ```
 
 ##### Discordeno
@@ -102,7 +102,7 @@ import { getApplicationCommands } from "discordeno";
 
 const commands = await getApplicationCommands(bot);
 
-await client.postBotCommands(commands);
+await client.postCommands(commands);
 ```
 
 ##### Harmony
@@ -110,7 +110,7 @@ await client.postBotCommands(commands);
 ```js
 const commands = await bot.interactions.commands.all();
 
-await client.postBotCommands(commands);
+await client.postCommands(commands);
 ```
 
 ##### Oceanic
@@ -118,13 +118,13 @@ await client.postBotCommands(commands);
 ```js
 const commands = await bot.application.getGlobalCommands();
 
-await client.postBotCommands(commands);
+await client.postCommands(commands);
 ```
 
 ##### Raw
 
 ```js
-await client.postBotCommands([
+await client.postCommands([
   {
     options: [],
     name: 'test',

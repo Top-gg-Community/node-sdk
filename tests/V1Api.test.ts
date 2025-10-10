@@ -4,9 +4,9 @@ import { VOTE } from './mocks/data';
 /* mock token */
 const client = new V1Api('.eyJfdCI6IiIsImlkIjoiMzY0ODA2MDI5ODc2NTU1Nzc2In0=.');
 
-describe('API postBotCommands test', () => {
-    it('postBotCommands should work', () => {
-        expect(client.postBotCommands([{
+describe('API postCommands test', () => {
+    it('postCommands should work', () => {
+        expect(client.postCommands([{
             id: '1',
             type: 1,
             application_id: '1',
