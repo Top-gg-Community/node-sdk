@@ -19,7 +19,7 @@ import {
 } from "../typings";
 
 /**
- * Top.gg v0 API Client
+ * Top.gg API v0 Client
  *
  * @example
  * ```js
@@ -274,7 +274,7 @@ export class Api extends EventEmitter {
 }
 
 /**
- * Top.gg v1 API Client
+ * Top.gg API v1 Client
  *
  * @example
  * ```js
