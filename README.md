@@ -43,7 +43,7 @@ $ yarn add @top-gg/sdk
 
 ### API v1
 
-Note that API v1 also includes API v0.
+> **NOTE**: API v1 also includes API v0.
 
 ```js
 import Topgg from "@top-gg/sdk";
