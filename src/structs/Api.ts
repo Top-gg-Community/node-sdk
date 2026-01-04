@@ -12,8 +12,9 @@ import {
   UserInfo,
   BotsResponse,
   ShortUser,
-  BotsQuery,
+  BotsQuery
 } from "../typings";
+import { type APIApplicationCommand } from 'discord-api-types/v10';
 
 /**
  * Top.gg API Client for Posting stats or Fetching data
@@ -128,6 +129,14 @@ export class Api extends EventEmitter {
     /* eslint-enable camelcase */
 
     return stats;
+  }
+
+  public async postCommands(commands: APIApplicationCommand[]) {
+    if (commands.length <= 0) throw new Error('Your application has no commands');
+
+    await this._request("POST", "/v1/projects/@me/commands", commands);
+
+    return commands;
   }
 
   /**
