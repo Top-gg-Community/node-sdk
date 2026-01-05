@@ -134,9 +134,9 @@ export class Api extends EventEmitter {
   public async postCommands(commands: APIApplicationCommand[]) {
     if (commands.length <= 0) throw new Error('Your application has no commands');
 
-    await this._request("POST", "/v1/projects/@me/commands", commands);
+    const response = await this._request("POST", "/v1/projects/@me/commands", commands);
 
-    return commands;
+    return response;
   }
 
   /**
