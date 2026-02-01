@@ -191,7 +191,7 @@ export class Api extends EventEmitter {
    * user.username; // Xignotic
    * ```
    *
-   * @param {Snowflake} _id User ID
+   * @param {Snowflake} id User ID
    * @returns {UserInfo} Info for user
    */
   public async getUser(id: Snowflake): Promise<UserInfo> {
