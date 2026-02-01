@@ -1,7 +1,7 @@
 import type { APIApplicationCommand } from "discord-api-types/v10";
 import type { IncomingHttpHeaders } from "undici/types/header";
 import { request, type Dispatcher } from "undici";
-import APIError from "../utils/ApiError";
+import TopGGAPIError from "../utils/ApiError";
 import { EventEmitter } from "events";
 import { STATUS_CODES } from "http";
 
@@ -98,7 +98,7 @@ export class Api extends EventEmitter {
     }
 
     if (response.statusCode < 200 || response.statusCode > 299) {
-      throw new APIError(
+      throw new TopGGAPIError(
         response.statusCode,
         STATUS_CODES[response.statusCode] ?? "",
         responseBody
@@ -195,7 +195,7 @@ export class Api extends EventEmitter {
    * @returns {UserInfo} Info for user
    */ // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async getUser(_id: Snowflake): Promise<UserInfo> {
-    throw new APIError(
+    throw new TopGGAPIError(
       404,
       STATUS_CODES[404]!,
       "getUser is no longer supported by Top.gg API v0."
@@ -374,7 +374,7 @@ export class V1Api extends Api {
         weight: response.weight
       };
     } catch (err) {
-      const topggError = err as APIError;
+      const topggError = err as TopGGAPIError;
 
       if (topggError.statusCode === 404) {
         return null;
