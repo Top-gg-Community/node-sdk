@@ -1,5 +1,7 @@
 # Top.gg Node.js SDK
 
+> For more information, see the documentation here: https://topgg.js.org.
+
 The community-maintained Node.js library for Top.gg.
 
 ## Chapters
@@ -7,10 +9,10 @@ The community-maintained Node.js library for Top.gg.
 - [Installation](#installation)
 - [Setting up](#setting-up)
 - [Usage](#usage)
-  - [API v1](#api-v1-1)
+  - [API v1](#api-v1)
     - [Getting your project's vote information of a user](#getting-your-projects-vote-information-of-a-user)
     - [Posting your bot's application commands list](#posting-your-bots-application-commands-list)
-  - [API v0](#api-v0-1)
+  - [API v0](#api-v0)
     - [Getting a bot](#getting-a-bot)
     - [Getting several bots](#getting-several-bots)
     - [Getting your project's voters](#getting-your-projects-voters)
@@ -23,7 +25,9 @@ The community-maintained Node.js library for Top.gg.
   - [Webhooks](#webhooks)
     - [Being notified whenever someone voted for your project](#being-notified-whenever-someone-voted-for-your-project)
 
+
 ## Installation
+
 
 ### NPM
 
@@ -39,9 +43,12 @@ $ yarn add @top-gg/sdk
 
 ## Setting up
 
-### API v1
 
-> **NOTE**: API v1 also includes API v0.
+### v1
+
+:::note
+API v1 also includes API v0.
+:::
 
 ```js
 import Topgg from "@top-gg/sdk";
@@ -49,7 +56,7 @@ import Topgg from "@top-gg/sdk";
 const client = new Topgg.V1Api(process.env.TOPGG_TOKEN);
 ```
 
-### API v0
+### v0
 
 ```js
 import Topgg from "@top-gg/sdk";
@@ -62,6 +69,7 @@ const client = new Topgg.Api(process.env.TOPGG_TOKEN);
 ### API v1
 
 #### Getting your project's vote information of a user
+
 
 ##### Discord ID
 
@@ -76,6 +84,7 @@ const vote = await client.getVote("8226924471638491136", "topgg");
 ```
 
 #### Posting your bot's application commands list
+
 
 ##### Discord.js
 
@@ -155,6 +164,7 @@ const bots = await client.getBots();
 
 #### Getting your project's voters
 
+
 ##### First page
 
 ```js
@@ -164,6 +174,7 @@ const voters = await client.getVoters();
 ##### Subsequent pages
 
 ```js
+//                                    Page number
 const voters = await client.getVoters(2);
 ```
 
@@ -191,6 +202,7 @@ await api.postStats({
 #### Automatically posting your bot's statistics every few minutes
 
 You would need to use the third-party `topgg-autoposter` package to be able to autopost. Install it in your terminal like so:
+
 
 ##### NPM
 
@@ -224,6 +236,7 @@ const isWeekend = await client.isWeekend();
 ```
 
 #### Generating widget URLs
+
 
 ##### Large
 
