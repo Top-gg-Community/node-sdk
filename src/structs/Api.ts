@@ -17,6 +17,7 @@ import {
   UserInfo,
   UserSource,
 } from "../typings";
+import { Readable } from "stream";
 
 /**
  * Top.gg API v0 client
@@ -101,7 +102,7 @@ export class Api extends EventEmitter {
       throw new TopGGAPIError(
         response.statusCode,
         STATUS_CODES[response.statusCode] ?? "",
-        responseBody
+        response
       );
     }
 
@@ -193,13 +194,13 @@ export class Api extends EventEmitter {
    *
    * @param {Snowflake} _id User ID
    * @returns {UserInfo} Info for user
-   */ // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public async getUser(_id: Snowflake): Promise<UserInfo> {
-    throw new TopGGAPIError(
-      404,
-      STATUS_CODES[404]!,
-      "getUser is no longer supported by Top.gg API v0."
+   */
+  public async getUser(id: Snowflake): Promise<UserInfo> {
+    console.warn(
+      "[DeprecationWarning] getUser is no longer supported by Top.gg API v0."
     );
+
+    return this._request("GET", `/users/${id}`);
   }
 
   /**
@@ -376,7 +377,7 @@ export class V1Api extends Api {
     } catch (err) {
       const topggError = err as TopGGAPIError;
 
-      if (topggError.statusCode === 404) {
+      if (topggError.response?.statusCode === 404) {
         return null;
       }
 
