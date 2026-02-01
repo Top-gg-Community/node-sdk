@@ -17,7 +17,6 @@ import {
   UserInfo,
   UserSource,
 } from "../typings";
-import { Readable } from "stream";
 
 /**
  * Top.gg API v0 client
