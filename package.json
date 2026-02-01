@@ -10,8 +10,8 @@
     "build:ci": "npm i --include=dev && tsc",
     "docs": "typedoc",
     "prepublishOnly": "npm run build:ci",
-    "lint": "eslint",
-    "lint:ci": "eslint --output-file eslint_report.json --format json",
+    "lint": "eslint src/**/*.ts",
+    "lint:ci": "eslint --output-file eslint_report.json --format json src/**/*.ts",
     "prepare": "npx husky install"
   },
   "repository": {
