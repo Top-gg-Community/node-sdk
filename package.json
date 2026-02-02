@@ -1,6 +1,6 @@
 {
   "name": "@top-gg/sdk",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "description": "A community-maintained Node.js API Client for the Top.gg API.",
   "main": "./dist/index.js",
   "scripts": {

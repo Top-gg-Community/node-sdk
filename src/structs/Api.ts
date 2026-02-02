@@ -8,18 +8,12 @@ import { STATUS_CODES } from "http";
 import {
   APIOptions,
   Snowflake,
-  BotInfo,
-  BotsResponse,
-  BotStats,
-  ShortUser,
-  BotsQuery,
   Vote,
-  UserInfo,
   UserSource,
 } from "../typings";
 
 /**
- * Top.gg API v0 client
+ * Top.gg API v1 client
  *
  * @example
  * ```js
@@ -32,7 +26,7 @@ import {
  * @link {@link https://docs.top.gg | API Reference}
  */
 export class Api extends EventEmitter {
-  protected options: APIOptions;
+  private options: APIOptions;
 
   /**
    * Create Top.gg API instance
@@ -66,7 +60,7 @@ export class Api extends EventEmitter {
     };
   }
 
-  protected async _request(
+  private async _request(
     method: Dispatcher.HttpMethod,
     path: string,
     body?: Record<string, any>
@@ -106,195 +100,6 @@ export class Api extends EventEmitter {
     }
 
     return responseBody;
-  }
-
-  /**
-   * Post your bot's stats to Top.gg
-   *
-   * @example
-   * ```js
-   * await api.postStats({
-   *   serverCount: 28199,
-   * });
-   * ```
-   *
-   * @param {object} stats Stats object
-   * @param {number} stats.serverCount Server count
-   * @returns {BotStats} Passed object
-   */
-  public async postStats(stats: BotStats): Promise<BotStats> {
-    if ((stats?.serverCount ?? 0) <= 0) throw new Error("Missing server count");
-
-    /* eslint-disable camelcase */
-    await this._request("POST", "/bots/stats", {
-      server_count: stats.serverCount,
-    });
-    /* eslint-enable camelcase */
-
-    return stats;
-  }
-
-  /**
-   * Get your bot's stats
-   *
-   * @example
-   * ```js
-   * await api.getStats();
-   * // =>
-   * {
-   *   serverCount: 28199,
-   *   shardCount: null,
-   *   shards: []
-   * }
-   * ```
-   *
-   * @returns {BotStats} Your bot's stats
-   */
-  public async getStats(_id?: Snowflake): Promise<BotStats> {
-    if (_id)
-      console.warn(
-        "[DeprecationWarning] getStats() no longer needs an ID argument"
-      );
-    const result = await this._request("GET", "/bots/stats");
-    return {
-      serverCount: result.server_count,
-      shardCount: null,
-      shards: [],
-    };
-  }
-
-  /**
-   * Get bot info
-   *
-   * @example
-   * ```js
-   * const bot = await client.getBot("461521980492087297");
-   * ```
-   *
-   * @param {Snowflake} id Bot ID
-   * @returns {BotInfo} Info for bot
-   */
-  public async getBot(id: Snowflake): Promise<BotInfo> {
-    if (!id) throw new Error("ID Missing");
-    return this._request("GET", `/bots/${id}`);
-  }
-
-  /**
-   * @deprecated No longer supported by Top.gg API v0.
-   *
-   * Get user info
-   *
-   * @example
-   * ```js
-   * await api.getUser("205680187394752512");
-   * // =>
-   * user.username; // Xignotic
-   * ```
-   *
-   * @param {Snowflake} id User ID
-   * @returns {UserInfo} Info for user
-   */
-  public async getUser(id: Snowflake): Promise<UserInfo> {
-    console.warn(
-      "[DeprecationWarning] getUser is no longer supported by Top.gg API v0."
-    );
-
-    return this._request("GET", `/users/${id}`);
-  }
-
-  /**
-   * Get a list of bots
-   *
-   * @example
-   * ```js
-   * const bots = await client.getBots();
-   * ```
-   *
-   * @param {BotsQuery} query Bot Query
-   * @returns {BotsResponse} Return response
-   */
-  public async getBots(query?: BotsQuery): Promise<BotsResponse> {
-    if (query) {
-      if (Array.isArray(query.fields)) query.fields = query.fields.join(", ");
-    }
-    return this._request("GET", "/bots", query);
-  }
-
-  /**
-   * Get recent 100 unique voters
-   *
-   * @example
-   * ```js
-   * // First page
-   * const voters1 = await client.getVoters();
-   * 
-   * // Subsequent pages
-   * const voters2 = await client.getVoters(2);
-   * ```
-   *
-   * @param {number} [page] The page number. Page numbers start at 1. Each page can only have at most 100 voters.
-   * @returns {ShortUser[]} Array of 100 unique voters
-   */
-  public async getVotes(page?: number): Promise<ShortUser[]> {
-    return this._request("GET", `/bots/${this.options.id}/votes`, { page: page ?? 1 });
-  }
-
-  /**
-   * Get whether or not a user has voted in the last 12 hours
-   *
-   * @example
-   * ```js
-   * const hasVoted = await client.hasVoted("661200758510977084");
-   * ```
-   *
-   * @param {Snowflake} id User ID
-   * @returns {boolean} Whether the user has voted in the last 12 hours
-   */
-  public async hasVoted(id: Snowflake): Promise<boolean> {
-    if (!id) throw new Error("Missing ID");
-
-    return this._request("GET", "/bots/check", { userId: id }).then(
-      (x) => !!x.voted
-    );
-  }
-
-  /**
-   * Whether or not the weekend multiplier is active
-   *
-   * @example
-   * ```js
-   * const isWeekend = await client.isWeekend();
-   * ```
-   *
-   * @returns {boolean} Whether the multiplier is active
-   */
-  public async isWeekend(): Promise<boolean> {
-    return this._request("GET", "/weekend").then((x) => x.is_weekend);
-  }
-}
-
-/**
- * Top.gg API v1 client
- *
- * @example
- * ```js
- * const Topgg = require("@top-gg/sdk");
- * 
- * const client = new Topgg.V1Api(process.env.TOPGG_TOKEN);
- * ```
- *
- * @link {@link https://topgg.js.org | Library docs}
- * @link {@link https://docs.top.gg | API Reference}
- */
-export class V1Api extends Api {
-    /**
-   * Create Top.gg API instance
-   *
-   * @param {string} token Token or options
-   * @param {APIOptions} [options] API Options
-   */
-  constructor(token: string, options: APIOptions = {}) {
-    super(token, options);
   }
 
   /**
