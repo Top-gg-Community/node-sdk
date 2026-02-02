@@ -80,7 +80,7 @@ export class Webhook {
           const parsed = JSON.parse(body.toString("utf8"));
 
           resolve(this._formatIncoming(parsed));
-        } catch (err) {
+        } catch {
           res.status(400).json({ error: "Invalid body" });
           resolve(false);
         }

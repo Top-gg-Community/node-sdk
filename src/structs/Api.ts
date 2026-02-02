@@ -49,6 +49,7 @@ export class Api extends EventEmitter {
     const tokenData = atob(tokenSegments[1]);
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       JSON.parse(tokenData).id;
     } catch {
       throw new Error(
