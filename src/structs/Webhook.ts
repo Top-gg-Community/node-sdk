@@ -85,17 +85,15 @@ export class Webhook {
         }
 
         const parsedSignature = Object.fromEntries(signatureHeader.split(",").map(part => part.split("=")));
-
-        const timestamp = parsedSignature["t"];
         const signature = parsedSignature[API_VERSION];
 
-        if (!timestamp || !signature) {
+        if (!parsedSignature.t || !signature) {
           res.status(400).send({ error: "Invalid signature format" });
           return resolve(false);
         }
 
         const hmac = crypto.createHmac("sha256", this.authorization);
-        const digest = hmac.update(`${timestamp}.${body}`);
+        const digest = hmac.update(`${parsedSignature.t}.${body}`);
 
         if (signature !== digest) {
           res.status(401).json({ error: "Invalid Authorization" });
