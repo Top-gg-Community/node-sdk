@@ -9,6 +9,7 @@ The community-maintained Node.js library for Top.gg.
 - [Installation](#installation)
 - [Setting up](#setting-up)
 - [Usage](#usage)
+  - [Getting your project's information](#getting-your-projects-information)
   - [Getting your project's vote information of a user](#getting-your-projects-vote-information-of-a-user)
   - [Posting your bot's application commands list](#posting-your-bots-application-commands-list)
   - [Generating widget URLs](#generating-widget-urls)
@@ -39,6 +40,36 @@ const client = new Topgg.Api(process.env.TOPGG_TOKEN);
 ```
 
 ## Usage
+
+### Getting your project's information
+
+```js
+const project = await client.getSelf();
+
+console.log(project);
+// =>
+// {
+//   id: '218109768489992192',
+//   name: 'Miki',
+//   type: 'bot',
+//   platform: 'discord',
+//   headline: 'A great bot with tons of features! language | admin | cards | fun | levels | roles | marriage | currency | custom commands!',
+//   tags: [
+//     'anime',
+//     'customizable-behavior',
+//     'economy',
+//     'fun',
+//     'game',
+//     'leveling',
+//     'multifunctional',
+//     'role-management',
+//     'roleplay',
+//     'social'
+//   ],
+//   votes: { current: 1120, total: 313389 },
+//   review: { score: 4.38, count: 62245 }
+// }
+```
 
 ### Getting your project's vote information of a user
 

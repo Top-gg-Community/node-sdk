@@ -112,6 +112,35 @@ export class Api extends EventEmitter {
   /**
    * Gets your project's information.
    *
+   * @example
+   * ```js
+   * const project = await client.getSelf();
+   *
+   * console.log(project);
+   * // =>
+   * // {
+   * //   id: '218109768489992192',
+   * //   name: 'Miki',
+   * //   type: 'bot',
+   * //   platform: 'discord',
+   * //   headline: 'A great bot with tons of features! language | admin | cards | fun | levels | roles | marriage | currency | custom commands!',
+   * //   tags: [
+   * //     'anime',
+   * //     'customizable-behavior',
+   * //     'economy',
+   * //     'fun',
+   * //     'game',
+   * //     'leveling',
+   * //     'multifunctional',
+   * //     'role-management',
+   * //     'roleplay',
+   * //     'social'
+   * //   ],
+   * //   votes: { current: 1120, total: 313389 },
+   * //   review: { score: 4.38, count: 62245 }
+   * // }
+   * ```
+   *
    * @returns {Promise<Project>} Your project's information.
    */
   public async getSelf(): Promise<Project> {
