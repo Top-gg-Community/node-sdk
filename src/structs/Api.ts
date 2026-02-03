@@ -13,6 +13,12 @@ import {
   Project,
 } from "../typings";
 
+/** The API version to use */
+export const API_VERSION = "v1";
+
+/** The API's base URL */
+const BASE_URL = `https://top.gg/api/${API_VERSION}`;
+
 /**
  * Top.gg API v1 client
  *
@@ -70,7 +76,7 @@ export class Api extends EventEmitter {
     if (this.options.token) headers["authorization"] = this.options.token;
     if (method !== "GET") headers["content-type"] = "application/json";
 
-    let url = `https://top.gg/api${path}`;
+    let url = BASE_URL + path;
 
     if (body && method === "GET") url += `?${new URLSearchParams(body)}`;
 
@@ -109,7 +115,7 @@ export class Api extends EventEmitter {
    * @returns {Promise<Project>} Your project's information.
    */
   public async getSelf(): Promise<Project> {
-    const project = await this._request("GET", "/v1/projects/@me");
+    const project = await this._request("GET", "/projects/@me");
 
     return {
       id: project.id,
@@ -175,7 +181,7 @@ export class Api extends EventEmitter {
    * @returns {Promise<void>}
    */
   public async postCommands(commands: APIApplicationCommand[]): Promise<void> {
-    await this._request("POST", "/v1/projects/@me/commands", commands);
+    await this._request("POST", "/projects/@me/commands", commands);
   }
 
   /**
@@ -198,7 +204,7 @@ export class Api extends EventEmitter {
     if (!id) throw new Error("Missing ID");
 
     try {
-      const response = await this._request("GET", `/v1/projects/@me/votes/${id}?source=${source}`);
+      const response = await this._request("GET", `/projects/@me/votes/${id}?source=${source}`);
 
       return {
         votedAt: response.created_at,

@@ -1,6 +1,8 @@
 import getBody from "raw-body";
 import { Request, Response, NextFunction } from "express";
+import crypto from "node:crypto";
 import { WebhookPayload } from "../typings";
+import { API_VERSION } from "./Api";
 
 export interface WebhookOptions {
   /**
@@ -43,9 +45,9 @@ export class Webhook {
   /**
    * Create a new webhook client instance
    *
-   * @param authorization Webhook authorization to verify requests
+   * @param {string} authorization Webhook authorization to verify requests
    */
-  constructor(private authorization?: string, options: WebhookOptions = {}) {
+  constructor(private authorization: string, options: WebhookOptions = {}) {
     this.options = {
       error: options.error ?? console.error,
     };
@@ -65,16 +67,40 @@ export class Webhook {
     res: Response
   ): Promise<WebhookPayload | false> {
     return new Promise((resolve) => {
-      if (
-        this.authorization &&
-        req.headers.authorization !== this.authorization
-      )
-        return res.status(401).json({ error: "Unauthorized" });
-      // parse json
-
-      if (req.body) return resolve(this._formatIncoming(req.body));
       getBody(req, {}, (error, body) => {
-        if (error) return res.status(422).json({ error: "Malformed request" });
+        if (error) {
+          res.status(422).json({ error: "Malformed request" });
+          return resolve(false);
+        }
+
+        let signatureHeader = req.headers["x-topgg-signature"];
+
+        if (Array.isArray(signatureHeader)) {
+          signatureHeader = signatureHeader[0];
+        }
+
+        if (!signatureHeader) {
+          res.status(401).json({ error: "Missing Top.gg Signature" });
+          return resolve(false);
+        }
+
+        const parsedSignature = Object.fromEntries(signatureHeader.split(",").map(part => part.split("=")));
+
+        const timestamp = parsedSignature["t"];
+        const signature = parsedSignature[API_VERSION];
+
+        if (!timestamp || !signature) {
+          res.status(400).send({ error: "Invalid signature format" });
+          return resolve(false);
+        }
+
+        const hmac = crypto.createHmac("sha256", this.authorization);
+        const digest = hmac.update(`${timestamp}.${body}`);
+
+        if (signature !== digest) {
+          res.status(401).json({ error: "Invalid Authorization" });
+          return resolve(false);
+        }
 
         try {
           const parsed = JSON.parse(body.toString("utf8"));
