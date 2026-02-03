@@ -1,4 +1,3 @@
-import getBody from "raw-body";
 import { Request, Response, NextFunction } from "express";
 import { WebhookPayload } from "../typings";
 
@@ -70,21 +69,25 @@ export class Webhook {
         req.headers.authorization !== this.authorization
       )
         return res.status(403).json({ error: "Unauthorized" });
+
       // parse json
-
       if (req.body) return resolve(this._formatIncoming(req.body));
-      getBody(req, {}, (error, body) => {
-        if (error) return res.status(422).json({ error: "Malformed request" });
 
-        try {
+      try {
+        const chunks: Uint8Array[] = [];
+
+        req.on("data", (d) => chunks.push(d));
+
+        req.on("end", () => {
+          const body = Buffer.concat(chunks);
           const parsed = JSON.parse(body.toString("utf8"));
 
           resolve(this._formatIncoming(parsed));
-        } catch (err) {
-          res.status(400).json({ error: "Invalid body" });
-          resolve(false);
-        }
-      });
+        });
+      } catch {
+        res.status(400).json({ error: "Invalid body" });
+        resolve(false);
+      }
     });
   }
 
