@@ -11,6 +11,7 @@ The community-maintained Node.js library for Top.gg.
 - [Usage](#usage)
   - [Getting your project's vote information of a user](#getting-your-projects-vote-information-of-a-user)
   - [Posting your bot's application commands list](#posting-your-bots-application-commands-list)
+  - [Generating widget URLs](#generating-widget-urls)
   - [Webhooks](#webhooks)
     - [Being notified whenever someone voted for your project](#being-notified-whenever-someone-voted-for-your-project)
 
@@ -115,6 +116,32 @@ await client.postCommands([
     nsfw: false
   }
 ]);
+```
+
+### Generating widget URLs
+
+#### Large
+
+```js
+const widgetUrl = Topgg.Widget.large(Topgg.WidgetType.DiscordBot, "574652751745777665");
+```
+
+#### Votes
+
+```js
+const widgetUrl = Topgg.Widget.votes(Topgg.WidgetType.DiscordBot, "574652751745777665");
+```
+
+#### Owner
+
+```js
+const widgetUrl = Topgg.Widget.owner(Topgg.WidgetType.DiscordBot, "574652751745777665");
+```
+
+#### Social
+
+```js
+const widgetUrl = Topgg.Widget.social(Topgg.WidgetType.DiscordBot, "574652751745777665");
 ```
 
 ### Webhooks
