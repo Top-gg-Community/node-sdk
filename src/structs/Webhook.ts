@@ -93,7 +93,7 @@ export class Webhook {
         }
 
         const hmac = crypto.createHmac("sha256", this.authorization);
-        const digest = hmac.update(`${parsedSignature.t}.${body}`);
+        const digest = hmac.update(`${parsedSignature.t}.${body}`).digest("hex");
 
         if (signature !== digest) {
           res.status(401).json({ error: "Invalid Authorization" });
