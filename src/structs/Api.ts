@@ -10,6 +10,7 @@ import {
   Snowflake,
   Vote,
   UserSource,
+  Project,
 } from "../typings";
 
 /**
@@ -103,6 +104,32 @@ export class Api extends EventEmitter {
   }
 
   /**
+   * Gets your project's information.
+   *
+   * @returns {Promise<Project>} Your project's information.
+   */
+  public async getSelf(): Promise<Project> {
+    const project = await this._request("GET", "/v1/projects/@me");
+
+    return {
+      id: project.id,
+      name: project.name,
+      platform: project.platform,
+      type: project.type,
+      headline: project.headline,
+      tags: project.tags,
+      votes: {
+        current: project.votes,
+        total: project.votes_total
+      },
+      review: {
+        score: project.review_score,
+        count: project.review_count
+      }
+    }
+  }
+
+  /**
    * Updates the application commands list in your Discord bot's Top.gg page.
    *
    * @example
@@ -145,13 +172,14 @@ export class Api extends EventEmitter {
    * ```
    *
    * @param {APIApplicationCommand[]} commands A list of application commands in raw Discord API JSON objects. This cannot be empty.
+   * @returns {Promise<void>}
    */
   public async postCommands(commands: APIApplicationCommand[]): Promise<void> {
     await this._request("POST", "/v1/projects/@me/commands", commands);
   }
 
   /**
-   * Get the latest vote information of a Top.gg user on your project.
+   * Gets the latest vote information of a Top.gg user on your project.
    *
    * @example
    * ```js
@@ -164,8 +192,7 @@ export class Api extends EventEmitter {
    *
    * @param {Snowflake} id The user's ID.
    * @param {UserSource} source The ID type to use. Defaults to "discord".
-   * 
-   * @returns {Vote | null} The user's latest vote information on your project or null if the user has not voted for your project in the past 12 hours.
+   * @returns {Promise<Vote | null>} The user's latest vote information on your project or null if the user has not voted for your project in the past 12 hours.
    */
   public async getVote(id: Snowflake, source: UserSource = "discord"): Promise<Vote | null> {
     if (!id) throw new Error("Missing ID");

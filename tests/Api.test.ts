@@ -1,8 +1,14 @@
 import { Api } from '../src/index';
-import { VOTE } from './mocks/data';
+import { PROJECT, VOTE } from './mocks/data';
 
 /* mock token */
 const client = new Api('.eyJfdCI6IiIsImlkIjoiMzY0ODA2MDI5ODc2NTU1Nzc2In0=.');
+
+describe('API getSelf test', () => {
+    it('getSelf should work', () => {
+        expect(client.getSelf()).resolves.toStrictEqual(PROJECT);
+    });
+});
 
 describe('API postCommands test', () => {
     it('postCommands should work', () => {

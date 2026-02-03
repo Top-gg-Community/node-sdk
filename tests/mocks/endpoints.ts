@@ -1,8 +1,14 @@
 import { MockInterceptor } from 'undici/types/mock-interceptor';
-import { RAW_VOTE } from './data';
+import { RAW_PROJECT, RAW_VOTE } from './data';
 import { getIdInPath } from '../jest.setup';
 
 export const endpoints = [
+    {
+        pattern: '/api/v1/projects/@me',
+        method: 'GET',
+        data: RAW_PROJECT,
+        requireAuth: true
+    },
     {
         pattern: '/api/v1/projects/@me/votes/:user_id',
         method: 'GET',

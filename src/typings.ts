@@ -12,6 +12,43 @@ export interface APIOptions {
 /** A user account from an external platform that is linked to a Top.gg user account. */
 export type UserSource = "discord" | "topgg";
 
+/** A project's source platform */
+export type Platform = 'discord'
+
+/** A project's type */
+export type Type = 'bot' | 'server'
+
+/** A project listed on Top.gg */
+export interface Project {
+  /** The project's Top.gg ID */
+  id: Snowflake;
+  /** The project's name sourced from the external platform */
+  name: string;
+  /** The project's source platform */
+  platform: Platform;
+  /** The project's type */
+  type: Type;
+  /** The project's short description */
+  headline: string;
+  /** The project's tag IDs */
+  tags: string[];
+  /** The project's vote information */
+  votes: {
+    /** The project's current vote count that affects the project's ranking */
+    current: number;
+    /** The project's total vote count */
+    total: number;
+  };
+  /** The project's review information */
+  review: {
+    /** The project's review score out of 5 */
+    score: number;
+    /** The project's total review count */
+    count: number;
+  };
+}
+
+/** A project's vote information */
 export interface Vote {
   /** When the vote was cast */
   votedAt?: string;
