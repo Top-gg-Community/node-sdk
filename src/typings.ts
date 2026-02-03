@@ -13,10 +13,10 @@ export interface APIOptions {
 export type UserSource = "discord" | "topgg";
 
 /** A project's source platform */
-export type Platform = 'discord'
+export type Platform = "discord";
 
 /** A project's type */
-export type Type = 'bot' | 'server'
+export type Type = "bot" | "server";
 
 /** A project listed on Top.gg */
 export interface Project {

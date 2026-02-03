@@ -126,7 +126,7 @@ export class Api extends EventEmitter {
         score: project.review_score,
         count: project.review_count
       }
-    }
+    };
   }
 
   /**
