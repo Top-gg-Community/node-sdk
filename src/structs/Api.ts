@@ -73,7 +73,7 @@ export class Api extends EventEmitter {
     body?: Record<string, any>
   ): Promise<any> {
     const headers: IncomingHttpHeaders = {};
-    if (this.options.token) headers["authorization"] = this.options.token;
+    if (this.options.token) headers["authorization"] = `Bearer ${this.options.token}`;
     if (method !== "GET") headers["content-type"] = "application/json";
 
     let url = BASE_URL + path;
