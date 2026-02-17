@@ -2,6 +2,8 @@ import getBody from "raw-body";
 import { Request, Response, NextFunction } from "express";
 import crypto from "node:crypto";
 import {
+  IntegrationCreatePayload,
+  IntegrationDeletePayload,
   PartialProject,
   User,
   VoteCreatePayload,
@@ -91,6 +93,27 @@ export class Webhook {
     let data;
 
     switch (body.type) {
+      case "integration.create": {
+        data = {
+          connectionID: body.data.connection_id,
+          secret: body.data.webhook_secret,
+          project: this._formatPartialProject(body.data.project),
+          user: this._formatUser(body.data.user)
+        } as IntegrationCreatePayload;
+
+        this.authorization = data.secret;
+
+        break;
+      }
+
+      case "integration.delete": {
+        data = {
+          connectionID: body.data.connection_id
+        } as IntegrationDeletePayload;
+
+        break;
+      }
+
       case "vote.create": {
         data = {
           id: body.data.id,

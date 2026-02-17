@@ -18,7 +18,11 @@ export type Platform = "discord";
 export type Type = "bot" | "server";
 
 /** A webhook payload's type */
-export type WebhookPayloadType = "webhook.test" | "vote.create";
+export type WebhookPayloadType =
+  | "integration.create"
+  | "integration.delete"
+  | "webhook.test"
+  | "vote.create";
 
 /** A project listed on Top.gg */
 export interface Project {
@@ -100,6 +104,24 @@ export interface VoteCreatePayload {
   user: User;
 }
 
+/** A `integration.create` webhook payload */
+export interface IntegrationCreatePayload {
+  /** The unique identifier for this connection */
+  connectionID: Snowflake;
+  /** The secret used to verify future webhook deliveries */
+  secret: string;
+  /** The project that the integration refers to */
+  project: PartialProject;
+  /** The user who triggered this event */
+  user: User;
+}
+
+/** A `integration.delete` webhook payload */
+export interface IntegrationDeletePayload {
+  /** The unique identifier for this connection */
+  connectionID: Snowflake;
+}
+
 /** A `webhook.test` webhook payload */
 export interface WebhookTestPayload {
   /** The project that the test refers to */
@@ -112,7 +134,11 @@ export interface WebhookPayload {
   /** The payload's type */
   type: WebhookPayloadType;
   /** The payload's data */
-  data: VoteCreatePayload | WebhookTestPayload;
+  data:
+    | IntegrationCreatePayload
+    | IntegrationDeletePayload
+    | VoteCreatePayload
+    | WebhookTestPayload;
   /** The payload's x-topgg-trace header for debugging and correlating requests with Top.gg support */
   trace: string | string[] | undefined;
 }
