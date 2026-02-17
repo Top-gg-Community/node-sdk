@@ -70,7 +70,7 @@ export class Webhook {
       id: project.id,
       type: project.type,
       platform: project.platform,
-      platformID: project.platform_id
+      platformId: project.platform_id
     };
   }
 
@@ -79,7 +79,7 @@ export class Webhook {
       id: user.id,
       name: user.name,
       avatarURL: user.avatar_url,
-      platformID: user.platform_id
+      platformId: user.platform_id
     };
   }
 
@@ -95,7 +95,7 @@ export class Webhook {
     switch (body.type) {
       case "integration.create": {
         data = {
-          connectionID: body.data.connection_id,
+          connectionId: body.data.connection_id,
           secret: body.data.webhook_secret,
           project: this._formatPartialProject(body.data.project),
           user: this._formatUser(body.data.user)
@@ -108,7 +108,7 @@ export class Webhook {
 
       case "integration.delete": {
         data = {
-          connectionID: body.data.connection_id
+          connectionId: body.data.connection_id
         } as IntegrationDeletePayload;
 
         break;

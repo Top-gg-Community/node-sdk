@@ -63,7 +63,7 @@ export interface PartialProject {
   /** The project's platform */
   platform: Platform;
   /** The project's platform ID */
-  platformID: Snowflake;
+  platformId: Snowflake;
 }
 
 /** A project's vote information */
@@ -85,7 +85,7 @@ export interface User {
   /** The user's avatar URL */
   avatarURL: string;
   /** The user's platform ID */
-  platformID: Snowflake;
+  platformId: Snowflake;
 }
 
 /** A `vote.create` webhook payload */
@@ -107,7 +107,7 @@ export interface VoteCreatePayload {
 /** A `integration.create` webhook payload */
 export interface IntegrationCreatePayload {
   /** The unique identifier for this connection */
-  connectionID: Snowflake;
+  connectionId: Snowflake;
   /** The secret used to verify future webhook deliveries */
   secret: string;
   /** The project that the integration refers to */
@@ -119,7 +119,7 @@ export interface IntegrationCreatePayload {
 /** A `integration.delete` webhook payload */
 export interface IntegrationDeletePayload {
   /** The unique identifier for this connection */
-  connectionID: Snowflake;
+  connectionId: Snowflake;
 }
 
 /** A `webhook.test` webhook payload */
