@@ -4,7 +4,6 @@ export type Snowflake = string;
 export interface APIOptions {
   /** Top.gg API token */
   token?: string;
-
   /** Client ID to use */
   id?: Snowflake;
 }
@@ -12,19 +11,22 @@ export interface APIOptions {
 /** A user account from an external platform that is linked to a Top.gg user account. */
 export type UserSource = "discord" | "topgg";
 
-/** A project's source platform */
+/** A project's platform */
 export type Platform = "discord";
 
 /** A project's type */
 export type Type = "bot" | "server";
 
+/** A webhook payload's type */
+export type WebhookPayloadType = "webhook.test" | "vote.create";
+
 /** A project listed on Top.gg */
 export interface Project {
-  /** The project's Top.gg ID */
+  /** The project's ID */
   id: Snowflake;
   /** The project's name sourced from the external platform */
   name: string;
-  /** The project's source platform */
+  /** The project's platform */
   platform: Platform;
   /** The project's type */
   type: Type;
@@ -48,6 +50,18 @@ export interface Project {
   };
 }
 
+/** A brief information on project listed on Top.gg */
+export interface PartialProject {
+  /** The project's ID */
+  id: Snowflake;
+  /** The project's type */
+  type: Type;
+  /** The project's platform */
+  platform: Platform;
+  /** The project's platform ID */
+  platformID: Snowflake;
+}
+
 /** A project's vote information */
 export interface Vote {
   /** When the vote was cast */
@@ -58,27 +72,51 @@ export interface Vote {
   weight?: number;
 }
 
+/** A Top.gg user */
+export interface User {
+  /** The user's ID */
+  id: Snowflake;
+  /** The user's name */
+  name: string;
+  /** The user's avatar URL */
+  avatarURL: string;
+  /** The user's platform ID */
+  platformID: Snowflake;
+}
+
+/** A `vote.create` webhook payload */
+export interface VoteCreatePayload {
+  /** The vote's ID */
+  id: Snowflake;
+  /** The number of votes this vote counted for. This is a rounded integer value which determines how many points this individual vote was worth */
+  weight: number;
+  /** When the vote was cast */
+  createdAt: Date;
+  /** When the vote expires (the user can vote again) */
+  expiresAt: Date;
+  /** The project that received this vote */
+  project: PartialProject;
+  /** The user who voted for this project */
+  user: User;
+}
+
+/** A `webhook.test` webhook payload */
+export interface WebhookTestPayload {
+  /** The project that received this vote */
+  project: PartialProject;
+  /** The user who voted for this project */
+  user: User;
+}
+
 export interface WebhookPayload {
-  /** If webhook is a Discord bot: ID of the bot that received a vote */
-  bot?: Snowflake;
-  /** If webhook is a server: ID of the server that received a vote */
-  guild?: Snowflake;
-  /** ID of the user who voted */
-  user: Snowflake;
-  /** The type of the vote (should always be "upvote" except when using the test button it's "test") */
-  type: string;
-  /** Whether the weekend multiplier is in effect, meaning users votes count as two */
-  isWeekend?: boolean;
-  /** Query parameters in vote page in a key to value object */
-  query:
-    | {
-        [key: string]: string;
-      }
-    | string;
+  /** The payload's type */
+  type: WebhookPayloadType;
+  /** The payload's data */
+  data: VoteCreatePayload | WebhookTestPayload;
 }
 
 declare module "express" {
   export interface Request {
-    vote?: WebhookPayload;
+    topggPayload?: WebhookPayload;
   }
 }

@@ -1,7 +1,14 @@
 import getBody from "raw-body";
 import { Request, Response, NextFunction } from "express";
 import crypto from "node:crypto";
-import { WebhookPayload } from "../typings";
+import {
+  PartialProject,
+  User,
+  VoteCreatePayload,
+  WebhookPayload,
+  WebhookPayloadType,
+  WebhookTestPayload
+} from "../typings";
 import { API_VERSION } from "./Api";
 
 export interface WebhookOptions {
@@ -47,19 +54,65 @@ export class Webhook {
    *
    * @param {string} authorization Webhook authorization to verify requests
    */
-  constructor(private authorization: string, options: WebhookOptions = {}) {
+  constructor(
+    private authorization: string,
+    options: WebhookOptions = {}
+  ) {
     this.options = {
-      error: options.error ?? console.error,
+      error: options.error ?? console.error
     };
   }
 
-  private _formatIncoming(
-    body: WebhookPayload & { query: string }
-  ): WebhookPayload {
-    const out: WebhookPayload = { ...body };
-    if (body?.query?.length > 0)
-      out.query = Object.fromEntries(new URLSearchParams(body.query));
-    return out;
+  private _formatPartialProject(project: any): PartialProject {
+    return {
+      id: project.id,
+      type: project.type,
+      platform: project.platform,
+      platformID: project.platform_id
+    };
+  }
+
+  private _formatUser(user: any): User {
+    return {
+      id: user.id,
+      name: user.name,
+      avatarURL: user.avatar_url,
+      platformID: user.platform_id
+    };
+  }
+
+  private _formatIncoming(body: {
+    type: WebhookPayloadType;
+    data: any;
+  }): WebhookPayload {
+    let data;
+
+    switch (body.type) {
+      case "vote.create": {
+        data = {
+          id: body.data.id,
+          weight: body.data.weight,
+          createdAt: new Date(body.data.created_at),
+          expiresAt: new Date(body.data.expires_at),
+          project: this._formatPartialProject(body.data.project),
+          user: this._formatUser(body.data.user)
+        } as VoteCreatePayload;
+
+        break;
+      }
+
+      case "webhook.test": {
+        data = {
+          project: this._formatPartialProject(body.data.project),
+          user: this._formatUser(body.data.user)
+        } as WebhookTestPayload;
+      }
+    }
+
+    return {
+      type: body.type,
+      data
+    };
   }
 
   private _parseRequest(
@@ -84,7 +137,9 @@ export class Webhook {
           return resolve(false);
         }
 
-        const parsedSignature = Object.fromEntries(signatureHeader.split(",").map(part => part.split("=")));
+        const parsedSignature = Object.fromEntries(
+          signatureHeader.split(",").map((part) => part.split("="))
+        );
         const signature = parsedSignature[API_VERSION];
 
         if (!parsedSignature.t || !signature) {
@@ -93,7 +148,9 @@ export class Webhook {
         }
 
         const hmac = crypto.createHmac("sha256", this.authorization);
-        const digest = hmac.update(`${parsedSignature.t}.${body}`).digest("hex");
+        const digest = hmac
+          .update(`${parsedSignature.t}.${body}`)
+          .digest("hex");
 
         if (signature !== digest) {
           res.status(401).json({ error: "Invalid Authorization" });
@@ -117,15 +174,17 @@ export class Webhook {
    *
    * @example
    * ```js
-   * app.post("/webhook", wh.listener((vote) => {
-   *   console.log(vote.user); // => 395526710101278721
+   * app.post("/webhook", wh.listener((payload) => {
+   *   if (payload.type === 'vote.create') {
+   *     console.log(payload.data.user);
+   *   }
    * }));
    * ```
    *
    * @example
    * ```js
    * // Throwing an error to resend the webhook
-   * app.post("/webhook/", wh.listener((vote) => {
+   * app.post("/webhook/", wh.listener((payload) => {
    *   // for example, if your bot is offline, you should probably not handle votes and try again
    *   if (bot.offline) throw new Error('Bot offline');
    * }));
@@ -186,7 +245,7 @@ export class Webhook {
       const response = await this._parseRequest(req, res);
       if (!response) return;
       res.sendStatus(204);
-      req.vote = response;
+      req.topggPayload = response;
       next();
     };
   }

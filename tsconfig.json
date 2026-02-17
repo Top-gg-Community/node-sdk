@@ -1,13 +1,14 @@
 {
   "files": ["./src/index.ts"],
   "compilerOptions": {
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
     "noImplicitAny": true,
     "declaration": true,
     "strict": true,
     "target": "ES2019",
+    "rootDir": "./src",
     "outDir": "./dist",
-    "module": "commonjs",
+    "module": "node16",
     "esModuleInterop": true
   }
 }

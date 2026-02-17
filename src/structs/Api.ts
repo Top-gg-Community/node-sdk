@@ -5,13 +5,7 @@ import TopGGAPIError from "../utils/ApiError";
 import { EventEmitter } from "events";
 import { STATUS_CODES } from "http";
 
-import {
-  APIOptions,
-  Snowflake,
-  Vote,
-  UserSource,
-  Project,
-} from "../typings";
+import { APIOptions, Snowflake, Vote, UserSource, Project } from "../typings";
 
 /** The API version to use */
 export const API_VERSION = "v1";
@@ -25,7 +19,7 @@ const BASE_URL = `https://top.gg/api/${API_VERSION}`;
  * @example
  * ```js
  * const Topgg = require("@top-gg/sdk");
- * 
+ *
  * const client = new Topgg.Api(process.env.TOPGG_TOKEN);
  * ```
  *
@@ -63,7 +57,7 @@ export class Api extends EventEmitter {
 
     this.options = {
       token,
-      ...options,
+      ...options
     };
   }
 
@@ -73,7 +67,8 @@ export class Api extends EventEmitter {
     body?: Record<string, any>
   ): Promise<any> {
     const headers: IncomingHttpHeaders = {};
-    if (this.options.token) headers["authorization"] = `Bearer ${this.options.token}`;
+    if (this.options.token)
+      headers["authorization"] = `Bearer ${this.options.token}`;
     if (method !== "GET") headers["content-type"] = "application/json";
 
     let url = BASE_URL + path;
@@ -83,17 +78,13 @@ export class Api extends EventEmitter {
     const response = await request(url, {
       method,
       headers,
-      body: body && method !== "GET" ? JSON.stringify(body) : undefined,
+      body: body && method !== "GET" ? JSON.stringify(body) : undefined
     });
 
     let responseBody: string | object | undefined;
 
-    if (
-      (response.headers["content-type"] as string)?.includes(
-        "json"
-      )
-    ) {
-      responseBody = await response.body.json() as object;
+    if ((response.headers["content-type"] as string)?.includes("json")) {
+      responseBody = (await response.body.json()) as object;
     } else {
       responseBody = await response.body.text();
     }
@@ -171,23 +162,23 @@ export class Api extends EventEmitter {
    * ```js
    * // Discord.js:
    * const commands = (await bot.application.commands.fetch()).map(cmd => cmd.toJSON());
-   * 
+   *
    * // Eris:
    * const commands = await bot.getCommands();
-   * 
+   *
    * // Discordeno:
    * import { getApplicationCommands } from "discordeno";
-   * 
+   *
    * const commands = await getApplicationCommands(bot);
-   * 
+   *
    * // Harmony:
    * const commands = await bot.interactions.commands.all();
-   * 
+   *
    * // Oceanic:
    * const commands = await bot.application.getGlobalCommands();
-   * 
+   *
    * await client.postCommands(commands);
-   * 
+   *
    * // Raw:
    * await client.postCommands([
    *   {
@@ -220,7 +211,7 @@ export class Api extends EventEmitter {
    * ```js
    * // Discord ID
    * const vote = await client.getVote("661200758510977084");
-   * 
+   *
    * // Top.gg ID
    * const vote = await client.getVote("8226924471638491136", "topgg");
    * ```
@@ -229,11 +220,17 @@ export class Api extends EventEmitter {
    * @param {UserSource} source The ID type to use. Defaults to "discord".
    * @returns {Promise<Vote | null>} The user's latest vote information on your project or null if the user has not voted for your project in the past 12 hours.
    */
-  public async getVote(id: Snowflake, source: UserSource = "discord"): Promise<Vote | null> {
+  public async getVote(
+    id: Snowflake,
+    source: UserSource = "discord"
+  ): Promise<Vote | null> {
     if (!id) throw new Error("Missing ID");
 
     try {
-      const response = await this._request("GET", `/projects/@me/votes/${id}?source=${source}`);
+      const response = await this._request(
+        "GET",
+        `/projects/@me/votes/${id}?source=${source}`
+      );
 
       return {
         votedAt: response.created_at,

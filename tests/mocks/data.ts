@@ -1,20 +1,21 @@
 export const RAW_PROJECT = {
-  id: '218109768489992192',
-  name: 'Miki',
-  type: 'bot',
-  platform: 'discord',
-  headline: 'A great bot with tons of features! language | admin | cards | fun | levels | roles | marriage | currency | custom commands!',
+  id: "218109768489992192",
+  name: "Miki",
+  type: "bot",
+  platform: "discord",
+  headline:
+    "A great bot with tons of features! language | admin | cards | fun | levels | roles | marriage | currency | custom commands!",
   tags: [
-    'anime',
-    'customizable-behavior',
-    'economy',
-    'fun',
-    'game',
-    'leveling',
-    'multifunctional',
-    'role-management',
-    'roleplay',
-    'social'
+    "anime",
+    "customizable-behavior",
+    "economy",
+    "fun",
+    "game",
+    "leveling",
+    "multifunctional",
+    "role-management",
+    "roleplay",
+    "social"
   ],
   votes: 1120,
   votes_total: 313389,
@@ -56,4 +57,4 @@ export const BOT_STATS = {
   server_count: 0,
   shards: [],
   shard_count: null
-}
+};
