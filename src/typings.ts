@@ -65,9 +65,9 @@ export interface PartialProject {
 /** A project's vote information */
 export interface Vote {
   /** When the vote was cast */
-  votedAt?: string;
+  votedAt: Date;
   /** When the vote expires and the user is required to vote again */
-  expiresAt?: string;
+  expiresAt: Date;
   /** This vote's weight. 1 during weekdays, 2 during weekends. */
   weight?: number;
 }

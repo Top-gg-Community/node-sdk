@@ -47,8 +47,8 @@ export const RAW_VOTE = {
 };
 
 export const VOTE = {
-  votedAt: RAW_VOTE.created_at,
-  expiresAt: RAW_VOTE.expires_at,
+  votedAt: new Date(RAW_VOTE.created_at),
+  expiresAt: new Date(RAW_VOTE.expires_at),
   weight: RAW_VOTE.weight
 };
 

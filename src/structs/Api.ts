@@ -233,8 +233,8 @@ export class Api extends EventEmitter {
       );
 
       return {
-        votedAt: response.created_at,
-        expiresAt: response.expires_at,
+        votedAt: new Date(response.created_at),
+        expiresAt: new Date(response.expires_at),
         weight: response.weight
       };
     } catch (err) {
