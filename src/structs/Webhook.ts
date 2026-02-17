@@ -81,10 +81,13 @@ export class Webhook {
     };
   }
 
-  private _formatIncoming(body: {
-    type: WebhookPayloadType;
-    data: any;
-  }): WebhookPayload {
+  private _formatIncoming(
+    body: {
+      type: WebhookPayloadType;
+      data: any;
+    },
+    trace: string | string[] | undefined
+  ): WebhookPayload {
     let data;
 
     switch (body.type) {
@@ -111,7 +114,8 @@ export class Webhook {
 
     return {
       type: body.type,
-      data
+      data,
+      trace
     };
   }
 
@@ -160,7 +164,7 @@ export class Webhook {
         try {
           const parsed = JSON.parse(body.toString("utf8"));
 
-          resolve(this._formatIncoming(parsed));
+          resolve(this._formatIncoming(parsed, req.headers["x-topgg-trace"]));
         } catch {
           res.status(400).json({ error: "Invalid body" });
           resolve(false);

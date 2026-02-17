@@ -113,6 +113,8 @@ export interface WebhookPayload {
   type: WebhookPayloadType;
   /** The payload's data */
   data: VoteCreatePayload | WebhookTestPayload;
+  /** The payload's x-topgg-trace header for debugging and correlating requests with Top.gg support */
+  trace: string | string[] | undefined;
 }
 
 declare module "express" {
