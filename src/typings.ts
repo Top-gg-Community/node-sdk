@@ -102,9 +102,9 @@ export interface VoteCreatePayload {
 
 /** A `webhook.test` webhook payload */
 export interface WebhookTestPayload {
-  /** The project that received this vote */
+  /** The project that the test refers to */
   project: PartialProject;
-  /** The user who voted for this project */
+  /** The user who triggered this test */
   user: User;
 }
 
