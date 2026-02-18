@@ -68,12 +68,16 @@ export interface PartialProject {
 
 /** A project's vote information */
 export interface Vote {
+  /** The voter's ID */
+  userId: Snowflake;
+  /** The voter's ID on the project's platform */
+  platformId: Snowflake;
   /** When the vote was cast */
   votedAt: Date;
   /** When the vote expires and the user is required to vote again */
   expiresAt: Date;
-  /** This vote's weight. 1 during weekdays, 2 during weekends. */
-  weight?: number;
+  /** The vote's weight. 1 during weekdays, 2 during weekends. */
+  weight: number;
 }
 
 /** A Top.gg user */

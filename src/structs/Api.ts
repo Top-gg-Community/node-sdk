@@ -233,6 +233,8 @@ export class Api extends EventEmitter {
       );
 
       return {
+        userId: response.user_id,
+        platformId: response.platform_id,
         votedAt: new Date(response.created_at),
         expiresAt: new Date(response.expires_at),
         weight: response.weight

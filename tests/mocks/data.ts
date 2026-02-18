@@ -41,12 +41,16 @@ export const PROJECT = {
 };
 
 export const RAW_VOTE = {
+  user_id: "1234567890",
+  platform_id: "1234567890",
   created_at: "2025-09-09T08:55:16.218761+00:00",
   expires_at: "2025-09-09T20:55:16.218761+00:00",
   weight: 1
 };
 
 export const VOTE = {
+  userId: RAW_VOTE.user_id,
+  platformId: RAW_VOTE.platform_id,
   votedAt: new Date(RAW_VOTE.created_at),
   expiresAt: new Date(RAW_VOTE.expires_at),
   weight: RAW_VOTE.weight
