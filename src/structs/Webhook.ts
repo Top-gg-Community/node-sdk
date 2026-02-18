@@ -251,30 +251,4 @@ export class Webhook {
       }
     };
   }
-
-  /**
-   * Middleware function to pass to express, sets req.vote to the payload
-   *
-   * @deprecated Use the new {@link Webhook.listener | .listener()} function
-   * @example
-   * ```js
-   * app.post("/dblwebhook", wh.middleware(), (req, res) => {
-   *   // req.vote is your payload e.g
-   *   console.log(req.vote.user); // => 395526710101278721
-   * });
-   * ```
-   */
-  public middleware() {
-    return async (
-      req: Request,
-      res: Response,
-      next: NextFunction
-    ): Promise<void> => {
-      const response = await this._parseRequest(req, res);
-      if (!response) return;
-      res.sendStatus(204);
-      req.topggPayload = response;
-      next();
-    };
-  }
 }
