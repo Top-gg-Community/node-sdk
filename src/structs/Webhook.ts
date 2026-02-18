@@ -79,7 +79,7 @@ export class Webhook {
     return {
       id: user.id,
       name: user.name,
-      avatarURL: user.avatar_url,
+      avatar: user.avatar_url,
       platformId: user.platform_id
     };
   }

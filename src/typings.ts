@@ -87,7 +87,7 @@ export interface User {
   /** The user's name */
   name: string;
   /** The user's avatar URL */
-  avatarURL: string;
+  avatar: string;
   /** The user's platform ID */
   platformId: Snowflake;
 }
