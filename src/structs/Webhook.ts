@@ -33,9 +33,10 @@ export interface WebhookOptions {
  * const app = express();
  * const wh = new Webhook("webhookauth123");
  *
- * app.post("/dblwebhook", wh.listener((vote) => {
- *   // vote is your vote object e.g
- *   console.log(vote.user); // => 321714991050784770
+ * app.post("/webhook", wh.listener((payload) => {
+ *   if (payload.type === "vote.create") {
+ *     console.log(payload.data.user);
+ *   }
  * }));
  *
  * app.listen(80);
@@ -202,7 +203,7 @@ export class Webhook {
    * @example
    * ```js
    * app.post("/webhook", wh.listener((payload) => {
-   *   if (payload.type === 'vote.create') {
+   *   if (payload.type === "vote.create") {
    *     console.log(payload.data.user);
    *   }
    * }));

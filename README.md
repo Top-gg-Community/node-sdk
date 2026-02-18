@@ -14,7 +14,6 @@ The community-maintained Node.js library for Top.gg.
   - [Posting your bot's application commands list](#posting-your-bots-application-commands-list)
   - [Generating widget URLs](#generating-widget-urls)
   - [Webhooks](#webhooks)
-    - [Being notified whenever someone voted for your project](#being-notified-whenever-someone-voted-for-your-project)
 
 ## Installation
 
@@ -177,8 +176,6 @@ const widgetUrl = Topgg.Widget.social(Topgg.WidgetType.DiscordBot, "574652751745
 
 ### Webhooks
 
-#### Being notified whenever someone voted for your project
-
 With express:
 
 ```js
@@ -188,8 +185,10 @@ import express from "express";
 const app = express();
 const webhook = new Webhook(process.env.TOPGG_WEBHOOK_PASSWORD);
 
-app.post("/votes", webhook.listener(vote => {
-  console.log(`A user with the ID of ${vote.user} has voted us on Top.gg!`);
+app.post("/webhook", wh.listener((payload) => {
+  if (payload.type === "vote.create") {
+    console.log(payload.data.user);
+  }
 }));
 
 app.listen(8080);
