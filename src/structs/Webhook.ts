@@ -240,10 +240,6 @@ export class Webhook {
 
       try {
         await fn(response, req, res, next);
-
-        if (!res.headersSent) {
-          res.sendStatus(204);
-        }
       } catch (err) {
         if (err instanceof Error) this.options.error?.(err);
 
