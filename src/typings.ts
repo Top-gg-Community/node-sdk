@@ -134,6 +134,7 @@ export interface WebhookTestPayload {
   user: User;
 }
 
+/** A webhook payload */
 export interface WebhookPayload {
   /** The payload's type */
   type: WebhookPayloadType;
