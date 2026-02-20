@@ -34,9 +34,7 @@ export interface WebhookOptions {
  * const webhook = new Webhook("webhookauth123");
  *
  * app.post("/webhook", webhook.listener((payload) => {
- *   if (payload.type === "vote.create") {
- *     console.log(payload.data.user);
- *   }
+ *   console.log(payload);
  * }));
  *
  * app.listen(80);
@@ -203,9 +201,7 @@ export class Webhook {
    * @example
    * ```js
    * app.post("/webhook", webhook.listener((payload) => {
-   *   if (payload.type === "vote.create") {
-   *     console.log(payload.data.user);
-   *   }
+   *   console.log(payload);
    * }));
    * ```
    *
