@@ -181,7 +181,7 @@ export class Webhook {
           .digest("hex");
 
         if (signature !== digest) {
-          res.status(401).json({ error: "Invalid Authorization" });
+          res.status(403).json({ error: "Invalid signature" });
           return resolve(false);
         }
 
