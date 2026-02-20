@@ -31,9 +31,9 @@ export interface WebhookOptions {
  * const { Webhook } = require("@top-gg/sdk");
  *
  * const app = express();
- * const wh = new Webhook("webhookauth123");
+ * const webhook = new Webhook("webhookauth123");
  *
- * app.post("/webhook", wh.listener((payload) => {
+ * app.post("/webhook", webhook.listener((payload) => {
  *   if (payload.type === "vote.create") {
  *     console.log(payload.data.user);
  *   }
@@ -202,7 +202,7 @@ export class Webhook {
    *
    * @example
    * ```js
-   * app.post("/webhook", wh.listener((payload) => {
+   * app.post("/webhook", webhook.listener((payload) => {
    *   if (payload.type === "vote.create") {
    *     console.log(payload.data.user);
    *   }
@@ -212,7 +212,7 @@ export class Webhook {
    * @example
    * ```js
    * // Throwing an error to resend the webhook
-   * app.post("/webhook/", wh.listener((payload) => {
+   * app.post("/webhook/", webhook.listener((payload) => {
    *   // for example, if your bot is offline, you should probably not handle votes and try again
    *   if (bot.offline) throw new Error('Bot offline');
    * }));

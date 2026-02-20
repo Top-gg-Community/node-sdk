@@ -196,7 +196,7 @@ import express from "express";
 const app = express();
 const webhook = new Webhook(process.env.TOPGG_WEBHOOK_PASSWORD);
 
-app.post("/webhook", wh.listener((payload) => {
+app.post("/webhook", webhook.listener((payload) => {
   if (payload.type === "vote.create") {
     console.log(payload.data.user);
   }
