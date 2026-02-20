@@ -69,7 +69,8 @@ beforeEach(() => {
           {},
           { pattern, requireAuth, validate }
         );
-      });
+      })
+      .persist();
   });
 
   client
@@ -80,7 +81,8 @@ beforeEach(() => {
     })
     .reply((request) => {
       throw Error(`No endpoint found for ${request.method} ${request.path}`);
-    });
+    })
+    .persist();
 
   setGlobalDispatcher(mockAgent);
 });

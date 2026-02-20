@@ -11,6 +11,7 @@ The community-maintained Node.js library for Top.gg.
 - [Usage](#usage)
   - [Getting your project's information](#getting-your-projects-information)
   - [Getting your project's vote information of a user](#getting-your-projects-vote-information-of-a-user)
+  - [Getting a cursor-based paginated list of votes for your project](#getting-a-cursor-based-paginated-list-of-votes-for-your-project)
   - [Posting your bot's application commands list](#posting-your-bots-application-commands-list)
   - [Generating widget URLs](#generating-widget-urls)
   - [Webhooks](#webhooks)
@@ -82,6 +83,16 @@ const vote = await client.getVote("661200758510977084");
 
 ```js
 const vote = await client.getVote("8226924471638491136", "topgg");
+```
+
+### Getting a cursor-based paginated list of votes for your project
+
+```js
+const firstPage = await client.getVotes(new Date("2026-01-01"));
+console.log(firstPage.votes);
+
+const secondPage = await firstPage.next();
+console.log(secondPage.votes);
 ```
 
 ### Posting your bot's application commands list

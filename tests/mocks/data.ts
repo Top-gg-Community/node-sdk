@@ -40,6 +40,18 @@ export const PROJECT = {
   }
 };
 
+export const RAW_PARTIAL_VOTE = {
+  created_at: "2025-09-09T08:55:16.218761+00:00",
+  expires_at: "2025-09-09T20:55:16.218761+00:00",
+  weight: 1
+};
+
+export const PARTIAL_VOTE = {
+  votedAt: new Date(RAW_PARTIAL_VOTE.created_at),
+  expiresAt: new Date(RAW_PARTIAL_VOTE.expires_at),
+  weight: RAW_PARTIAL_VOTE.weight
+};
+
 export const RAW_VOTE = {
   user_id: "1234567890",
   platform_id: "1234567890",
@@ -56,9 +68,7 @@ export const VOTE = {
   weight: RAW_VOTE.weight
 };
 
-// https://docs.top.gg/api/bot/#bot-stats
-export const BOT_STATS = {
-  server_count: 0,
-  shards: [],
-  shard_count: null
+export const RAW_PAGINATED_VOTES = {
+  data: [RAW_VOTE],
+  cursor: "0123456789abcdef"
 };

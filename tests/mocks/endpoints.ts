@@ -1,5 +1,5 @@
 import { MockInterceptor } from "undici/types/mock-interceptor";
-import { RAW_PROJECT, RAW_VOTE } from "./data";
+import { RAW_PAGINATED_VOTES, RAW_PROJECT, RAW_VOTE } from "./data";
 import { getIdInPath } from "../jest.setup";
 
 export const endpoints = [
@@ -27,6 +27,12 @@ export const endpoints = [
     pattern: "/api/v1/projects/@me/commands",
     method: "POST",
     data: {},
+    requireAuth: true
+  },
+  {
+    pattern: "/api/v1/projects/@me/votes",
+    method: "GET",
+    data: RAW_PAGINATED_VOTES,
     requireAuth: true
   }
 ];

@@ -5,7 +5,14 @@ import TopGGAPIError from "../utils/ApiError";
 import { EventEmitter } from "events";
 import { STATUS_CODES } from "http";
 
-import { APIOptions, Snowflake, Vote, UserSource, Project } from "../typings";
+import {
+  APIOptions,
+  Snowflake,
+  UserSource,
+  Project,
+  PartialVote,
+  PaginatedVotes
+} from "../typings";
 
 /** The API version to use */
 export const API_VERSION = "v1";
@@ -218,12 +225,12 @@ export class Api extends EventEmitter {
    *
    * @param {Snowflake} id The user's ID.
    * @param {UserSource} source The ID type to use. Defaults to "discord".
-   * @returns {Promise<Vote | null>} The user's latest vote information on your project or null if the user has not voted for your project in the past 12 hours.
+   * @returns {Promise<PartialVote | null>} The user's latest vote information on your project or null if the user has not voted for your project in the past 12 hours.
    */
   public async getVote(
     id: Snowflake,
     source: UserSource = "discord"
-  ): Promise<Vote | null> {
+  ): Promise<PartialVote | null> {
     if (!id) throw new Error("Missing ID");
 
     try {
@@ -233,8 +240,6 @@ export class Api extends EventEmitter {
       );
 
       return {
-        userId: response.user_id,
-        platformId: response.platform_id,
         votedAt: new Date(response.created_at),
         expiresAt: new Date(response.expires_at),
         weight: response.weight
@@ -248,5 +253,50 @@ export class Api extends EventEmitter {
 
       throw err;
     }
+  }
+
+  private async _getVotesInner(options: {
+    since?: Date;
+    cursor?: string;
+  }): Promise<PaginatedVotes> {
+    const response = await this._request(
+      "GET",
+      `/projects/@me/votes?${options.since ? `startDate=${encodeURIComponent(options.since.toISOString())}` : `cursor=${options.cursor}`}`
+    );
+    /* eslint-disable-next-line @typescript-eslint/no-this-alias */
+    const self = this;
+
+    return {
+      votes: response.data.map((vote: any) => ({
+        userId: vote.user_id,
+        platformId: vote.platform_id,
+        votedAt: new Date(vote.created_at),
+        expiresAt: new Date(vote.expires_at),
+        weight: vote.weight
+      })),
+      next: () =>
+        self._getVotesInner({
+          cursor: response.cursor
+        })
+    };
+  }
+
+  /**
+   * Gets a cursor-based paginated list of votes for your project, ordered by creation date.
+   *
+   * @example
+   * ```js
+   * const firstPage = await client.getVotes(new Date("2026-01-01"));
+   * console.log(firstPage.votes);
+   *
+   * const secondPage = await firstPage.next();
+   * console.log(secondPage.votes);
+   * ```
+   *
+   * @param {Date} since Timestamp to start fetching votes from.
+   * @returns {Promise<PaginatedVotes>} A cursor-based paginated list of votes for your project.
+   */
+  public async getVotes(since: Date): Promise<PaginatedVotes> {
+    return await this._getVotesInner({ since });
   }
 }

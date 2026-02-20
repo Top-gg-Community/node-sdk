@@ -54,7 +54,7 @@ export interface Project {
   };
 }
 
-/** A brief information on project listed on Top.gg */
+/** A brief information on a project listed on Top.gg */
 export interface PartialProject {
   /** The project's ID */
   id: Snowflake;
@@ -64,6 +64,16 @@ export interface PartialProject {
   platform: Platform;
   /** The project's platform ID */
   platformId: Snowflake;
+}
+
+/** A brief information of a project's vote */
+export interface PartialVote {
+  /** When the vote was cast */
+  votedAt: Date;
+  /** When the vote expires and the user is required to vote again */
+  expiresAt: Date;
+  /** The vote's weight. 1 during weekdays, 2 during weekends. */
+  weight: number;
 }
 
 /** A project's vote information */
@@ -78,6 +88,14 @@ export interface Vote {
   expiresAt: Date;
   /** The vote's weight. 1 during weekdays, 2 during weekends. */
   weight: number;
+}
+
+/** A paginated list of a project's vote information. */
+export interface PaginatedVotes {
+  /** The votes in this page */
+  votes: Vote[];
+  /** Advances to the next page */
+  next(): Promise<PaginatedVotes>;
 }
 
 /** A Top.gg user */
