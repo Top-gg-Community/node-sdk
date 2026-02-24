@@ -126,7 +126,7 @@ export interface VoteCreatePayload {
   user: User;
 }
 
-/** A `integration.create` webhook payload */
+/** An `integration.create` webhook payload */
 export interface IntegrationCreatePayload {
   /** The unique identifier for this connection */
   connectionId: Snowflake;
@@ -138,7 +138,7 @@ export interface IntegrationCreatePayload {
   user: User;
 }
 
-/** A `integration.delete` webhook payload */
+/** An `integration.delete` webhook payload */
 export interface IntegrationDeletePayload {
   /** The unique identifier for this connection */
   connectionId: Snowflake;
