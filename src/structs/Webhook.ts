@@ -148,7 +148,7 @@ export class Webhook {
     return new Promise((resolve) => {
       getBody(req, {}, (error, body) => {
         if (error) {
-          res.status(422).json({ error: "Malformed request" });
+          res.status(400).json({ error: "Malformed request" });
           return resolve(false);
         }
 
@@ -159,7 +159,7 @@ export class Webhook {
         }
 
         if (!signatureHeader) {
-          res.status(401).json({ error: "Missing Top.gg Signature" });
+          res.status(401).json({ error: "Missing signature" });
           return resolve(false);
         }
 
@@ -169,7 +169,7 @@ export class Webhook {
         const signature = parsedSignature[API_VERSION];
 
         if (!parsedSignature.t || !signature) {
-          res.status(400).send({ error: "Invalid signature format" });
+          res.status(422).send({ error: "Invalid signature format" });
           return resolve(false);
         }
 
@@ -183,12 +183,16 @@ export class Webhook {
           return resolve(false);
         }
 
+        let failStatus = 400
+
         try {
           const parsed = JSON.parse(body.toString("utf8"));
 
+          failStatus = 422
+
           resolve(this._formatIncoming(parsed, req.headers["x-topgg-trace"]));
         } catch {
-          res.status(400).json({ error: "Invalid body" });
+          res.status(failStatus).json({ error: "Invalid body" });
           resolve(false);
         }
       });
