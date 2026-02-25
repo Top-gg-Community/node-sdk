@@ -183,12 +183,12 @@ export class Webhook {
           return resolve(false);
         }
 
-        let failStatus = 400
+        let failStatus = 400;
 
         try {
           const parsed = JSON.parse(body.toString("utf8"));
 
-          failStatus = 422
+          failStatus = 422;
 
           resolve(this._formatIncoming(parsed, req.headers["x-topgg-trace"]));
         } catch {
