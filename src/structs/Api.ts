@@ -45,23 +45,6 @@ export class Api extends EventEmitter {
   constructor(token: string, options: APIOptions = {}) {
     super();
 
-    const tokenSegments = token.split(".");
-
-    if (tokenSegments.length !== 3) {
-      throw new Error("Got a malformed API token.");
-    }
-
-    try {
-      const tokenData = JSON.parse(atob(tokenSegments[1]));
-      const tokenId = tokenData.id;
-
-      options.id ??= tokenId;
-    } catch {
-      throw new Error(
-        "Invalid API token state, this should not happen! Please report!"
-      );
-    }
-
     this.options = {
       token,
       ...options
