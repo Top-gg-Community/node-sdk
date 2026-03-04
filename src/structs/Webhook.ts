@@ -117,7 +117,7 @@ export class Webhook {
         data = {
           id: body.data.id,
           weight: body.data.weight,
-          createdAt: new Date(body.data.created_at),
+          votedAt: new Date(body.data.created_at),
           expiresAt: new Date(body.data.expires_at),
           project: this._formatPartialProject(body.data.project),
           user: this._formatUser(body.data.user)

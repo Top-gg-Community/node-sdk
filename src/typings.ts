@@ -117,7 +117,7 @@ export interface VoteCreatePayload {
   /** The number of votes this vote counted for. This is a rounded integer value which determines how many points this individual vote was worth */
   weight: number;
   /** When the vote was cast */
-  createdAt: Date;
+  votedAt: Date;
   /** When the vote expires (the user can vote again) */
   expiresAt: Date;
   /** The project that received this vote */
