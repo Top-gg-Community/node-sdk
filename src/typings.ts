@@ -79,7 +79,7 @@ export interface PartialVote {
 /** A project's vote information */
 export interface Vote {
   /** The voter's ID */
-  userId: Snowflake;
+  voterId: Snowflake;
   /** The voter's ID on the project's platform */
   platformId: Snowflake;
   /** When the vote was cast */

@@ -251,7 +251,7 @@ export class Api extends EventEmitter {
 
     return {
       votes: response.data.map((vote: any) => ({
-        userId: vote.user_id,
+        voterId: vote.user_id,
         platformId: vote.platform_id,
         votedAt: new Date(vote.created_at),
         expiresAt: new Date(vote.expires_at),

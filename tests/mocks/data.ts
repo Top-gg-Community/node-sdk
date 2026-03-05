@@ -61,7 +61,7 @@ export const RAW_VOTE = {
 };
 
 export const VOTE = {
-  userId: RAW_VOTE.user_id,
+  voterId: RAW_VOTE.user_id,
   platformId: RAW_VOTE.platform_id,
   votedAt: new Date(RAW_VOTE.created_at),
   expiresAt: new Date(RAW_VOTE.expires_at),
