@@ -100,41 +100,7 @@ console.log(secondPage.votes);
 #### Discord.js
 
 ```js
-const commands = (await bot.application.commands.fetch()).map(cmd => cmd.toJSON());
-
-await client.postCommands(commands);
-```
-
-#### Eris
-
-```js
-const commands = await bot.getCommands();
-
-await client.postCommands(commands);
-```
-
-#### Discordeno
-
-```js
-import { getApplicationCommands } from "discordeno";
-
-const commands = await getApplicationCommands(bot);
-
-await client.postCommands(commands);
-```
-
-#### Harmony
-
-```js
-const commands = await bot.interactions.commands.all();
-
-await client.postCommands(commands);
-```
-
-#### Oceanic
-
-```js
-const commands = await bot.application.getGlobalCommands();
+const commands = (await bot.application.commands.fetch()).map(command => command.toJSON());
 
 await client.postCommands(commands);
 ```
@@ -142,6 +108,8 @@ await client.postCommands(commands);
 #### Raw
 
 ```js
+// Array of application commands that
+// can be serialized to Discord API's raw JSON format.
 await client.postCommands([
   {
     options: [],

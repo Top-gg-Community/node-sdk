@@ -151,25 +151,11 @@ export class Api extends EventEmitter {
    * @example
    * ```js
    * // Discord.js:
-   * const commands = (await bot.application.commands.fetch()).map(cmd => cmd.toJSON());
-   *
-   * // Eris:
-   * const commands = await bot.getCommands();
-   *
-   * // Discordeno:
-   * import { getApplicationCommands } from "discordeno";
-   *
-   * const commands = await getApplicationCommands(bot);
-   *
-   * // Harmony:
-   * const commands = await bot.interactions.commands.all();
-   *
-   * // Oceanic:
-   * const commands = await bot.application.getGlobalCommands();
-   *
-   * await client.postCommands(commands);
+   * const commands = (await bot.application.commands.fetch()).map(command => command.toJSON());
    *
    * // Raw:
+   * //   Array of application commands that
+   * //   can be serialized to Discord API's raw JSON format.
    * await client.postCommands([
    *   {
    *     options: [],
