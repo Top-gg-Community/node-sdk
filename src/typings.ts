@@ -88,7 +88,7 @@ export interface Vote extends PartialVote {
 export interface PaginatedVotes {
   /** The votes in this page */
   votes: Vote[];
-  /** Advances to the next page */
+  /** Tries to advance to the next page */
   next(): Promise<PaginatedVotes>;
 }
 
