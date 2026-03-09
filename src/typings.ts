@@ -77,17 +77,11 @@ export interface PartialVote {
 }
 
 /** A project's vote information */
-export interface Vote {
+export interface Vote extends PartialVote {
   /** The voter's ID */
   voterId: Snowflake;
   /** The voter's ID on the project's platform */
   platformId: Snowflake;
-  /** When the vote was cast */
-  votedAt: Date;
-  /** When the vote expires and the user is required to vote again */
-  expiresAt: Date;
-  /** The vote's weight. 1 during weekdays, 2 during weekends. */
-  weight: number;
 }
 
 /** A paginated list of a project's vote information. */
