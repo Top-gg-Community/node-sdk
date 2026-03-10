@@ -25,7 +25,7 @@ const BASE_URL = `https://top.gg/api/${API_VERSION}`;
  *
  * @example
  * ```js
- * const Topgg = require("@top-gg/sdk");
+ * import Topgg from "@top-gg/sdk";
  *
  * const client = new Topgg.Api(process.env.TOPGG_TOKEN);
  * ```
@@ -255,7 +255,9 @@ export class Api extends EventEmitter {
    *
    * @example
    * ```js
-   * const firstPage = await client.getVotes(new Date("2026-01-01"));
+   * const since = new Date("2026-01-01");
+   *
+   * const firstPage = await client.getVotes(since);
    * console.log(firstPage.votes);
    *
    * const secondPage = await firstPage.next();

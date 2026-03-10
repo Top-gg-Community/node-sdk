@@ -27,21 +27,18 @@ export interface WebhookOptions {
  *
  * @example
  * ```js
- * const express = require("express");
- * const { Webhook } = require("@top-gg/sdk");
+ * import { Webhook } from "@top-gg/sdk";
+ * import express from "express";
  *
  * const app = express();
- * const webhook = new Webhook("webhookauth123");
+ * const webhook = new Webhook(process.env.TOPGG_WEBHOOK_PASSWORD);
  *
+ * // POST /webhook
  * app.post("/webhook", webhook.listener((payload) => {
  *   console.log(payload);
  * }));
  *
- * app.listen(80);
- *
- * // In this situation, your TopGG Webhook dashboard should look like
- * // URL = http://your.server.ip:80/dblwebhook
- * // Authorization: webhookauth123
+ * app.listen(8080);
  * ```
  *
  * @link {@link https://docs.top.gg/resources/webhooks/#schema | Webhook Data Schema}
@@ -207,6 +204,7 @@ export class Webhook {
    *
    * @example
    * ```js
+   * // POST /webhook
    * app.post("/webhook", webhook.listener((payload) => {
    *   console.log(payload);
    * }));
@@ -214,10 +212,13 @@ export class Webhook {
    *
    * @example
    * ```js
+   * // POST /webhook
    * // Throwing an error to resend the webhook
-   * app.post("/webhook/", webhook.listener((payload) => {
+   * app.post("/webhook", webhook.listener((payload) => {
    *   // for example, if your bot is offline, you should probably not handle votes and try again
-   *   if (bot.offline) throw new Error('Bot offline');
+   *   if (bot.offline) {
+   *     throw new Error("Bot offline");
+   *   }
    * }));
    * ```
    *

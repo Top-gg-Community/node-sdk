@@ -88,7 +88,9 @@ const vote = await client.getVote("8226924471638491136", "topgg");
 ### Getting a cursor-based paginated list of votes for your project
 
 ```js
-const firstPage = await client.getVotes(new Date("2026-01-01"));
+const since = new Date("2026-01-01");
+
+const firstPage = await client.getVotes(since);
 console.log(firstPage.votes);
 
 const secondPage = await firstPage.next();
@@ -164,6 +166,7 @@ import express from "express";
 const app = express();
 const webhook = new Webhook(process.env.TOPGG_WEBHOOK_PASSWORD);
 
+// POST /webhook
 app.post("/webhook", webhook.listener((payload) => {
   console.log(payload);
 }));
