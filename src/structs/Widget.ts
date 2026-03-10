@@ -15,7 +15,7 @@ export enum WidgetType {
  */
 export class Widget {
   /**
-   * Generate a large widget URL.
+   * Generates a large widget URL.
    *
    * @param {WidgetType} ty The widget type.
    * @param {Snowflake} id The ID.
@@ -26,7 +26,7 @@ export class Widget {
   }
 
   /**
-   * Generate a small widget URL for displaying votes.
+   * Generates a small widget URL for displaying votes.
    *
    * @param {WidgetType} ty The widget type.
    * @param {Snowflake} id The ID.
@@ -37,7 +37,7 @@ export class Widget {
   }
 
   /**
-   * Generate a small widget URL for displaying a project's owner.
+   * Generates a small widget URL for displaying a project's owner.
    *
    * @param {WidgetType} ty The widget type.
    * @param {Snowflake} id The ID.
@@ -48,7 +48,7 @@ export class Widget {
   }
 
   /**
-   * Generate a small widget URL for displaying social stats.
+   * Generates a small widget URL for displaying social stats.
    *
    * @param {WidgetType} ty The widget type.
    * @param {Snowflake} id The ID.
