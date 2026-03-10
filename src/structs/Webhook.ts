@@ -183,16 +183,19 @@ export class Webhook {
           return resolve(false);
         }
 
-        let failStatus = 400;
+        const bodyString = body.toString("utf8");
 
         try {
-          const parsed = JSON.parse(body.toString("utf8"));
-
-          failStatus = 422;
+          const parsed = JSON.parse(bodyString);
 
           resolve(this._formatIncoming(parsed, req.headers["x-topgg-trace"]));
-        } catch {
-          res.status(failStatus).json({ error: "Invalid body" });
+        } catch (err: any) {
+          console.warn(
+            `[WARNING] Unable to parse Top.gg webhook payload. Please report this bug to the SDK maintainers.\nCause: ${err.stack || err.message || err}\n--- BEGIN BODY DUMP ---\n${bodyString}\n--- END BODY DUMP ---`
+          );
+
+          res.status(204);
+
           resolve(false);
         }
       });
