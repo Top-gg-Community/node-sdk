@@ -1,14 +1,6 @@
-import { Snowflake } from "../typings";
+import { Platform, ProjectType, Snowflake } from "../typings";
 
 const BASE_URL: string = "https://top.gg/api/v1/widgets";
-
-/**
- * Widget type.
- */
-export enum WidgetType {
-  DiscordBot = "discord/bot",
-  DiscordServer = "discord/server"
-}
 
 /**
  * Widget generator functions.
@@ -17,44 +9,48 @@ export class Widget {
   /**
    * Generates a large widget URL.
    *
-   * @param {WidgetType} ty The widget type.
-   * @param {Snowflake} id The ID.
+   * @param {Platform} platform The project's platform.
+   * @param {WidgetType} projectType The project's type.
+   * @param {Snowflake} id The project's ID.
    * @returns {string} The widget URL.
    */
-  public static large(ty: WidgetType, id: Snowflake): string {
-    return `${BASE_URL}/large/${ty}/${id}`;
+  public static large(platform: Platform, projectType: ProjectType, id: Snowflake): string {
+    return `${BASE_URL}/large/${platform}/${projectType}/${id}`;
   }
 
   /**
    * Generates a small widget URL for displaying votes.
    *
-   * @param {WidgetType} ty The widget type.
-   * @param {Snowflake} id The ID.
+   * @param {Platform} platform The project's platform.
+   * @param {WidgetType} projectType The project's type.
+   * @param {Snowflake} id The project's ID.
    * @returns {string} The widget URL.
    */
-  public static votes(ty: WidgetType, id: Snowflake): string {
-    return `${BASE_URL}/small/votes/${ty}/${id}`;
+  public static votes(platform: Platform, projectType: ProjectType, id: Snowflake): string {
+    return `${BASE_URL}/small/votes/${platform}/${projectType}/${id}`;
   }
 
   /**
    * Generates a small widget URL for displaying a project's owner.
    *
-   * @param {WidgetType} ty The widget type.
-   * @param {Snowflake} id The ID.
+   * @param {Platform} platform The project's platform.
+   * @param {WidgetType} projectType The project's type.
+   * @param {Snowflake} id The project's ID.
    * @returns {string} The widget URL.
    */
-  public static owner(ty: WidgetType, id: Snowflake): string {
-    return `${BASE_URL}/small/owner/${ty}/${id}`;
+  public static owner(platform: Platform, projectType: ProjectType, id: Snowflake): string {
+    return `${BASE_URL}/small/owner/${platform}/${projectType}/${id}`;
   }
 
   /**
    * Generates a small widget URL for displaying social stats.
    *
-   * @param {WidgetType} ty The widget type.
-   * @param {Snowflake} id The ID.
+   * @param {Platform} platform The project's platform.
+   * @param {WidgetType} projectType The project's type.
+   * @param {Snowflake} id The project's ID.
    * @returns {string} The widget URL.
    */
-  public static social(ty: WidgetType, id: Snowflake): string {
-    return `${BASE_URL}/small/social/${ty}/${id}`;
+  public static social(platform: Platform, projectType: ProjectType, id: Snowflake): string {
+    return `${BASE_URL}/small/social/${platform}/${projectType}/${id}`;
   }
 }

@@ -134,25 +134,25 @@ await client.postCommands([
 #### Large
 
 ```js
-const widgetUrl = Topgg.Widget.large(Topgg.WidgetType.DiscordBot, "574652751745777665");
+const widgetUrl = Topgg.Widget.large("discord", "bot", "574652751745777665");
 ```
 
 #### Votes
 
 ```js
-const widgetUrl = Topgg.Widget.votes(Topgg.WidgetType.DiscordBot, "574652751745777665");
+const widgetUrl = Topgg.Widget.votes("discord", "bot", "574652751745777665");
 ```
 
 #### Owner
 
 ```js
-const widgetUrl = Topgg.Widget.owner(Topgg.WidgetType.DiscordBot, "574652751745777665");
+const widgetUrl = Topgg.Widget.owner("discord", "bot", "574652751745777665");
 ```
 
 #### Social
 
 ```js
-const widgetUrl = Topgg.Widget.social(Topgg.WidgetType.DiscordBot, "574652751745777665");
+const widgetUrl = Topgg.Widget.social("discord", "bot", "574652751745777665");
 ```
 
 ### Webhooks

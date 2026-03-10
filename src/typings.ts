@@ -15,7 +15,7 @@ export type UserSource = "discord" | "topgg";
 export type Platform = "discord";
 
 /** A project's type */
-export type Type = "bot" | "server";
+export type ProjectType = "bot" | "server";
 
 /** A webhook payload's type */
 export type WebhookPayloadType =
@@ -33,7 +33,7 @@ export interface Project {
   /** The project's platform */
   platform: Platform;
   /** The project's type */
-  type: Type;
+  type: ProjectType;
   /** The project's short description */
   headline: string;
   /** The project's tag IDs */
@@ -59,7 +59,7 @@ export interface PartialProject {
   /** The project's ID */
   id: Snowflake;
   /** The project's type */
-  type: Type;
+  type: ProjectType;
   /** The project's platform */
   platform: Platform;
   /** The project's platform ID */
