@@ -1,6 +1,6 @@
 # Top.gg Node.js SDK
 
-> For more information, see the documentation here: https://topgg.js.org.
+> For more information, see the documentation here: <https://topgg.js.org>.
 
 The community-maintained Node.js library for Top.gg.
 
