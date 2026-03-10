@@ -14,7 +14,11 @@ export class Widget {
    * @param {Snowflake} id The project's ID.
    * @returns {string} The widget URL.
    */
-  public static large(platform: Platform, projectType: ProjectType, id: Snowflake): string {
+  public static large(
+    platform: Platform,
+    projectType: ProjectType,
+    id: Snowflake
+  ): string {
     return `${BASE_URL}/large/${platform}/${projectType}/${id}`;
   }
 
@@ -26,7 +30,11 @@ export class Widget {
    * @param {Snowflake} id The project's ID.
    * @returns {string} The widget URL.
    */
-  public static votes(platform: Platform, projectType: ProjectType, id: Snowflake): string {
+  public static votes(
+    platform: Platform,
+    projectType: ProjectType,
+    id: Snowflake
+  ): string {
     return `${BASE_URL}/small/votes/${platform}/${projectType}/${id}`;
   }
 
@@ -38,7 +46,11 @@ export class Widget {
    * @param {Snowflake} id The project's ID.
    * @returns {string} The widget URL.
    */
-  public static owner(platform: Platform, projectType: ProjectType, id: Snowflake): string {
+  public static owner(
+    platform: Platform,
+    projectType: ProjectType,
+    id: Snowflake
+  ): string {
     return `${BASE_URL}/small/owner/${platform}/${projectType}/${id}`;
   }
 
@@ -50,7 +62,11 @@ export class Widget {
    * @param {Snowflake} id The project's ID.
    * @returns {string} The widget URL.
    */
-  public static social(platform: Platform, projectType: ProjectType, id: Snowflake): string {
+  public static social(
+    platform: Platform,
+    projectType: ProjectType,
+    id: Snowflake
+  ): string {
     return `${BASE_URL}/small/social/${platform}/${projectType}/${id}`;
   }
 }

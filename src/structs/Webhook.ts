@@ -143,59 +143,65 @@ export class Webhook {
     res: Response
   ): Promise<WebhookPayload | false> {
     return new Promise((resolve) => {
-      getBody(req, {}, (error, body) => {
-        if (error) {
-          res.status(400).json({ error: "Malformed request" });
-          return resolve(false);
-        }
+      getBody(
+        req,
+        {
+          limit: 2 * 1024 * 1024
+        },
+        (error, body) => {
+          if (error) {
+            res.status(400).json({ error: "Malformed request" });
+            return resolve(false);
+          }
 
-        let signatureHeader = req.headers["x-topgg-signature"];
+          let signatureHeader = req.headers["x-topgg-signature"];
 
-        if (Array.isArray(signatureHeader)) {
-          signatureHeader = signatureHeader[0];
-        }
+          if (Array.isArray(signatureHeader)) {
+            signatureHeader = signatureHeader[0];
+          }
 
-        if (!signatureHeader) {
-          res.status(401).json({ error: "Missing signature" });
-          return resolve(false);
-        }
+          if (!signatureHeader) {
+            res.status(401).json({ error: "Missing signature" });
+            return resolve(false);
+          }
 
-        const parsedSignature = Object.fromEntries(
-          signatureHeader.split(",").map((part) => part.split("="))
-        );
-        const signature = parsedSignature[API_VERSION];
-
-        if (!parsedSignature.t || !signature) {
-          res.status(422).send({ error: "Invalid signature format" });
-          return resolve(false);
-        }
-
-        const hmac = crypto.createHmac("sha256", this.authorization);
-        const digest = hmac
-          .update(`${parsedSignature.t}.${body}`)
-          .digest("hex");
-
-        if (signature !== digest) {
-          res.status(403).json({ error: "Invalid signature" });
-          return resolve(false);
-        }
-
-        const bodyString = body.toString("utf8");
-
-        try {
-          const parsed = JSON.parse(bodyString);
-
-          resolve(this._formatIncoming(parsed, req.headers["x-topgg-trace"]));
-        } catch (err: any) {
-          console.warn(
-            `[WARNING] Unable to parse Top.gg webhook payload. Please report this bug to the SDK maintainers.\nCause: ${err.stack || err.message || err}\n--- BEGIN BODY DUMP ---\n${bodyString}\n--- END BODY DUMP ---`
+          const parsedSignature = Object.fromEntries(
+            signatureHeader.split(",").map((part) => part.split("="))
           );
+          const signature = parsedSignature[API_VERSION];
 
-          res.status(204);
+          if (!parsedSignature.t || !signature) {
+            res.status(422).send({ error: "Invalid signature format" });
+            return resolve(false);
+          }
 
-          resolve(false);
+          const hmac = crypto.createHmac("sha256", this.authorization);
+          const digest = hmac
+            .update(`${parsedSignature.t}.${body}`)
+            .digest("hex");
+
+          if (signature !== digest) {
+            res.status(403).json({ error: "Invalid signature" });
+            return resolve(false);
+          }
+
+          const bodyString = body.toString("utf8");
+
+          try {
+            const parsed = JSON.parse(bodyString);
+
+            resolve(this._formatIncoming(parsed, req.headers["x-topgg-trace"]));
+          } catch (err: any) {
+            console.warn(
+              `[WARNING] Unable to parse Top.gg webhook payload. Please report this bug to the SDK maintainers.\nCause: ${err.stack || err.message || err}\n--- BEGIN BODY DUMP ---\n${bodyString}\n--- END BODY DUMP ---`
+            );
+
+            res.status(204);
+
+            resolve(false);
+          }
         }
-      });
+      );
     });
   }
 
