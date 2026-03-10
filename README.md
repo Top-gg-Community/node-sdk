@@ -2,7 +2,7 @@
 
 > For more information, see the documentation here: <https://topgg.js.org>.
 
-The community-maintained Node.js library for Top.gg.
+The community-maintained Node.js SDK for Top.gg.
 
 ## Chapters
 

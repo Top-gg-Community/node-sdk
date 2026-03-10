@@ -30,7 +30,7 @@ const BASE_URL = `https://top.gg/api/${API_VERSION}`;
  * const client = new Topgg.Api(process.env.TOPGG_TOKEN);
  * ```
  *
- * @link {@link https://topgg.js.org | Library docs}
+ * @link {@link https://topgg.js.org | SDK docs}
  * @link {@link https://docs.top.gg | API Reference}
  */
 export class Api extends EventEmitter {
