@@ -4,7 +4,6 @@ import { endpoints } from "./mocks/endpoints";
 
 interface IOptions {
   pattern: string;
-  requireAuth?: boolean;
   validate?: (request: MockInterceptor.MockResponseCallbackOptions) => void;
 }
 
@@ -55,7 +54,7 @@ beforeEach(() => {
     };
   };
 
-  endpoints.forEach(({ pattern, method, data, requireAuth, validate }) => {
+  endpoints.forEach(({ pattern, method, data, validate }) => {
     client
       .intercept({
         path: (path) => isMatchingPath(pattern, path),
@@ -67,7 +66,7 @@ beforeEach(() => {
           200,
           data,
           {},
-          { pattern, requireAuth, validate }
+          { pattern, validate }
         );
       })
       .persist();
