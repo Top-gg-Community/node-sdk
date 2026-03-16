@@ -1,6 +1,4 @@
 import type { APIApplicationCommand } from "discord-api-types/v10";
-import type { IncomingHttpHeaders } from "undici/types/header";
-import { request, type Dispatcher } from "undici";
 import TopGGAPIError from "../utils/ApiError";
 import { EventEmitter } from "events";
 import { STATUS_CODES } from "http";
@@ -52,20 +50,20 @@ export class Api extends EventEmitter {
   }
 
   private async _request(
-    method: Dispatcher.HttpMethod,
+    method: string,
     path: string,
     body?: Record<string, any>
   ): Promise<any> {
-    const headers: IncomingHttpHeaders = {};
-    if (this.options.token)
-      headers["authorization"] = `Bearer ${this.options.token}`;
-    if (method !== "GET") headers["content-type"] = "application/json";
+    const headers = new Headers();
+
+    if (this.options.token) headers.set("authorization", `Bearer ${this.options.token}`);
+    if (method !== "GET") headers.set("content-type", "application/json");
 
     let url = BASE_URL + path;
 
     if (body && method === "GET") url += `?${new URLSearchParams(body)}`;
 
-    const response = await request(url, {
+    const response = await fetch(url, {
       method,
       headers,
       body: body && method !== "GET" ? JSON.stringify(body) : undefined
@@ -73,16 +71,16 @@ export class Api extends EventEmitter {
 
     let responseBody: string | object | undefined;
 
-    if ((response.headers["content-type"] as string)?.includes("json")) {
-      responseBody = (await response.body.json()) as object;
+    if (response.headers.get("content-type")?.includes("json")) {
+      responseBody = (await response.json()) as object;
     } else {
-      responseBody = await response.body.text();
+      responseBody = await response.text();
     }
 
-    if (response.statusCode < 200 || response.statusCode > 299) {
+    if (response.status < 200 || response.status > 299) {
       throw new TopGGAPIError(
-        response.statusCode,
-        STATUS_CODES[response.statusCode] ?? "",
+        response.status,
+        STATUS_CODES[response.status] ?? "",
         response
       );
     }
@@ -216,7 +214,7 @@ export class Api extends EventEmitter {
     } catch (err) {
       const topggError = err as TopGGAPIError;
 
-      if (topggError.response?.statusCode === 404) {
+      if (topggError.response?.status === 404) {
         return null;
       }
 
