@@ -22,7 +22,7 @@ export interface WebhookOptions {
   error?: (error: Error) => void | Promise<void>;
 
   /**
-   * The timeout in milliseconds for reading payloads. Defaults to one second.
+   * The timeout for reading payloads in milliseconds. Defaults to one second.
    */
   timeout?: number;
 }
