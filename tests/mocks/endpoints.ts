@@ -1,8 +1,15 @@
-import { MockInterceptor } from "undici/types/mock-interceptor";
 import { RAW_PAGINATED_VOTES, RAW_PARTIAL_VOTE, RAW_PROJECT } from "./data";
-import { getIdInPath } from "../jest.setup";
+import type { MockInterceptor } from "undici/types/mock-interceptor.d";
+import { getIdInPath, type MockResponse } from "./index";
 
-export const endpoints = [
+interface MockEndpoint {
+  pattern: string;
+  method: string;
+  data: any;
+  validate?: (request: MockInterceptor.MockResponseCallbackOptions) => MockResponse | null;
+}
+
+export const endpoints: MockEndpoint[] = [
   {
     pattern: "/api/v1/projects/@me",
     method: "GET",
@@ -17,14 +24,13 @@ export const endpoints = [
         "/api/v1/projects/@me/votes/:user_id",
         request.path
       );
-      if (Number(user_id) === 0) return { statusCode: 404 };
-      return null;
+      return Number(user_id) === 0 ? { statusCode: 404 } : null;
     }
   },
   {
     pattern: "/api/v1/projects/@me/commands",
     method: "POST",
-    data: {}
+    data: ""
   },
   {
     pattern: "/api/v1/projects/@me/votes",

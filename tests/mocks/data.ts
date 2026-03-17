@@ -1,3 +1,5 @@
+export const MOCK_TOKEN = ".eyJfdCI6IiIsImlkIjoiMzY0ODA2MDI5ODc2NTU1Nzc2In0=.";
+
 export const RAW_PROJECT = {
   id: "218109768489992192",
   name: "Miki",
