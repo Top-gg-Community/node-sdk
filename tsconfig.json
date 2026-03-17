@@ -5,10 +5,10 @@
     "noImplicitAny": true,
     "declaration": true,
     "strict": true,
-    "target": "ES2019",
+    "target": "esnext",
     "rootDir": "./src",
     "outDir": "./dist",
-    "module": "node16",
+    "module": "nodenext",
     "esModuleInterop": true,
     "isolatedModules": true
   }
