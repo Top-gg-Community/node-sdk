@@ -3,7 +3,7 @@ import TopGGAPIError from "../utils/ApiError.js";
 import { EventEmitter } from "events";
 import { STATUS_CODES } from "http";
 
-import {
+import type {
   APIOptions,
   Snowflake,
   UserSource,

@@ -1,4 +1,4 @@
-import { Platform, ProjectType, Snowflake } from "../typings.js";
+import type { Platform, ProjectType, Snowflake } from "../typings.js";
 
 const BASE_URL: string = "https://top.gg/api/v1/widgets";
 
