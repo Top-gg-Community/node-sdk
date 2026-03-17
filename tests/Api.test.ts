@@ -1,4 +1,4 @@
-import { deepStrictEqual, strictEqual, rejects } from "node:assert";
+import { deepStrictEqual, rejects, strictEqual } from "node:assert";
 import { it, describe } from "node:test";
 
 import { MOCK_TOKEN, PARTIAL_VOTE, PROJECT, VOTE } from "./mocks/data";
