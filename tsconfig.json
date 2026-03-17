@@ -1,7 +1,7 @@
 {
   "include": ["src/**/*.ts"],
   "compilerOptions": {
-    "moduleResolution": "node16",
+    "moduleResolution": "nodenext",
     "noImplicitAny": true,
     "declaration": true,
     "strict": true,
