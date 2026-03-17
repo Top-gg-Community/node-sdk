@@ -9,14 +9,15 @@ const tips = {
 
 /** API Error */
 export default class TopGGAPIError extends Error {
-  /** Possible response from the request */
-  public response?: Response;
-  constructor(code: number, text: string, response: Response) {
-    if (code in tips) {
-      super(`${code} ${text} (${tips[code as keyof typeof tips]})`);
+  /** The response from the request */
+  public response: Response;
+  constructor(text: string, response: Response) {
+    if (response.status in tips) {
+      super(`${response.status} ${text} (${tips[response.status as keyof typeof tips]})`);
     } else {
-      super(`${code} ${text}`);
+      super(`${response.status} ${text}`);
     }
+    this.name = "TopGGAPIError";
     this.response = response;
   }
 }

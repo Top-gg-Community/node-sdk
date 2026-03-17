@@ -79,7 +79,6 @@ export class Api extends EventEmitter {
 
     if (response.status < 200 || response.status > 299) {
       throw new TopGGAPIError(
-        response.status,
         STATUS_CODES[response.status] ?? "",
         response
       );
@@ -214,7 +213,7 @@ export class Api extends EventEmitter {
     } catch (err) {
       const topggError = err as TopGGAPIError;
 
-      if (topggError.response?.status === 404) {
+      if (topggError.response.status === 404) {
         return null;
       }
 
