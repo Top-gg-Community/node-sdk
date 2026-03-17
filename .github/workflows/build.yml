@@ -13,9 +13,9 @@ jobs:
       matrix:
         node: [21, 22, 24, 25]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - name: Cache node_modules
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         env:
           cache-name: cache-node-modules
         with:
@@ -26,7 +26,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
           check-latest: true
