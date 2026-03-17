@@ -31,7 +31,7 @@ export interface WebhookOptions {
  * import express from "express";
  *
  * const app = express();
- * const webhook = new Webhook(process.env.TOPGG_WEBHOOK_PASSWORD);
+ * const webhook = new Webhook(process.env.TOPGG_WEBHOOK_SECRET);
  *
  * // POST /webhook
  * app.post("/webhook", webhook.listener((payload) => {
