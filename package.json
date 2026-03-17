@@ -8,8 +8,8 @@
     "node": ">= 18.18.2"
   },
   "scripts": {
-    "test": "node --import tsx --test",
-    "test:coverage": "c8 node --import tsx --test",
+    "test": "node --import tsx --test tests/**/*.test.ts",
+    "test:coverage": "c8 node --import tsx --test tests/**/*.test.ts",
     "build": "tsc",
     "build:ci": "npm i --include=dev && tsc",
     "docs": "typedoc",
