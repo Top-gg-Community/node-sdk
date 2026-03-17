@@ -33,7 +33,7 @@ describe("Webhook error handling test", () => {
 
     const response = httpMocks.createResponse();
 
-    await listener(request as unknown as Request, response, () => {});
+    await listener(request as any, response, () => {});
 
     strictEqual(response._getStatusCode(), 400);
     deepStrictEqual(response._getJSONData(), {
@@ -52,7 +52,7 @@ describe("Webhook error handling test", () => {
 
     const response = httpMocks.createResponse();
 
-    await listener(request as unknown as Request, response, () => {});
+    await listener(request as any, response, () => {});
 
     strictEqual(response._getStatusCode(), 401);
     deepStrictEqual(response._getJSONData(), {
@@ -72,7 +72,7 @@ describe("Webhook error handling test", () => {
 
     const response = httpMocks.createResponse();
 
-    await listener(request as unknown as Request, response, () => {});
+    await listener(request as any, response, () => {});
 
     strictEqual(response._getStatusCode(), 422);
     deepStrictEqual(response._getJSONData(), {
@@ -94,7 +94,7 @@ describe("Webhook error handling test", () => {
 
     const response = httpMocks.createResponse();
 
-    await listener(request as unknown as Request, response, () => {});
+    await listener(request as any, response, () => {});
 
     strictEqual(response._getStatusCode(), 403);
     deepStrictEqual(response._getJSONData(), {
@@ -120,7 +120,7 @@ describe("Webhook error handling test", () => {
 
     const response = httpMocks.createResponse();
 
-    await faultyListener(request as unknown as Request, response, () => {});
+    await faultyListener(request as any, response, () => {});
 
     strictEqual(response._getStatusCode(), 500);
   });
@@ -143,7 +143,7 @@ describe("Webhook error handling test", () => {
 
     const response = httpMocks.createResponse();
 
-    await listener(request as unknown as Request, response, () => {});
+    await listener(request as any, response, () => {});
 
     strictEqual(response._getStatusCode(), 204);
   });
@@ -165,7 +165,7 @@ describe("Webhook payload test", () => {
 
       const response = httpMocks.createResponse();
 
-      await listener(request as unknown as Request, response, () => {});
+      await listener(request as any, response, () => {});
 
       strictEqual(response._getStatusCode(), 200);
       deepStrictEqual(response._getJSONData(), {
