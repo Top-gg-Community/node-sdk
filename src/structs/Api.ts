@@ -186,7 +186,7 @@ export class Api extends EventEmitter {
    *
    * @param {Snowflake} id The user's ID.
    * @param {UserSource} source The ID type to use. Defaults to "discord".
-   * @returns {Promise<PartialVote | null>} The user's latest vote information on your project or null if the user has not voted for your project in the past 12 hours.
+   * @returns {Promise<PartialVote | null>} The user's latest vote information on your project or null if the user does not exist or has not voted for your project in the past 12 hours.
    */
   public async getVote(
     id: Snowflake,
