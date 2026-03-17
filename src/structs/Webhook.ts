@@ -22,7 +22,7 @@ export interface WebhookOptions {
   error?: (error: Error) => void | Promise<void>;
 
   /**
-   * The timeout for reading payloads in milliseconds. Defaults to one second.
+   * The timeout for reading payloads in milliseconds. Defaults to five seconds.
    */
   timeout?: number;
 }
@@ -62,7 +62,7 @@ export class Webhook {
     this.secret = secret;
     this.options = {
       error: options.error ?? console.error,
-      timeout: options.timeout ?? 1000
+      timeout: options.timeout ?? 5000
     };
   }
 
