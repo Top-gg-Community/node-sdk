@@ -1,4 +1,4 @@
-name: Jest Tests
+name: Run tests
 
 on:
   push:
@@ -19,5 +19,5 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - name: Install Dependencies
         run: npm install
-      - name: Run Jest tests
-        run: npm run test
+      - name: Run tests
+        run: npm test
