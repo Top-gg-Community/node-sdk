@@ -221,7 +221,7 @@ export class Webhook {
 
       setTimeout(() => {
         req.destroy();
-        res.status(400).json({ error: "Malformed request" });
+        res.status(408).json({ error: "Request timed out" });
 
         resolve(false);
       }, this.options.timeout);

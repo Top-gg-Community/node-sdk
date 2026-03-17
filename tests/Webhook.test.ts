@@ -35,9 +35,9 @@ describe("Webhook error handling test", () => {
 
     await listener(request as any, response, () => {});
 
-    strictEqual(response._getStatusCode(), 400);
+    strictEqual(response._getStatusCode(), 408);
     deepStrictEqual(response._getJSONData(), {
-      error: "Malformed request"
+      error: "Request timed out"
     });
   });
 
