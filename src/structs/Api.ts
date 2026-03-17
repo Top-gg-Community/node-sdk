@@ -60,11 +60,7 @@ export class Api extends EventEmitter {
       headers.set("authorization", `Bearer ${this.options.token}`);
     if (method !== "GET") headers.set("content-type", "application/json");
 
-    let url = BASE_URL + path;
-
-    if (body && method === "GET") url += `?${new URLSearchParams(body)}`;
-
-    const response = await fetch(url, {
+    const response = await fetch(BASE_URL + path, {
       method,
       headers,
       body: body && method !== "GET" ? JSON.stringify(body) : undefined
