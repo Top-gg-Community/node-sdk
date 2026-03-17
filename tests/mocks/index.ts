@@ -1,7 +1,9 @@
 import type { MockInterceptor } from "undici/types/mock-interceptor";
+import { MOCK_TOKEN, MOCK_WEBHOOK_SECRET } from "./data";
 import { MockAgent, setGlobalDispatcher } from "undici";
 import { endpoints } from "./endpoints";
-import { MOCK_TOKEN } from "./data";
+import { API_VERSION } from "../../src";
+import crypto from "node:crypto";
 
 export interface MockResponse {
   statusCode: number;
@@ -25,6 +27,17 @@ export function isMatchingPath(pattern: string, url: string) {
     (!endpoints.some(({ pattern }) => pattern === url) &&
       getIdInPath(pattern, url) !== null)
   );
+}
+
+export function signature(body: Buffer) {
+  const timestamp = Math.floor(Date.now() / 1000);
+
+  const hmac = crypto.createHmac("sha256", MOCK_WEBHOOK_SECRET);
+  const signature = hmac
+    .update(`${timestamp}.${body.toString("utf-8")}`)
+    .digest("hex");
+
+  return `t=${timestamp},${API_VERSION}=${signature}`;
 }
 
 export function registerMocks() {

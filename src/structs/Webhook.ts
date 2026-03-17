@@ -1,4 +1,3 @@
-import getBody from "raw-body";
 import { Request, Response, NextFunction } from "express";
 import crypto from "node:crypto";
 import {
@@ -10,8 +9,9 @@ import {
   WebhookPayload,
   WebhookPayloadType,
   WebhookTestPayload
-} from "../typings";
-import { API_VERSION } from "./Api";
+} from "../typings.js";
+import { API_VERSION } from "./Api.js";
+import getBody from "raw-body";
 
 export interface WebhookOptions {
   /**
@@ -20,6 +20,11 @@ export interface WebhookOptions {
    * @default console.error
    */
   error?: (error: Error) => void | Promise<void>;
+
+  /**
+   * The timeout in milliseconds for reading payloads. Defaults to one second.
+   */
+  timeout?: number;
 }
 
 /**
@@ -45,19 +50,19 @@ export interface WebhookOptions {
  * @link {@link https://docs.top.gg/resources/webhoooks | Webhook Documentation}
  */
 export class Webhook {
+  public secret: string;
   public options: WebhookOptions;
 
   /**
    * Create a new webhook client instance
    *
-   * @param {string} authorization Webhook authorization to verify requests
+   * @param {string} secret The webhook secret to verify requests
    */
-  constructor(
-    private authorization: string,
-    options: WebhookOptions = {}
-  ) {
+  constructor(secret: string, options: WebhookOptions = {}) {
+    this.secret = secret;
     this.options = {
-      error: options.error ?? console.error
+      error: options.error ?? console.error,
+      timeout: options.timeout ?? 1000
     };
   }
 
@@ -97,7 +102,7 @@ export class Webhook {
           user: this._formatUser(body.data.user)
         } as IntegrationCreatePayload;
 
-        this.authorization = data.secret;
+        this.secret = data.secret;
 
         break;
       }
@@ -128,6 +133,12 @@ export class Webhook {
           project: this._formatPartialProject(body.data.project),
           user: this._formatUser(body.data.user)
         } as WebhookTestPayload;
+
+        break;
+      }
+
+      default: {
+        throw new Error(`Got an unrecognized payload type '${body.type}'.`);
       }
     }
 
@@ -149,6 +160,7 @@ export class Webhook {
           limit: 2 * 1024 * 1024
         },
         (error, body) => {
+          /* node:coverage ignore next 4 */
           if (error) {
             res.status(400).json({ error: "Malformed request" });
             return resolve(false);
@@ -156,6 +168,7 @@ export class Webhook {
 
           let signatureHeader = req.headers["x-topgg-signature"];
 
+          /* node:coverage ignore next 3 */
           if (Array.isArray(signatureHeader)) {
             signatureHeader = signatureHeader[0];
           }
@@ -171,11 +184,11 @@ export class Webhook {
           const signature = parsedSignature[API_VERSION];
 
           if (!parsedSignature.t || !signature) {
-            res.status(422).send({ error: "Invalid signature format" });
+            res.status(422).json({ error: "Invalid signature format" });
             return resolve(false);
           }
 
-          const hmac = crypto.createHmac("sha256", this.authorization);
+          const hmac = crypto.createHmac("sha256", this.secret);
           const digest = hmac
             .update(`${parsedSignature.t}.${body}`)
             .digest("hex");
@@ -190,18 +203,28 @@ export class Webhook {
           try {
             const parsed = JSON.parse(bodyString);
 
-            resolve(this._formatIncoming(parsed, req.headers["x-topgg-trace"]));
+            return resolve(
+              this._formatIncoming(parsed, req.headers["x-topgg-trace"])
+            );
           } catch (err: any) {
+            /* node:coverage ignore next 3 */
             console.warn(
               `[WARNING] Unable to parse Top.gg webhook payload. Please report this bug to the SDK maintainers.\nCause: ${err.stack || err.message || err}\n--- BEGIN BODY DUMP ---\n${bodyString}\n--- END BODY DUMP ---`
             );
 
-            res.status(204);
+            res.sendStatus(204);
 
-            resolve(false);
+            return resolve(false);
           }
         }
       );
+
+      setTimeout(() => {
+        req.destroy();
+        res.status(400).json({ error: "Malformed request" });
+
+        resolve(false);
+      }, this.options.timeout);
     });
   }
 
@@ -235,9 +258,9 @@ export class Webhook {
   public listener(
     fn: (
       payload: WebhookPayload,
-      req?: Request,
-      res?: Response,
-      next?: NextFunction
+      req: Request,
+      res: Response,
+      next: NextFunction
     ) => void | Promise<void>
   ) {
     return async (

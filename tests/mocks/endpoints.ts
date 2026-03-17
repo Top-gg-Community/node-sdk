@@ -1,5 +1,5 @@
 import { RAW_PAGINATED_VOTES, RAW_PARTIAL_VOTE, RAW_PROJECT } from "./data";
-import type { MockInterceptor } from "undici/types/mock-interceptor.d";
+import type { MockInterceptor } from "undici/types/mock-interceptor";
 import { getIdInPath, type MockResponse } from "./index";
 
 interface MockEndpoint {

@@ -16,6 +16,7 @@ export default class TopGGAPIError extends Error {
       super(
         `${response.status} ${text} (${tips[response.status as keyof typeof tips]})`
       );
+      /* node:coverage ignore next 3 */
     } else {
       super(`${response.status} ${text}`);
     }

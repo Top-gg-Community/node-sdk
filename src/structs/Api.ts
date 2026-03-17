@@ -1,5 +1,5 @@
 import type { APIApplicationCommand } from "discord-api-types/v10";
-import TopGGAPIError from "../utils/ApiError";
+import TopGGAPIError from "../utils/ApiError.js";
 import { EventEmitter } from "events";
 import { STATUS_CODES } from "http";
 
@@ -10,7 +10,7 @@ import {
   Project,
   PartialVote,
   PaginatedVotes
-} from "../typings";
+} from "../typings.js";
 
 /** The API version to use */
 export const API_VERSION = "v1";
@@ -75,6 +75,7 @@ export class Api extends EventEmitter {
     }
 
     if (response.status < 200 || response.status > 299) {
+      /* node:coverage ignore next 1 */
       throw new TopGGAPIError(STATUS_CODES[response.status] ?? "", response);
     }
 
