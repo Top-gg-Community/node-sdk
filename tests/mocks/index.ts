@@ -20,7 +20,11 @@ export function isMatchingPath(pattern: string, url: string) {
   // Remove query params
   url = url.split("?")[0];
 
-  return pattern === url || (!endpoints.some(({ pattern }) => pattern === url) && getIdInPath(pattern, url) !== null);
+  return (
+    pattern === url ||
+    (!endpoints.some(({ pattern }) => pattern === url) &&
+      getIdInPath(pattern, url) !== null)
+  );
 }
 
 export function registerMocks() {
@@ -49,13 +53,18 @@ export function registerMocks() {
           };
         }
 
-        return validate?.(request) ?? {
-          statusCode: 200,
-          data: typeof data === "string" ? data : JSON.stringify(data),
-          responseOptions: {
-            headers: { "content-type": typeof data === "string" ? "text/html" : "application/json" }
+        return (
+          validate?.(request) ?? {
+            statusCode: 200,
+            data: typeof data === "string" ? data : JSON.stringify(data),
+            responseOptions: {
+              headers: {
+                "content-type":
+                  typeof data === "string" ? "text/html" : "application/json"
+              }
+            }
           }
-        }
+        );
       })
       .persist();
   });

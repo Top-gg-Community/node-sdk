@@ -48,7 +48,7 @@ describe("API getVote test", () => {
   });
 
   it("getVote should throw error when no token is provided", async () => {
-    await rejects(() => (new Api("")).getVote("1"), { name: "TopGGAPIError" });
+    await rejects(() => new Api("").getVote("1"), { name: "TopGGAPIError" });
   });
 });
 
@@ -63,6 +63,7 @@ describe("API getVotes test", () => {
 
 describe("Widgets test", () => {
   for (const type of ["large", "owner", "social", "votes"]) {
-    it(`${type} widget should work`, () => (Widget as any)[type]("discord", "bot", "12345"));
+    it(`${type} widget should work`, () =>
+      (Widget as any)[type]("discord", "bot", "12345"));
   }
 });

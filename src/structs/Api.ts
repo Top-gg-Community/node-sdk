@@ -56,7 +56,8 @@ export class Api extends EventEmitter {
   ): Promise<any> {
     const headers = new Headers();
 
-    if (this.options.token) headers.set("authorization", `Bearer ${this.options.token}`);
+    if (this.options.token)
+      headers.set("authorization", `Bearer ${this.options.token}`);
     if (method !== "GET") headers.set("content-type", "application/json");
 
     let url = BASE_URL + path;
@@ -78,10 +79,7 @@ export class Api extends EventEmitter {
     }
 
     if (response.status < 200 || response.status > 299) {
-      throw new TopGGAPIError(
-        STATUS_CODES[response.status] ?? "",
-        response
-      );
+      throw new TopGGAPIError(STATUS_CODES[response.status] ?? "", response);
     }
 
     return responseBody;

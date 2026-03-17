@@ -6,7 +6,9 @@ interface MockEndpoint {
   pattern: string;
   method: string;
   data: any;
-  validate?: (request: MockInterceptor.MockResponseCallbackOptions) => MockResponse | null;
+  validate?: (
+    request: MockInterceptor.MockResponseCallbackOptions
+  ) => MockResponse | null;
 }
 
 export const endpoints: MockEndpoint[] = [

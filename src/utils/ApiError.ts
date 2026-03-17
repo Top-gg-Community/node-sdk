@@ -13,7 +13,9 @@ export default class TopGGAPIError extends Error {
   public response: Response;
   constructor(text: string, response: Response) {
     if (response.status in tips) {
-      super(`${response.status} ${text} (${tips[response.status as keyof typeof tips]})`);
+      super(
+        `${response.status} ${text} (${tips[response.status as keyof typeof tips]})`
+      );
     } else {
       super(`${response.status} ${text}`);
     }
