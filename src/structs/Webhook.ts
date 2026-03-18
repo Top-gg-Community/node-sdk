@@ -56,7 +56,7 @@ export class Webhook {
   /**
    * Create a new webhook client instance
    *
-   * @param {string} secret The webhook secret to verify requests
+   * @param {string} secret The secret to verify requests
    */
   constructor(secret: string, options: WebhookOptions = {}) {
     this.secret = secret;
