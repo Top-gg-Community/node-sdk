@@ -80,6 +80,28 @@ describe("Webhook error handling test", () => {
     });
   });
 
+  it("Listener should return 403 when the timestamp is outside of the accepted time window", async () => {
+    const body = Buffer.from(JSON.stringify(INTEGRATION_CREATE_PAYLOAD));
+    const request = Object.assign(Readable.from([body]), {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "content-length": Buffer.byteLength(body).toString(),
+        "x-topgg-signature": signature(body, new Date(2026, 1, 1)),
+        "x-topgg-trace": MOCK_WEBHOOK_TRACE
+      }
+    });
+
+    const response = httpMocks.createResponse();
+
+    await listener(request as any, response, () => {});
+
+    strictEqual(response._getStatusCode(), 403);
+    deepStrictEqual(response._getJSONData(), {
+      error: "Timestamp outside of accepted time window"
+    });
+  });
+
   it("Listener should return 403 when x-topgg-signature does not match", async () => {
     const body = Buffer.from("test");
     const request = Object.assign(Readable.from([body]), {

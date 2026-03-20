@@ -29,8 +29,8 @@ export function isMatchingPath(pattern: string, url: string) {
   );
 }
 
-export function signature(body: Buffer) {
-  const timestamp = Math.floor(Date.now() / 1000);
+export function signature(body: Buffer, date: Date = new Date()) {
+  const timestamp = Math.floor(date.getTime() / 1000);
 
   const hmac = crypto.createHmac("sha256", MOCK_WEBHOOK_SECRET);
   const signature = hmac

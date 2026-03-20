@@ -25,6 +25,11 @@ export interface WebhookOptions {
    * The timeout for reading payloads in milliseconds. Defaults to five seconds.
    */
   timeout?: number;
+
+  /**
+   * The accepted time window for timestamps before they get rejected to help mitigate replay attacks in milliseconds. Defaults to 30 seconds.
+   */
+  timestampWindow?: number;
 }
 
 /**
@@ -62,7 +67,8 @@ export class Webhook {
     this.secret = secret;
     this.options = {
       error: options.error ?? console.error,
-      timeout: options.timeout ?? 5000
+      timeout: options.timeout ?? 5000,
+      timestampWindow: options.timestampWindow ?? 30000
     };
   }
 
@@ -185,6 +191,17 @@ export class Webhook {
 
           if (!parsedSignature.t || !signature) {
             res.status(422).json({ error: "Invalid signature format" });
+            return resolve(false);
+          }
+
+          if (
+            this.options.timestampWindow &&
+            Math.abs(Date.now() - Number(parsedSignature.t) * 1000) >
+              this.options.timestampWindow
+          ) {
+            res
+              .status(403)
+              .json({ error: "Timestamp outside of accepted time window" });
             return resolve(false);
           }
 
