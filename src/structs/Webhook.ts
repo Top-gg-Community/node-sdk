@@ -196,7 +196,7 @@ export class Webhook {
 
           if (
             this.options.timestampWindow &&
-            Math.abs(Date.now() - Number(parsedSignature.t) * 1000) >
+            Math.abs(Date.now() - parseInt(parsedSignature.t, 10) * 1000) >
               this.options.timestampWindow
           ) {
             res
@@ -206,11 +206,12 @@ export class Webhook {
           }
 
           const hmac = crypto.createHmac("sha256", this.secret);
-          const digest = hmac
-            .update(`${parsedSignature.t}.${body}`)
-            .digest("hex");
+          const digest = Buffer.from(
+            hmac.update(`${parsedSignature.t}.${body}`).digest("hex"),
+            "hex"
+          );
 
-          if (signature !== digest) {
+          if (!crypto.timingSafeEqual(Buffer.from(signature, "hex"), digest)) {
             res.status(403).json({ error: "Invalid signature" });
             return resolve(false);
           }

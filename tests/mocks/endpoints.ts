@@ -26,7 +26,9 @@ export const endpoints: MockEndpoint[] = [
         "/api/v1/projects/@me/votes/:user_id",
         request.path
       );
-      return Number(user_id) === 0 ? { statusCode: 404 } : null;
+      return user_id && parseInt(user_id, 10) === 0
+        ? { statusCode: 404 }
+        : null;
     }
   },
   {
