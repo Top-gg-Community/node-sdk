@@ -159,6 +159,8 @@ export class Webhook {
     req: Request,
     res: Response
   ): Promise<WebhookPayload | false> {
+    const currentTimestamp = Date.now();
+
     return new Promise((resolve) => {
       getBody(
         req,
@@ -196,8 +198,9 @@ export class Webhook {
 
           if (
             this.options.timestampWindow &&
-            Math.abs(Date.now() - parseInt(parsedSignature.t, 10) * 1000) >
-              this.options.timestampWindow
+            Math.abs(
+              currentTimestamp - parseInt(parsedSignature.t, 10) * 1000
+            ) > this.options.timestampWindow
           ) {
             res
               .status(403)
