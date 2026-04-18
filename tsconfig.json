@@ -1,13 +1,15 @@
 {
-  "files": ["./src/index.ts"],
+  "include": ["src/**/*.ts"],
   "compilerOptions": {
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "noImplicitAny": true,
     "declaration": true,
     "strict": true,
-    "target": "ES2019",
+    "target": "esnext",
+    "rootDir": "./src",
     "outDir": "./dist",
-    "module": "commonjs",
-    "esModuleInterop": true
+    "module": "nodenext",
+    "esModuleInterop": true,
+    "isolatedModules": true
   }
 }

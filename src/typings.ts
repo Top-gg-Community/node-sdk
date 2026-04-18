@@ -1,240 +1,167 @@
-export interface APIOptions {
-  /** Top.gg token */
-  token?: string;
-}
-
 /** Discord ID */
 export type Snowflake = string;
 
-export interface BotInfo {
-  /** The Top.gg ID of the bot */
+export interface APIOptions {
+  /** Top.gg API token */
+  token?: string;
+  /** Client ID to use */
+  id?: Snowflake;
+}
+
+/** A user account from an external platform that is linked to a Top.gg user account. */
+export type UserSource = "discord" | "topgg";
+
+/** A project's platform */
+export type Platform = "discord";
+
+/** A project's type */
+export type ProjectType = "bot" | "server";
+
+/** A webhook payload's type */
+export type WebhookPayloadType =
+  | "integration.create"
+  | "integration.delete"
+  | "webhook.test"
+  | "vote.create";
+
+/** A project listed on Top.gg */
+export interface Project {
+  /** The project's ID */
   id: Snowflake;
-  /** The Discord ID of the bot */
-  clientid: Snowflake;
-  /** The username of the bot */
-  username: string;
-  /**
-   * The discriminator of the bot
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  discriminator: string;
-  /** The bot's avatar */
-  avatar: string;
-  /**
-   * The cdn hash of the bot's avatar if the bot has none
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  defAvatar: string;
-  /**
-   * The URL for the banner image
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  bannerUrl?: string;
-  /**
-   * The library of the bot
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  lib: string;
-  /** The prefix of the bot */
-  prefix: string;
-  /** The short description of the bot */
-  shortdesc: string;
-  /** The long description of the bot. Can contain HTML and/or Markdown */
-  longdesc?: string;
-  /** The tags of the bot */
+  /** The project's name sourced from the external platform */
+  name: string;
+  /** The project's platform */
+  platform: Platform;
+  /** The project's type */
+  type: ProjectType;
+  /** The project's short description */
+  headline: string;
+  /** The project's tag IDs */
   tags: string[];
-  /** The website url of the bot */
-  website?: string;
-  /** The support url of the bot */
-  support?: string;
-  /** The link to the github repo of the bot */
-  github?: string;
-  /** The owners of the bot. First one in the array is the main owner */
-  owners: Snowflake[];
-  /**
-   * The guilds featured on the bot page
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  guilds: Snowflake[];
-  /** The custom bot invite url of the bot */
-  invite?: string;
-  /** The date when the bot was submitted (in ISO 8601) */
-  date: string;
-  /**
-   * The certified status of the bot
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  certifiedBot: boolean;
-  /** The vanity url of the bot */
-  vanity?: string;
-  /** The amount of votes the bot has */
-  points: number;
-  /** The amount of votes the bot has this month */
-  monthlyPoints: number;
-  /**
-   * The guild id for the donatebot setup
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  donatebotguildid: Snowflake;
-  /** The amount of servers the bot is in based on posted stats */
-  server_count?: number;
-  /** The bot's reviews on Top.gg */
-  reviews: {
-    /** This bot's average review score out of 5 */
-    averageScore: number;
-    /** This bot's review count */
+  /** The project's vote information */
+  votes: {
+    /** The project's current vote count that affects the project's ranking */
+    current: number;
+    /** The project's total vote count */
+    total: number;
+  };
+  /** The project's review information */
+  review: {
+    /** The project's review score out of 5 */
+    score: number;
+    /** The project's total review count */
     count: number;
   };
 }
 
-export interface BotStats {
-  /** The amount of servers the bot is in */
-  serverCount?: number;
-  /**
-   * The amount of servers the bot is in per shard. Always present but can be
-   * empty. (Only when receiving stats)
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  shards?: number[];
-  /**
-   * The shard ID to post as (only when posting)
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  shardId?: number;
-  /**
-   * The amount of shards a bot has
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  shardCount?: number | null;
-}
-
-/**
- * @deprecated No longer supported by Top.gg API v0.
- */
-export interface UserInfo {
-  /** The id of the user */
+/** A brief information on a project listed on Top.gg */
+export interface PartialProject {
+  /** The project's ID */
   id: Snowflake;
-  /** The username of the user */
-  username: string;
-  /** The discriminator of the user */
-  discriminator: string;
-  /** The user's avatar url */
-  avatar: string;
-  /** The cdn hash of the user's avatar if the user has none */
-  defAvatar: string;
-  /** The bio of the user */
-  bio?: string;
-  /** The banner image url of the user */
-  banner?: string;
-  /** The social usernames of the user */
-  social: {
-    /** The youtube channel id of the user */
-    youtube?: string;
-    /** The reddit username of the user */
-    reddit?: string;
-    /** The twitter username of the user */
-    twitter?: string;
-    /** The instagram username of the user */
-    instagram?: string;
-    /** The github username of the user */
-    github?: string;
-  };
-  /** The custom hex color of the user */
-  color: string;
-  /** The supporter status of the user */
-  supporter: boolean;
-  /** The certified status of the user */
-  certifiedDev: boolean;
-  /** The mod status of the user */
-  mod: boolean;
-  /** The website moderator status of the user */
-  webMod: boolean;
-  /** The admin status of the user */
-  admin: boolean;
+  /** The project's type */
+  type: ProjectType;
+  /** The project's platform */
+  platform: Platform;
+  /** The project's platform ID */
+  platformId: Snowflake;
 }
 
-export interface BotsQuery {
-  /** The amount of bots to return. Max. 500 */
-  limit?: number;
-  /** Amount of bots to skip */
-  offset?: number;
-  /** A search string in the format of "field: value field2: value2" */
-  search?:
-    | {
-        [key in keyof BotInfo]: string;
-      }
-    | string;
-  /** Sorts results from a specific criteria. Results will always be descending. */
-  sort?: "monthlyPoints" | "id" | "date";
-  /** A list of fields to show. */
-  fields?: string[] | string;
+/** A brief information of a project's vote */
+export interface PartialVote {
+  /** When the vote was cast */
+  votedAt: Date;
+  /** When the vote expires and the user is required to vote again */
+  expiresAt: Date;
+  /** The vote's weight. 1 during weekdays, 2 during weekends. */
+  weight: number;
 }
 
-export interface BotsResponse {
-  /** The matching bots */
-  results: BotInfo[];
-  /** The limit used */
-  limit: number;
-  /** The offset used */
-  offset: number;
-  /** The length of the results array */
-  count: number;
-  /** The total number of bots matching your search */
-  total: number;
+/** A project's vote information */
+export interface Vote extends PartialVote {
+  /** The voter's ID */
+  voterId: Snowflake;
+  /** The voter's ID on the project's platform */
+  platformId: Snowflake;
 }
 
-export interface ShortUser {
-  /** User's ID */
+/** A paginated list of a project's vote information. */
+export interface PaginatedVotes {
+  /** The votes in this page */
+  votes: Vote[];
+  /** Tries to advance to the next page */
+  next(): Promise<PaginatedVotes>;
+}
+
+/** A Top.gg user */
+export interface User {
+  /** The user's ID */
   id: Snowflake;
-  /** User's username */
-  username: string;
-  /**
-   * User's discriminator
-   *
-   * @deprecated No longer supported by Top.gg API v0.
-   */
-  discriminator: string;
-  /** User's avatar url */
+  /** The user's name */
+  name: string;
+  /** The user's avatar URL */
   avatar: string;
+  /** The user's platform ID */
+  platformId: Snowflake;
 }
 
+/** A `vote.create` webhook payload */
+export interface VoteCreatePayload {
+  /** The vote's ID */
+  id: Snowflake;
+  /** The number of votes this vote counted for. This is a rounded integer value which determines how many points this individual vote was worth */
+  weight: number;
+  /** When the vote was cast */
+  votedAt: Date;
+  /** When the vote expires (the user can vote again) */
+  expiresAt: Date;
+  /** The project that received this vote */
+  project: PartialProject;
+  /** The user who voted for this project */
+  user: User;
+}
+
+/** An `integration.create` webhook payload */
+export interface IntegrationCreatePayload {
+  /** The unique identifier for this connection */
+  connectionId: Snowflake;
+  /** The secret used to verify future webhook deliveries */
+  secret: string;
+  /** The project that the integration refers to */
+  project: PartialProject;
+  /** The user who triggered this event */
+  user: User;
+}
+
+/** An `integration.delete` webhook payload */
+export interface IntegrationDeletePayload {
+  /** The unique identifier for this connection */
+  connectionId: Snowflake;
+}
+
+/** A `webhook.test` webhook payload */
+export interface WebhookTestPayload {
+  /** The project that the test refers to */
+  project: PartialProject;
+  /** The user who triggered this test */
+  user: User;
+}
+
+/** A webhook payload */
 export interface WebhookPayload {
-  /** If webhook is a bot: ID of the bot that received a vote */
-  bot?: Snowflake;
-  /** If webhook is a server: ID of the server that received a vote */
-  guild?: Snowflake;
-  /** ID of the user who voted */
-  user: Snowflake;
-  /**
-   * The type of the vote (should always be "upvote" except when using the test
-   * button it's "test")
-   */
-  type: string;
-  /**
-   * Whether the weekend multiplier is in effect, meaning users votes count as
-   * two
-   */
-  isWeekend?: boolean;
-  /** Query parameters in vote page in a key to value object */
-  query:
-    | {
-        [key: string]: string;
-      }
-    | string;
+  /** The payload's type */
+  type: WebhookPayloadType;
+  /** The payload's data */
+  data:
+    | IntegrationCreatePayload
+    | IntegrationDeletePayload
+    | VoteCreatePayload
+    | WebhookTestPayload;
+  /** The payload's x-topgg-trace header for debugging and correlating requests with Top.gg support */
+  trace: string | string[] | undefined;
 }
 
 declare module "express" {
   export interface Request {
-    vote?: WebhookPayload;
+    topggPayload?: WebhookPayload;
   }
 }

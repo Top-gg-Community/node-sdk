@@ -1,68 +1,69 @@
-import { Api } from '../src/index';
-import ApiError from '../src/utils/ApiError';
-import { BOT, BOT_STATS, VOTES } from './mocks/data';
+import { deepStrictEqual, rejects, strictEqual } from "node:assert";
+import { it, describe } from "node:test";
 
-/* mock token */
-const client = new Api('.eyJpZCI6IjEwMjY1MjU1NjgzNDQyNjQ3MjQiLCJib3QiOnRydWV9.');
+import { MOCK_TOKEN, PARTIAL_VOTE, PROJECT, VOTE } from "./mocks/data";
+import { registerMocks } from "./mocks/index";
+import { Api, Widget } from "../src/index";
 
-describe('API postStats test', () => {
-    it('postStats without server count should throw error', async () => {
-        await expect(client.postStats({ shardCount: 0 })).rejects.toThrow(Error);
-    });
+const client = new Api(MOCK_TOKEN);
 
-    it('postStats with invalid negative server count should throw error', () => {
-        expect(client.postStats({ serverCount: -1 })).rejects.toThrow(Error);
-    });
+registerMocks();
 
-    it('postStats should return 200', async () => {
-        await expect(client.postStats({ serverCount: 1 })).resolves.toBeInstanceOf(
-            Object
-        );
-    });
+describe("API getSelf test", () => {
+  it("getSelf should work", async () => {
+    deepStrictEqual(await client.getSelf(), PROJECT);
+  });
 });
 
-describe('API getStats test', () => {
-    it('getStats should return 200 when bot is found', async () => {
-        expect(client.getStats('1')).resolves.toStrictEqual({
-            serverCount: BOT_STATS.server_count,
-            shardCount: BOT_STATS.shard_count,
-            shards: BOT_STATS.shards
-        });
-    });
+describe("API postCommands test", () => {
+  it("postCommands should work", async () => {
+    strictEqual(
+      await client.postCommands([
+        {
+          id: "1",
+          type: 1,
+          application_id: "1",
+          name: "test",
+          description: "command description",
+          default_member_permissions: "",
+          version: "1"
+        }
+      ]),
+      undefined
+    );
+  });
 });
 
-describe('API getBot test', () => {
-    it('getBot should return 404 when bot is not found', () => {
-        expect(client.getBot('0')).rejects.toThrow(ApiError);
-    });
+describe("API getVote test", () => {
+  it("getVote should work", async () => {
+    deepStrictEqual(await client.getVote("1"), PARTIAL_VOTE);
+  });
 
-    it('getBot should return 200 when bot is found', async () => {
-        expect(client.getBot('1')).resolves.toStrictEqual(BOT);
-    });
+  it("getVote should return null when an invalid id is provided", async () => {
+    strictEqual(await client.getVote("0"), null);
+  });
 
-    it('getBot should throw when no id is provided', () => {
-        expect(client.getBot('')).rejects.toThrow(Error);
-    });
+  it("getVote should throw error when no id is provided", async () => {
+    await rejects(() => client.getVote(""), { name: "Error" });
+  });
+
+  it("getVote should throw error when no token is provided", async () => {
+    await rejects(() => new Api("").getVote("1"), { name: "TopGGAPIError" });
+  });
 });
 
-describe('API getVotes test', () => {
-    it('getVotes should return 200 when token is provided', () => {
-        expect(client.getVotes()).resolves.toEqual(VOTES);
-    });
+describe("API getVotes test", () => {
+  it("getVotes should work", async () => {
+    const response = await client.getVotes(new Date("2026-01-01"));
+
+    deepStrictEqual(response.votes, [VOTE]);
+    deepStrictEqual((await response.next()).votes, [VOTE]);
+  });
 });
 
-describe('API hasVoted test', () => {
-    it('hasVoted should return 200 when token is provided', () => {
-        expect(client.hasVoted('1')).resolves.toBe(true);
-    });
-
-    it('hasVoted should throw error when no id is provided', () => {
-        expect(client.hasVoted('')).rejects.toThrow(Error);
-    });
-});
-
-describe('API isWeekend tests', () => {
-    it('isWeekend should return true', async () => {
-        expect(client.isWeekend()).resolves.toBe(true);
-    });
+describe("Widgets test", () => {
+  for (const type of ["large", "owner", "social", "votes"]) {
+    it(`${type} widget should work`, () =>
+      (Widget as any)[type]("discord", "bot", "12345"));
+  }
 });

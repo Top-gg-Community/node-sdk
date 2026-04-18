@@ -1,10 +1,9 @@
-const js = require('@eslint/js');
-const ts = require("@typescript-eslint/eslint-plugin");
+import tsPlugin from "@typescript-eslint/eslint-plugin";
+import ts from "@typescript-eslint/eslint-plugin";
+import tsParser from "@typescript-eslint/parser";
+import js from "@eslint/js";
 
-const tsPlugin = require('@typescript-eslint/eslint-plugin');
-const jestPlugin = require('eslint-plugin-jest');
-
-module.exports = [
+export default [
   {
     ignores: ["node_modules/*", "docs/*", "dist/*"]
   },
@@ -12,20 +11,19 @@ module.exports = [
     ...js.configs.recommended,
     files: ["src/**/*.ts"],
     languageOptions: {
-      parser: require('@typescript-eslint/parser'),
+      parser: tsParser,
       parserOptions: {
-        project: './tsconfig.json',
+        projectService: true
       },
       globals: {
         es6: true,
         browser: true,
-        node: true,
-        jest: true
-      }
+        node: true
+      },
+      sourceType: "module"
     },
     plugins: {
-      "@typescript-eslint": tsPlugin,
-      jest: jestPlugin
+      "@typescript-eslint": tsPlugin
     },
     rules: {
       ...ts.configs.recommended.rules,

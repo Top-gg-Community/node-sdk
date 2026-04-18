@@ -1,3 +1,4 @@
-export * from "./structs/Api";
-export * from "./structs/Webhook";
-export * from "./typings";
+export * from "./structs/Api.js";
+export * from "./structs/Webhook.js";
+export * from "./structs/Widget.js";
+export * from "./typings.js";

@@ -1,53 +1,44 @@
-import { MockInterceptor } from 'undici/types/mock-interceptor';
-import { BOT, BOTS, BOT_STATS, USER_VOTE, VOTES, WEEKEND } from './data';
-import { getIdInPath } from '../jest.setup';
+import { RAW_PAGINATED_VOTES, RAW_PARTIAL_VOTE, RAW_PROJECT } from "./data";
+import type { MockInterceptor } from "undici/types/mock-interceptor";
+import { getIdInPath, type MockResponse } from "./index";
 
-export const endpoints = [
-    {
-        pattern: '/api/bots',
-        method: 'GET',
-        data: BOTS,
-        requireAuth: true
-    },
-    {
-        pattern: '/api/bots/:bot_id',
-        method: 'GET',
-        data: BOT,
-        requireAuth: true,
-        validate: (request: MockInterceptor.MockResponseCallbackOptions) => {
-            const bot_id = getIdInPath('/api/bots/:bot_id', request.path);
-            if (Number(bot_id) === 0) return { statusCode: 404 };
-            return null;
-        }
-    },
-    {
-        pattern: '/api/bots/votes',
-        method: 'GET',
-        data: VOTES,
-        requireAuth: true
-    },
-    {
-        pattern: '/api/bots/check',
-        method: 'GET',
-        data: USER_VOTE,
-        requireAuth: true
-    },
-    {
-        pattern: '/api/bots/stats',
-        method: 'GET',
-        data: BOT_STATS,
-        requireAuth: true
-    },
-    {
-        pattern: '/api/bots/stats',
-        method: 'POST',
-        data: {},
-        requireAuth: true
-    },
-    {
-        pattern: '/api/weekend',
-        method: 'GET',
-        data: WEEKEND,
-        requireAuth: true
+interface MockEndpoint {
+  pattern: string;
+  method: string;
+  data: any;
+  validate?: (
+    request: MockInterceptor.MockResponseCallbackOptions
+  ) => MockResponse | null;
+}
+
+export const endpoints: MockEndpoint[] = [
+  {
+    pattern: "/api/v1/projects/@me",
+    method: "GET",
+    data: RAW_PROJECT
+  },
+  {
+    pattern: "/api/v1/projects/@me/votes/:user_id",
+    method: "GET",
+    data: RAW_PARTIAL_VOTE,
+    validate: (request: MockInterceptor.MockResponseCallbackOptions) => {
+      const user_id = getIdInPath(
+        "/api/v1/projects/@me/votes/:user_id",
+        request.path
+      );
+      return user_id && parseInt(user_id, 10) === 0
+        ? { statusCode: 404 }
+        : null;
     }
-]
+  },
+  {
+    pattern: "/api/v1/projects/@me/commands",
+    method: "POST",
+    data: ""
+  },
+  {
+    pattern: "/api/v1/projects/@me/votes",
+    method: "GET",
+    data: RAW_PAGINATED_VOTES
+  }
+];

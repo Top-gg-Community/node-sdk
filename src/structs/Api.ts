@@ -1,31 +1,34 @@
-import { request, type Dispatcher } from "undici";
-import type { IncomingHttpHeaders } from "undici/types/header";
-import ApiError from "../utils/ApiError";
+import type { APIApplicationCommand } from "discord-api-types/v10";
+import TopGGAPIError from "../utils/ApiError.js";
 import { EventEmitter } from "events";
 import { STATUS_CODES } from "http";
 
-import {
+import type {
   APIOptions,
   Snowflake,
-  BotStats,
-  BotInfo,
-  UserInfo,
-  BotsResponse,
-  ShortUser,
-  BotsQuery,
-} from "../typings";
+  UserSource,
+  Project,
+  PartialVote,
+  PaginatedVotes
+} from "../typings.js";
+
+/** The API version to use */
+export const API_VERSION = "v1";
+
+/** The API's base URL */
+const BASE_URL = `https://top.gg/api/${API_VERSION}`;
 
 /**
- * Top.gg API Client for Posting stats or Fetching data
+ * Top.gg API v1 client
  *
  * @example
  * ```js
- * const Topgg = require("@top-gg/sdk");
+ * import Topgg from "@top-gg/sdk";
  *
- * const api = new Topgg.Api("Your top.gg token");
+ * const client = new Topgg.Api(process.env.TOPGG_TOKEN);
  * ```
  *
- * @link {@link https://topgg.js.org | Library docs}
+ * @link {@link https://topgg.js.org | SDK docs}
  * @link {@link https://docs.top.gg | API Reference}
  */
 export class Api extends EventEmitter {
@@ -40,286 +43,223 @@ export class Api extends EventEmitter {
   constructor(token: string, options: APIOptions = {}) {
     super();
 
-    const tokenSegments = token.split(".");
-
-    if (tokenSegments.length !== 3) {
-      throw new Error("Got a malformed API token.");
-    }
-
-    const tokenData = atob(tokenSegments[1]);
-
-    try {
-      JSON.parse(tokenData).id;
-    } catch {
-      throw new Error(
-        "Invalid API token state, this should not happen! Please report!"
-      );
-    }
-
     this.options = {
       token,
-      ...options,
+      ...options
     };
   }
 
   private async _request(
-    method: Dispatcher.HttpMethod,
+    method: string,
     path: string,
     body?: Record<string, any>
   ): Promise<any> {
-    const headers: IncomingHttpHeaders = {};
-    if (this.options.token) headers["authorization"] = this.options.token;
-    if (method !== "GET") headers["content-type"] = "application/json";
+    const headers = new Headers();
 
-    let url = `https://top.gg/api${path}`;
+    if (this.options.token)
+      headers.set("authorization", `Bearer ${this.options.token}`);
+    if (method !== "GET") headers.set("content-type", "application/json");
 
-    if (body && method === "GET") url += `?${new URLSearchParams(body)}`;
-
-    const response = await request(url, {
+    const response = await fetch(BASE_URL + path, {
       method,
       headers,
-      body: body && method !== "GET" ? JSON.stringify(body) : undefined,
+      body: body && method !== "GET" ? JSON.stringify(body) : undefined
     });
 
-    let responseBody;
+    let responseBody: string | object | undefined;
 
-    if (
-      (response.headers["content-type"] as string)?.startsWith(
-        "application/json"
-      )
-    ) {
-      responseBody = await response.body.json();
+    if (response.headers.get("content-type")?.includes("json")) {
+      responseBody = (await response.json()) as object;
     } else {
-      responseBody = await response.body.text();
+      responseBody = await response.text();
     }
 
-    if (response.statusCode < 200 || response.statusCode > 299) {
-      throw new ApiError(
-        response.statusCode,
-        STATUS_CODES[response.statusCode] ?? "",
-        response
-      );
+    if (response.status < 200 || response.status > 299) {
+      /* node:coverage ignore next 1 */
+      throw new TopGGAPIError(STATUS_CODES[response.status] ?? "", response);
     }
 
     return responseBody;
   }
 
   /**
-   * Post bot stats to Top.gg
+   * Gets your project's information.
    *
    * @example
    * ```js
-   * await api.postStats({
-   *   serverCount: 28199,
-   * });
-   * ```
+   * const project = await client.getSelf();
    *
-   * @param {object} stats Stats object
-   * @param {number} stats.serverCount Server count
-   * @returns {BotStats} Passed object
-   */
-  public async postStats(stats: BotStats): Promise<BotStats> {
-    if ((stats?.serverCount ?? 0) <= 0) throw new Error("Missing server count");
-
-    /* eslint-disable camelcase */
-    await this._request("POST", "/bots/stats", {
-      server_count: stats.serverCount,
-    });
-    /* eslint-enable camelcase */
-
-    return stats;
-  }
-
-  /**
-   * Get your bot's stats
-   *
-   * @example
-   * ```js
-   * await api.getStats();
+   * console.log(project);
    * // =>
-   * {
-   *   serverCount: 28199,
-   *   shardCount: null,
-   *   shards: []
-   * }
+   * // {
+   * //   id: '218109768489992192',
+   * //   name: 'Miki',
+   * //   type: 'bot',
+   * //   platform: 'discord',
+   * //   headline: 'A great bot with tons of features! language | admin | cards | fun | levels | roles | marriage | currency | custom commands!',
+   * //   tags: [
+   * //     'anime',
+   * //     'customizable-behavior',
+   * //     'economy',
+   * //     'fun',
+   * //     'game',
+   * //     'leveling',
+   * //     'multifunctional',
+   * //     'role-management',
+   * //     'roleplay',
+   * //     'social'
+   * //   ],
+   * //   votes: { current: 1120, total: 313389 },
+   * //   review: { score: 4.38, count: 62245 }
+   * // }
    * ```
    *
-   * @returns {BotStats} Your bot's stats
+   * @returns {Promise<Project>} Your project's information.
    */
-  public async getStats(_id?: Snowflake): Promise<BotStats> {
-    if (_id)
-      console.warn(
-        "[DeprecationWarning] getStats() no longer needs an ID argument"
-      );
-    const result = await this._request("GET", "/bots/stats");
+  public async getSelf(): Promise<Project> {
+    const project = await this._request("GET", "/projects/@me");
+
     return {
-      serverCount: result.server_count,
-      shardCount: null,
-      shards: [],
+      id: project.id,
+      name: project.name,
+      platform: project.platform,
+      type: project.type,
+      headline: project.headline,
+      tags: project.tags,
+      votes: {
+        current: project.votes,
+        total: project.votes_total
+      },
+      review: {
+        score: project.review_score,
+        count: project.review_count
+      }
     };
   }
 
   /**
-   * Get bot info
+   * Updates the application commands list in your Discord bot's Top.gg page.
    *
    * @example
    * ```js
-   * await api.getBot("461521980492087297"); // returns bot info
-   * ```
+   * // Discord.js:
+   * const commands = (await bot.application.commands.fetch()).map(command => command.toJSON());
    *
-   * @param {Snowflake} id Bot ID
-   * @returns {BotInfo} Info for bot
-   */
-  public async getBot(id: Snowflake): Promise<BotInfo> {
-    if (!id) throw new Error("ID Missing");
-    return this._request("GET", `/bots/${id}`);
-  }
-
-  /**
-   * @deprecated No longer supported by Top.gg API v0.
-   *
-   * Get user info
-   *
-   * @example
-   * ```js
-   * await api.getUser("205680187394752512");
-   * // =>
-   * user.username; // Xignotic
-   * ```
-   *
-   * @param {Snowflake} id User ID
-   * @returns {UserInfo} Info for user
-   */
-  public async getUser(id: Snowflake): Promise<UserInfo> {
-    console.warn(
-      "[DeprecationWarning] getUser is no longer supported by Top.gg API v0."
-    );
-
-    return this._request("GET", `/users/${id}`);
-  }
-
-  /**
-   * Get a list of bots
-   *
-   * @example
-   * ```js
-   * // Finding by properties
-   * await api.getBots({
-   *   search: {
-   *     username: "shiro"
-   *   },
-   * });
-   * // =>
-   * {
-   *   results: [
-   *     {
-   *       id: "461521980492087297",
-   *       username: "Shiro",
-   *       ...rest of bot object
-   *     }
-   *     ...other shiro knockoffs B)
-   *   ],
-   *   limit: 10,
-   *   offset: 0,
-   *   count: 1,
-   *   total: 1
-   * }
-   * // Restricting fields
-   * await api.getBots({
-   *   fields: ["id", "username"],
-   * });
-   * // =>
-   * {
-   *   results: [
-   *     {
-   *       id: '461521980492087297',
-   *       username: 'Shiro'
-   *     },
-   *     {
-   *       id: '493716749342998541',
-   *       username: 'Mimu'
-   *     },
-   *     ...
-   *   ],
-   *   ...
-   * }
-   * ```
-   *
-   * @param {BotsQuery} query Bot Query
-   * @returns {BotsResponse} Return response
-   */
-  public async getBots(query?: BotsQuery): Promise<BotsResponse> {
-    if (query) {
-      if (Array.isArray(query.fields)) query.fields = query.fields.join(", ");
-      if (query.search instanceof Object) {
-        query.search = Object.entries(query.search)
-          .map(([key, value]) => `${key}: ${value}`)
-          .join(" ");
-      }
-    }
-    return this._request("GET", "/bots", query);
-  }
-
-  /**
-   * Get recent unique users who've voted
-   *
-   * @example
-   * ```js
-   * await api.getVotes();
-   * // =>
-   * [
+   * // Raw:
+   * //   Array of application commands that
+   * //   can be serialized to Discord API's raw JSON format.
+   * await client.postCommands([
    *   {
-   *     username: 'Xignotic',
-   *     id: '205680187394752512',
-   *     avatar: 'https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png'
-   *   },
-   *   {
-   *     username: 'iara',
-   *     id: '395526710101278721',
-   *     avatar: 'https://cdn.discordapp.com/avatars/1026525568344264724/cd70e62e41f691f1c05c8455d8c31e23.png'
+   *     options: [],
+   *     name: 'test',
+   *     name_localizations: null,
+   *     description: 'command description',
+   *     description_localizations: null,
+   *     contexts: [],
+   *     default_permission: null,
+   *     default_member_permissions: null,
+   *     dm_permission: false,
+   *     integration_types: [],
+   *     nsfw: false
    *   }
-   *   ...more
-   * ]
+   * ]);
    * ```
    *
-   * @param {number} [page] The page number. Each page can only have at most 100 voters.
-   * @returns {ShortUser[]} Array of unique users who've voted
+   * @param {APIApplicationCommand[]} commands A list of application commands in raw Discord API JSON objects. This cannot be empty.
+   * @returns {Promise<void>}
    */
-  public async getVotes(page?: number): Promise<ShortUser[]> {
-    return this._request("GET", "/bots/votes", { page: page ?? 1 });
+  public async postCommands(commands: APIApplicationCommand[]): Promise<void> {
+    await this._request("POST", "/projects/@me/commands", commands);
   }
 
   /**
-   * Get whether or not a user has voted in the last 12 hours
+   * Gets the latest vote information of a Top.gg user on your project.
    *
    * @example
    * ```js
-   * await api.hasVoted("205680187394752512");
-   * // => true/false
+   * // Discord ID
+   * const vote = await client.getVote("661200758510977084");
+   *
+   * // Top.gg ID
+   * const vote = await client.getVote("8226924471638491136", "topgg");
    * ```
    *
-   * @param {Snowflake} id User ID
-   * @returns {boolean} Whether the user has voted in the last 12 hours
+   * @param {Snowflake} id The user's ID.
+   * @param {UserSource} source The ID type to use. Defaults to "discord".
+   * @returns {Promise<PartialVote | null>} The user's latest vote information on your project or null if the user does not exist or has not voted for your project in the past 12 hours.
    */
-  public async hasVoted(id: Snowflake): Promise<boolean> {
+  public async getVote(
+    id: Snowflake,
+    source: UserSource = "discord"
+  ): Promise<PartialVote | null> {
     if (!id) throw new Error("Missing ID");
-    return this._request("GET", "/bots/check", { userId: id }).then(
-      (x) => !!x.voted
+
+    try {
+      const response = await this._request(
+        "GET",
+        `/projects/@me/votes/${id}?source=${source}`
+      );
+
+      return {
+        votedAt: new Date(response.created_at),
+        expiresAt: new Date(response.expires_at),
+        weight: response.weight
+      };
+    } catch (err) {
+      const topggError = err as TopGGAPIError;
+
+      if (topggError.response.status === 404) {
+        return null;
+      }
+
+      throw err;
+    }
+  }
+
+  private async _getVotesInner(options: {
+    since?: Date;
+    cursor?: string;
+  }): Promise<PaginatedVotes> {
+    const response = await this._request(
+      "GET",
+      `/projects/@me/votes?${options.since ? `startDate=${encodeURIComponent(options.since.toISOString())}` : `cursor=${options.cursor}`}`
     );
+    /* eslint-disable-next-line @typescript-eslint/no-this-alias */
+    const self = this;
+
+    return {
+      votes: response.data.map((vote: any) => ({
+        voterId: vote.user_id,
+        platformId: vote.platform_id,
+        votedAt: new Date(vote.created_at),
+        expiresAt: new Date(vote.expires_at),
+        weight: vote.weight
+      })),
+      next: () =>
+        self._getVotesInner({
+          cursor: response.cursor
+        })
+    };
   }
 
   /**
-   * Whether or not the weekend multiplier is active
+   * Gets a cursor-based paginated list of votes for your project, ordered by creation date.
    *
    * @example
    * ```js
-   * await api.isWeekend();
-   * // => true/false
+   * const since = new Date("2026-01-01");
+   *
+   * const firstPage = await client.getVotes(since);
+   * console.log(firstPage.votes);
+   *
+   * const secondPage = await firstPage.next();
+   * console.log(secondPage.votes);
    * ```
    *
-   * @returns {boolean} Whether the multiplier is active
+   * @param {Date} since Timestamp to start fetching votes from.
+   * @returns {Promise<PaginatedVotes>} A cursor-based paginated list of votes for your project.
    */
-  public async isWeekend(): Promise<boolean> {
-    return this._request("GET", "/weekend").then((x) => x.is_weekend);
+  public async getVotes(since: Date): Promise<PaginatedVotes> {
+    return await this._getVotesInner({ since });
   }
 }

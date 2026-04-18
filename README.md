@@ -1,62 +1,175 @@
-# Top.gg Node SDK
+# Top.gg Node.js SDK
 
-An official module for interacting with the Top.<span>gg API
+> For more information, see the documentation here: <https://topgg.js.org>.
 
-# Installation
+The community-maintained Node.js SDK for Top.gg.
 
-`yarn add @top-gg/sdk` or `npm i @top-gg/sdk`
+## Chapters
 
-# Introduction
+- [Installation](#installation)
+- [Setting up](#setting-up)
+- [Usage](#usage)
+  - [Getting your project's information](#getting-your-projects-information)
+  - [Getting your project's vote information of a user](#getting-your-projects-vote-information-of-a-user)
+  - [Getting a cursor-based paginated list of votes for your project](#getting-a-cursor-based-paginated-list-of-votes-for-your-project)
+  - [Posting your bot's application commands list](#posting-your-bots-application-commands-list)
+  - [Generating widget URLs](#generating-widget-urls)
+  - [Webhooks](#webhooks)
 
-The base client is Topgg.Api, and it takes your Top.gg token and provides you with plenty of methods to interact with the API.
+## Installation
 
-See [this tutorial](https://github.com/top-gg/rust-sdk/assets/60427892/d2df5bd3-bc48-464c-b878-a04121727bff) on how to retrieve your API token.
 
-You can also setup webhooks via Topgg.Webhook, look down below at the examples for how to do so!
+### NPM
 
-# Links
-
-[Documentation](https://topgg.js.org)
-
-[API Reference](https://docs.top.gg) | [GitHub](https://github.com/top-gg/node-sdk) | [NPM](https://npmjs.com/package/@top-gg/sdk) | [Discord Server](https://discord.gg/EYHTgJX)
-
-# Popular Examples
-
-## Auto-Posting stats
-
-If you're looking for an easy way to post your bot's stats (server count, shard count), check out [`topgg-autoposter`](https://npmjs.com/package/topgg-autoposter)
-
-```js
-const client = Discord.Client(); // Your discord.js client or any other
-const { AutoPoster } = require("topgg-autoposter");
-
-AutoPoster("topgg-token", client).on("posted", () => {
-  console.log("Posted stats to Top.gg!");
-});
+```sh
+$ npm i @top-gg/sdk
 ```
 
-With this your server count and shard count will be posted to Top.<span>gg
+### Yarn
 
-## Webhook server
-
-```js
-const express = require("express");
-const Topgg = require("@top-gg/sdk");
-
-const app = express(); // Your express app
-
-const webhook = new Topgg.Webhook("topggauth123"); // add your Top.gg webhook authorization (not bot token)
-
-app.post(
-  "/dblwebhook",
-  webhook.listener((vote) => {
-    // vote is your vote object
-    console.log(vote.user); // 221221226561929217
-  })
-); // attach the middleware
-
-app.listen(3000); // your port
+```sh
+$ yarn add @top-gg/sdk
 ```
 
-With this example, your webhook dashboard (`https://top.gg/bot/{your bot's id}/webhooks`) should look like this:
-![](https://i.imgur.com/cZfZgK5.png)
+## Setting up
+
+```js
+import Topgg from "@top-gg/sdk";
+
+const client = new Topgg.Api(process.env.TOPGG_TOKEN);
+```
+
+## Usage
+
+### Getting your project's information
+
+```js
+const project = await client.getSelf();
+
+console.log(project);
+// =>
+// {
+//   id: '218109768489992192',
+//   name: 'Miki',
+//   type: 'bot',
+//   platform: 'discord',
+//   headline: 'A great bot with tons of features! language | admin | cards | fun | levels | roles | marriage | currency | custom commands!',
+//   tags: [
+//     'anime',
+//     'customizable-behavior',
+//     'economy',
+//     'fun',
+//     'game',
+//     'leveling',
+//     'multifunctional',
+//     'role-management',
+//     'roleplay',
+//     'social'
+//   ],
+//   votes: { current: 1120, total: 313389 },
+//   review: { score: 4.38, count: 62245 }
+// }
+```
+
+### Getting your project's vote information of a user
+
+#### Discord ID
+
+```js
+const vote = await client.getVote("661200758510977084");
+```
+
+#### Top.gg ID
+
+```js
+const vote = await client.getVote("8226924471638491136", "topgg");
+```
+
+### Getting a cursor-based paginated list of votes for your project
+
+```js
+const since = new Date("2026-01-01");
+
+const firstPage = await client.getVotes(since);
+console.log(firstPage.votes);
+
+const secondPage = await firstPage.next();
+console.log(secondPage.votes);
+```
+
+### Posting your bot's application commands list
+
+#### Discord.js
+
+```js
+const commands = (await bot.application.commands.fetch()).map(command => command.toJSON());
+
+await client.postCommands(commands);
+```
+
+#### Raw
+
+```js
+// Array of application commands that
+// can be serialized to Discord API's raw JSON format.
+await client.postCommands([
+  {
+    options: [],
+    name: 'test',
+    name_localizations: null,
+    description: 'command description',
+    description_localizations: null,
+    contexts: [],
+    default_permission: null,
+    default_member_permissions: null,
+    dm_permission: false,
+    integration_types: [],
+    nsfw: false
+  }
+]);
+```
+
+### Generating widget URLs
+
+#### Large
+
+```js
+const widgetUrl = Topgg.Widget.large("discord", "bot", "1026525568344264724");
+```
+
+#### Votes
+
+```js
+const widgetUrl = Topgg.Widget.votes("discord", "bot", "1026525568344264724");
+```
+
+#### Owner
+
+```js
+const widgetUrl = Topgg.Widget.owner("discord", "bot", "1026525568344264724");
+```
+
+#### Social
+
+```js
+const widgetUrl = Topgg.Widget.social("discord", "bot", "1026525568344264724");
+```
+
+### Webhooks
+
+With express:
+
+```js
+import { Webhook } from "@top-gg/sdk";
+import express from "express";
+
+const app = express();
+const webhook = new Webhook(process.env.TOPGG_WEBHOOK_SECRET);
+
+// POST /webhook
+app.post("/webhook", webhook.listener((payload) => {
+  console.log(payload);
+}));
+
+app.listen(8080);
+```
