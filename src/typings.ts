@@ -1,6 +1,8 @@
 /** Discord ID */
 export type Snowflake = string;
 
+export type Method = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
+
 export interface APIOptions {
   /** Top.gg API token */
   token?: string;
@@ -16,6 +18,25 @@ export type Platform = "discord";
 
 /** A project's type */
 export type ProjectType = "bot" | "server";
+
+/** A locale for a project's payload */
+export type Locale =
+  | "en"
+  | "de"
+  | "fr"
+  | "pt"
+  | "tr"
+  | "hi"
+  | "ja"
+  | "ar"
+  | "nl"
+  | "ko"
+  | "it"
+  | "es"
+  | "ru"
+  | "uk"
+  | "vi"
+  | "zh"
 
 /** A webhook payload's type */
 export type WebhookPayloadType =
@@ -54,6 +75,13 @@ export interface Project {
   };
 }
 
+export interface ProjectPayload {
+  /** The project's short description */
+  headline?: Record<Locale, string>;
+  /** The project's page content */
+  content?: Record<Locale, string>;
+}
+
 /** A brief information on a project listed on Top.gg */
 export interface PartialProject {
   /** The project's ID */
@@ -90,6 +118,16 @@ export interface PaginatedVotes {
   votes: Vote[];
   /** Tries to advance to the next page */
   next(): Promise<PaginatedVotes>;
+}
+
+/** An announcement of a project */
+export interface Announcement {
+  /** The announcement's title */
+  title: string;
+  /** The announcement's content */
+  content: string;
+  /** The announcement's creation timestamp */
+  createdAt: string;
 }
 
 /** A Top.gg user */
@@ -152,13 +190,34 @@ export interface WebhookPayload {
   type: WebhookPayloadType;
   /** The payload's data */
   data:
-    | IntegrationCreatePayload
-    | IntegrationDeletePayload
-    | VoteCreatePayload
-    | WebhookTestPayload;
+  | IntegrationCreatePayload
+  | IntegrationDeletePayload
+  | VoteCreatePayload
+  | WebhookTestPayload;
   /** The payload's x-topgg-trace header for debugging and correlating requests with Top.gg support */
   trace: string | string[] | undefined;
 }
+
+export interface DiscordBotPayload {
+  /** The total number of servers the bot is currently in */
+  serverCount?: number;
+  /** The number of shards the bot is currently running */
+  shardCount?: number;
+}
+
+export interface DiscordServerPayload {
+  /** The total number of members in the server */
+  memberCount?: number;
+  /** The number of members currently online */
+  onlineCount?: number;
+}
+
+export interface RobloxGamePayload {
+  /** The current number of players in the game */
+  playerCount: number;
+}
+
+export type MetricsPayload = DiscordBotPayload | DiscordServerPayload | RobloxGamePayload
 
 declare module "express" {
   export interface Request {
