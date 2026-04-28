@@ -77,9 +77,9 @@ export interface Project {
 
 export interface ProjectPayload {
   /** The project's short description */
-  headline?: Record<Locale, string>;
+  headline?: Partial<Record<Locale, string>>;
   /** The project's page content */
-  content?: Record<Locale, string>;
+  content?: Partial<Record<Locale, string>>;
 }
 
 /** A brief information on a project listed on Top.gg */

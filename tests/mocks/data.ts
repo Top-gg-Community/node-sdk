@@ -45,6 +45,61 @@ export const PROJECT = {
   }
 };
 
+export const RAW_PROJECT_PAYLOAD = {
+  headline: {
+    en: "A great bot with tons of features!"
+  },
+  page_content: {
+    en: "# Welcome\nThis is the full page description for your project..."
+  }
+}
+
+export const PROJECT_PAYLOAD = {
+  headline: RAW_PROJECT_PAYLOAD.headline,
+  content: RAW_PROJECT_PAYLOAD.page_content
+}
+
+export const RAW_ANNOUNCEMENT = {
+  title: "Version 2.0 Released!",
+  content: "We just released version 2.0 with a bunch of new features and improvements.",
+  created_at: "2026-03-14T15:09:26Z"
+}
+
+export const ANNOUNCEMENT = {
+  title: RAW_ANNOUNCEMENT.title,
+  content: RAW_ANNOUNCEMENT.content,
+  createdAt: RAW_ANNOUNCEMENT.created_at
+}
+
+export const RAW_METRIC = {
+  server_count: 420,
+  shard_count: 67
+}
+
+export const METRIC = {
+  serverCount: RAW_METRIC.server_count,
+  shardCount: RAW_METRIC.shard_count
+}
+
+export const METRIC_BATCH = {
+  timestamp: "2026-04-17T10:00:00Z",
+  serverCount: RAW_METRIC.server_count,
+  shardCount: RAW_METRIC.shard_count
+}
+
+export const RAW_METRIC_BATCH = {
+  data: [
+    {
+      timestamp: "2026-04-17T10:00:00Z",
+      metrics: { server_count: 419 }
+    },
+    {
+      timestamp: "2026-04-17T10:05:00Z",
+      metrics: RAW_METRIC
+    }
+  ]
+}
+
 export const RAW_PARTIAL_VOTE = {
   created_at: "2025-09-09T08:55:16.218761+00:00",
   expires_at: "2025-09-09T20:55:16.218761+00:00",

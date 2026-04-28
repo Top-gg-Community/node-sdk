@@ -10,14 +10,16 @@ The community-maintained Node.js SDK for Top.gg.
 - [Setting up](#setting-up)
 - [Usage](#usage)
   - [Getting your project's information](#getting-your-projects-information)
+  - [Updating your project's information](#updating-your-projects-information)
   - [Getting your project's vote information of a user](#getting-your-projects-vote-information-of-a-user)
   - [Getting a cursor-based paginated list of votes for your project](#getting-a-cursor-based-paginated-list-of-votes-for-your-project)
+  - [Posting an announcement for your project](#posting-an-announcement-for-your-project)
+  - [Posting your project's metric stats](#posting-your-projects-metric-stats)
   - [Posting your bot's application commands list](#posting-your-bots-application-commands-list)
   - [Generating widget URLs](#generating-widget-urls)
   - [Webhooks](#webhooks)
 
 ## Installation
-
 
 ### NPM
 
@@ -71,6 +73,19 @@ console.log(project);
 // }
 ```
 
+### Updating your project's information
+
+```js
+await client.editSelf({
+  headline: {
+    "en": "A great bot with tons of features!"
+  },
+  content: {
+    "en": "# Welcome\nThis is the full page description for your project..."
+  }
+});
+```
+
 ### Getting your project's vote information of a user
 
 #### Discord ID
@@ -95,6 +110,46 @@ console.log(firstPage.votes);
 
 const secondPage = await firstPage.next();
 console.log(secondPage.votes);
+```
+
+### Posting an announcement for your project 
+
+```js
+const announcement = await client.postAnnouncement(
+  "Version 2.0 Released!",
+  "We just released version 2.0 with a bunch of new features and improvements."
+);
+
+console.log(announcement)
+// =>
+// {
+//   title: "Version 2.0 Released!",
+//   content: "We just released version 2.0 with a bunch of new features and improvements.",
+//   createdAt: "2026-03-14T15:09:26Z"
+// }
+```
+
+### Posting your project's metric stats
+
+#### Single
+
+```js
+await client.postMetrics({ serverCount: 420, shardCount: 53 });
+```
+
+#### Batch
+
+```js
+await client.postMetrics([
+  {
+    timestamp: "2026-04-17T10:00:00Z",
+    serverCount: 420,
+    shardCount: 53
+  },
+  {
+    serverCount: 435
+  }
+]);
 ```
 
 ### Posting your bot's application commands list
