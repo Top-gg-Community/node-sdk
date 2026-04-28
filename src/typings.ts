@@ -75,6 +75,7 @@ export interface Project {
   };
 }
 
+/** A project payload */
 export interface ProjectPayload {
   /** The project's short description */
   headline?: Partial<Record<Locale, string>>;
@@ -198,6 +199,7 @@ export interface WebhookPayload {
   trace: string | string[] | undefined;
 }
 
+/** A Discord bot payload */
 export interface DiscordBotPayload {
   /** The total number of servers the bot is currently in */
   serverCount?: number;
@@ -205,6 +207,7 @@ export interface DiscordBotPayload {
   shardCount?: number;
 }
 
+/** A Discord server payload */
 export interface DiscordServerPayload {
   /** The total number of members in the server */
   memberCount?: number;
@@ -212,11 +215,13 @@ export interface DiscordServerPayload {
   onlineCount?: number;
 }
 
+/** A Roblox game payload */
 export interface RobloxGamePayload {
   /** The current number of players in the game */
   playerCount: number;
 }
 
+/** A metrics payload */
 export type MetricsPayload = DiscordBotPayload | DiscordServerPayload | RobloxGamePayload
 
 declare module "express" {

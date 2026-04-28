@@ -277,7 +277,7 @@ export class Api extends EventEmitter {
    * ]);
    * ```
    * 
-   * @param payload The metrics payload.
+   * @param payload The metrics payload. Can be a single object or an array of objects with up to 100 entries.
    * @returns {Promise<void>}
    */
   public async postMetrics(
