@@ -9,7 +9,11 @@ import type {
   UserSource,
   Project,
   PartialVote,
-  PaginatedVotes
+  PaginatedVotes,
+  Announcement,
+  Method,
+  MetricsPayload,
+  ProjectPayload,
 } from "../typings.js";
 
 /** The API version to use */
@@ -45,14 +49,14 @@ export class Api extends EventEmitter {
 
     this.options = {
       token,
-      ...options
+      ...options,
     };
   }
 
   private async _request(
-    method: string,
+    method: Method,
     path: string,
-    body?: Record<string, any>
+    body?: Record<string, any>,
   ): Promise<any> {
     const headers = new Headers();
 
@@ -63,7 +67,7 @@ export class Api extends EventEmitter {
     const response = await fetch(BASE_URL + path, {
       method,
       headers,
-      body: body && method !== "GET" ? JSON.stringify(body) : undefined
+      body: body && method !== "GET" ? JSON.stringify(body) : undefined,
     });
 
     let responseBody: string | object | undefined;
@@ -128,13 +132,38 @@ export class Api extends EventEmitter {
       tags: project.tags,
       votes: {
         current: project.votes,
-        total: project.votes_total
+        total: project.votes_total,
       },
       review: {
         score: project.review_score,
-        count: project.review_count
-      }
+        count: project.review_count,
+      },
     };
+  }
+
+  /**
+   * Updates the headline and/or page content for your project. Both fields are locale-keyed, so you can set content for multiple languages in a single request.
+   *
+   * @example
+   * ```js
+   * await client.editSelf({
+   *  headline: {
+   *    "en": "A great bot with tons of features!"
+   *  },
+   *  content: {
+   *    "en": "# Welcome\nThis is the full page description for your project..."
+   *  }
+   * });
+   * ```
+   *
+   * @param {ProjectPayload} options The project payload options.
+   * @returns {Promise<void>}
+   */
+  public async editSelf(options: ProjectPayload): Promise<void> {
+    await this._request("PATCH", "/projects/@me", {
+      headline: options.headline,
+      page_content: options.content,
+    });
   }
 
   /**
@@ -173,6 +202,112 @@ export class Api extends EventEmitter {
   }
 
   /**
+   * Creates a new announcement for your project. Announcements appear on your project's page and can be used to notify users about updates, new features, or other news.
+   *
+   * @example
+   * ```js
+   * const announcement = await client.postAnnouncement(
+   *    "Version 2.0 Released!",
+   *    "We just released version 2.0 with a bunch of new features and improvements."
+   * );
+   *
+   * console.log(announcement)
+   * // =>
+   * // {
+   * //   title: "Version 2.0 Released!",
+   * //   content: "We just released version 2.0 with a bunch of new features and improvements.",
+   * //   createdAt: "2026-03-14T15:09:26Z"
+   * // }
+   * ```
+   *
+   * @param {string} title The announcement title. Must be between 3 and 100 characters.
+   * @param {string} content The announcement body text. Must be between 10 and 2,000 characters.
+   * @returns {Promise<Announcement>} The created announcement.
+   */
+  public async postAnnouncement(
+    title: string,
+    content: string,
+  ): Promise<Announcement> {
+    const announcement = await this._request(
+      "POST",
+      "/projects/@me/announcements",
+      { title, content },
+    );
+
+    return {
+      title: announcement.title,
+      content: announcement.content,
+      createdAt: announcement.created_at,
+    };
+  }
+
+  private _parseMetrics(payload: MetricsPayload) {
+    if ("serverCount" in payload || "shardCount" in payload) {
+      return {
+        server_count: payload.serverCount,
+        shard_count: payload.shardCount,
+      };
+    }
+
+    if ("memberCount" in payload || "onlineCount" in payload) {
+      return {
+        member_count: payload.memberCount,
+        online_count: payload.onlineCount,
+      };
+    }
+
+    if ("playerCount" in payload) {
+      return {
+        player_count: payload.playerCount,
+      };
+    }
+  }
+
+  /**
+   * Submits a single or batch of metrics payloads for your project. Use this to push fresh numbers after an event such as joining or leaving a guild or a player connecting.
+   *
+   * @example
+   * ```js
+   * // Single
+   * await client.postMetrics({ serverCount: 420, shardCount: 53 });
+   *
+   * // Batch
+   * await client.postMetrics([
+   *  {
+   *    timestamp: "2026-04-17T10:00:00Z",
+   *    serverCount: 420,
+   *    shardCount: 53
+   *  },
+   *  {
+   *    serverCount: 435
+   *  }
+   * ]);
+   * ```
+   *
+   * @param payload The metrics payload. Can be a single object or an array of objects with up to 100 entries.
+   * @returns {Promise<void>}
+   */
+  public async postMetrics(
+    payload: MetricsPayload | (MetricsPayload & { timestamp?: string })[],
+  ): Promise<void> {
+    if (!Array.isArray(payload)) {
+      await this._request(
+        "PATCH",
+        "/projects/@me/metrics",
+        this._parseMetrics(payload),
+      );
+      return;
+    }
+
+    await this._request("POST", "/projects/@me/metrics/batch", {
+      data: payload.map(({ timestamp, ...metrics }) => ({
+        timestamp,
+        metrics: this._parseMetrics(metrics),
+      })),
+    });
+  }
+
+  /**
    * Gets the latest vote information of a Top.gg user on your project.
    *
    * @example
@@ -190,20 +325,20 @@ export class Api extends EventEmitter {
    */
   public async getVote(
     id: Snowflake,
-    source: UserSource = "discord"
+    source: UserSource = "discord",
   ): Promise<PartialVote | null> {
     if (!id) throw new Error("Missing ID");
 
     try {
       const response = await this._request(
         "GET",
-        `/projects/@me/votes/${id}?source=${source}`
+        `/projects/@me/votes/${id}?source=${source}`,
       );
 
       return {
         votedAt: new Date(response.created_at),
         expiresAt: new Date(response.expires_at),
-        weight: response.weight
+        weight: response.weight,
       };
     } catch (err) {
       const topggError = err as TopGGAPIError;
@@ -222,7 +357,7 @@ export class Api extends EventEmitter {
   }): Promise<PaginatedVotes> {
     const response = await this._request(
       "GET",
-      `/projects/@me/votes?${options.since ? `startDate=${encodeURIComponent(options.since.toISOString())}` : `cursor=${options.cursor}`}`
+      `/projects/@me/votes?${options.since ? `startDate=${encodeURIComponent(options.since.toISOString())}` : `cursor=${options.cursor}`}`,
     );
     /* eslint-disable-next-line @typescript-eslint/no-this-alias */
     const self = this;
@@ -233,12 +368,12 @@ export class Api extends EventEmitter {
         platformId: vote.platform_id,
         votedAt: new Date(vote.created_at),
         expiresAt: new Date(vote.expires_at),
-        weight: vote.weight
+        weight: vote.weight,
       })),
       next: () =>
         self._getVotesInner({
-          cursor: response.cursor
-        })
+          cursor: response.cursor,
+        }),
     };
   }
 

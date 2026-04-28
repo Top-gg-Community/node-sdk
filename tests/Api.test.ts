@@ -1,7 +1,7 @@
 import { deepStrictEqual, rejects, strictEqual } from "node:assert";
 import { it, describe } from "node:test";
 
-import { MOCK_TOKEN, PARTIAL_VOTE, PROJECT, VOTE } from "./mocks/data";
+import { ANNOUNCEMENT, METRIC, METRIC_BATCH, MOCK_TOKEN, PARTIAL_VOTE, PROJECT, PROJECT_PAYLOAD, VOTE } from "./mocks/data";
 import { registerMocks } from "./mocks/index";
 import { Api, Widget } from "../src/index";
 
@@ -12,6 +12,31 @@ registerMocks();
 describe("API getSelf test", () => {
   it("getSelf should work", async () => {
     deepStrictEqual(await client.getSelf(), PROJECT);
+  });
+});
+
+describe("API editSelf test", () => {
+  it("editSelf should work", async () => {
+    strictEqual(await client.editSelf(PROJECT_PAYLOAD), undefined);
+  });
+});
+
+describe("API postAnnouncement test", () => {
+  it("postAnnouncement should work", async () => {
+    deepStrictEqual(
+      await client.postAnnouncement(ANNOUNCEMENT.title, ANNOUNCEMENT.content),
+      ANNOUNCEMENT
+    );
+  });
+});
+
+describe("API postMetrics test", () => {
+  it("postMetrics single should work", async () => {
+    strictEqual(await client.postMetrics(METRIC), undefined);
+  });
+
+  it("postMetrics batch should work", async () => {
+    strictEqual(await client.postMetrics(METRIC_BATCH), undefined);
   });
 });
 

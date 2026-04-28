@@ -8,7 +8,7 @@ import type {
   VoteCreatePayload,
   WebhookPayload,
   WebhookPayloadType,
-  WebhookTestPayload
+  WebhookTestPayload,
 } from "../typings.js";
 import { API_VERSION } from "./Api.js";
 import getBody from "raw-body";
@@ -68,7 +68,7 @@ export class Webhook {
     this.options = {
       error: options.error ?? console.error,
       timeout: options.timeout ?? 5000,
-      timestampWindow: options.timestampWindow ?? 30000
+      timestampWindow: options.timestampWindow ?? 30000,
     };
   }
 
@@ -77,7 +77,7 @@ export class Webhook {
       id: project.id,
       type: project.type,
       platform: project.platform,
-      platformId: project.platform_id
+      platformId: project.platform_id,
     };
   }
 
@@ -86,7 +86,7 @@ export class Webhook {
       id: user.id,
       name: user.name,
       avatar: user.avatar_url,
-      platformId: user.platform_id
+      platformId: user.platform_id,
     };
   }
 
@@ -95,7 +95,7 @@ export class Webhook {
       type: WebhookPayloadType;
       data: any;
     },
-    trace: string | string[] | undefined
+    trace: string | string[] | undefined,
   ): WebhookPayload {
     let data;
 
@@ -105,7 +105,7 @@ export class Webhook {
           connectionId: body.data.connection_id,
           secret: body.data.webhook_secret,
           project: this._formatPartialProject(body.data.project),
-          user: this._formatUser(body.data.user)
+          user: this._formatUser(body.data.user),
         } as IntegrationCreatePayload;
 
         this.secret = data.secret;
@@ -115,7 +115,7 @@ export class Webhook {
 
       case "integration.delete": {
         data = {
-          connectionId: body.data.connection_id
+          connectionId: body.data.connection_id,
         } as IntegrationDeletePayload;
 
         break;
@@ -128,7 +128,7 @@ export class Webhook {
           votedAt: new Date(body.data.created_at),
           expiresAt: new Date(body.data.expires_at),
           project: this._formatPartialProject(body.data.project),
-          user: this._formatUser(body.data.user)
+          user: this._formatUser(body.data.user),
         } as VoteCreatePayload;
 
         break;
@@ -137,7 +137,7 @@ export class Webhook {
       case "webhook.test": {
         data = {
           project: this._formatPartialProject(body.data.project),
-          user: this._formatUser(body.data.user)
+          user: this._formatUser(body.data.user),
         } as WebhookTestPayload;
 
         break;
@@ -151,13 +151,13 @@ export class Webhook {
     return {
       type: body.type,
       data,
-      trace
+      trace,
     };
   }
 
   private _parseRequest(
     req: Request,
-    res: Response
+    res: Response,
   ): Promise<WebhookPayload | false> {
     const currentTimestamp = Date.now();
 
@@ -165,7 +165,7 @@ export class Webhook {
       getBody(
         req,
         {
-          limit: 2 * 1024 * 1024
+          limit: 2 * 1024 * 1024,
         },
         (error, body) => {
           /* node:coverage ignore next 4 */
@@ -187,7 +187,7 @@ export class Webhook {
           }
 
           const parsedSignature = Object.fromEntries(
-            signatureHeader.split(",").map((part) => part.split("="))
+            signatureHeader.split(",").map((part) => part.split("=")),
           );
           const signature = parsedSignature[API_VERSION];
 
@@ -199,7 +199,7 @@ export class Webhook {
           if (
             this.options.timestampWindow &&
             Math.abs(
-              currentTimestamp - parseInt(parsedSignature.t, 10) * 1000
+              currentTimestamp - parseInt(parsedSignature.t, 10) * 1000,
             ) > this.options.timestampWindow
           ) {
             res
@@ -211,7 +211,7 @@ export class Webhook {
           const hmac = crypto.createHmac("sha256", this.secret);
           const digest = Buffer.from(
             hmac.update(`${parsedSignature.t}.${body}`).digest("hex"),
-            "hex"
+            "hex",
           );
 
           if (!crypto.timingSafeEqual(Buffer.from(signature, "hex"), digest)) {
@@ -225,19 +225,19 @@ export class Webhook {
             const parsed = JSON.parse(bodyString);
 
             return resolve(
-              this._formatIncoming(parsed, req.headers["x-topgg-trace"])
+              this._formatIncoming(parsed, req.headers["x-topgg-trace"]),
             );
           } catch (err: any) {
             /* node:coverage ignore next 3 */
             console.warn(
-              `[WARNING] Unable to parse Top.gg webhook payload. Please report this bug to the SDK maintainers.\nCause: ${err.stack || err.message || err}\n--- BEGIN BODY DUMP ---\n${bodyString}\n--- END BODY DUMP ---`
+              `[WARNING] Unable to parse Top.gg webhook payload. Please report this bug to the SDK maintainers.\nCause: ${err.stack || err.message || err}\n--- BEGIN BODY DUMP ---\n${bodyString}\n--- END BODY DUMP ---`,
             );
 
             res.sendStatus(204);
 
             return resolve(false);
           }
-        }
+        },
       );
 
       setTimeout(() => {
@@ -281,13 +281,13 @@ export class Webhook {
       payload: WebhookPayload,
       req: Request,
       res: Response,
-      next: NextFunction
-    ) => void | Promise<void>
+      next: NextFunction,
+    ) => void | Promise<void>,
   ) {
     return async (
       req: Request,
       res: Response,
-      next: NextFunction
+      next: NextFunction,
     ): Promise<void> => {
       const response = await this._parseRequest(req, res);
       if (!response) return;
