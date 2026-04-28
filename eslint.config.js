@@ -55,7 +55,7 @@ export default [
       "prefer-exponentiation-operator": "error",
       "no-lonely-if": "error",
       radix: "warn",
-      camelcase: "warn",
+      camelcase: ["warn", { properties: "never" }],
       "new-cap": "error",
       quotes: ["warn", "double", { allowTemplateLiterals: true }],
       "no-void": "error",

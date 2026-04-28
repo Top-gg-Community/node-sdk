@@ -36,7 +36,7 @@ export type Locale =
   | "ru"
   | "uk"
   | "vi"
-  | "zh"
+  | "zh";
 
 /** A webhook payload's type */
 export type WebhookPayloadType =
@@ -191,10 +191,10 @@ export interface WebhookPayload {
   type: WebhookPayloadType;
   /** The payload's data */
   data:
-  | IntegrationCreatePayload
-  | IntegrationDeletePayload
-  | VoteCreatePayload
-  | WebhookTestPayload;
+    | IntegrationCreatePayload
+    | IntegrationDeletePayload
+    | VoteCreatePayload
+    | WebhookTestPayload;
   /** The payload's x-topgg-trace header for debugging and correlating requests with Top.gg support */
   trace: string | string[] | undefined;
 }
@@ -222,7 +222,10 @@ export interface RobloxGamePayload {
 }
 
 /** A metrics payload */
-export type MetricsPayload = DiscordBotPayload | DiscordServerPayload | RobloxGamePayload
+export type MetricsPayload =
+  | DiscordBotPayload
+  | DiscordServerPayload
+  | RobloxGamePayload;
 
 declare module "express" {
   export interface Request {
