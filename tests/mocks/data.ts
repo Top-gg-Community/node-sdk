@@ -81,11 +81,17 @@ export const METRIC = {
   shardCount: RAW_METRIC.shard_count
 }
 
-export const METRIC_BATCH = {
-  timestamp: "2026-04-17T10:00:00Z",
-  serverCount: RAW_METRIC.server_count,
-  shardCount: RAW_METRIC.shard_count
-}
+export const METRIC_BATCH = [
+  {
+    timestamp: "2026-04-17T10:00:00Z",
+    serverCount: 419
+  },
+  {
+    timestamp: "2026-04-17T10:05:00Z",
+    serverCount: RAW_METRIC.server_count,
+    shardCount: RAW_METRIC.shard_count
+  }
+]
 
 export const RAW_METRIC_BATCH = {
   data: [

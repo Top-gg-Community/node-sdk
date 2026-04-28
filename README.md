@@ -78,10 +78,10 @@ console.log(project);
 ```js
 await client.editSelf({
   headline: {
-    "en": "A great bot with tons of features!"
+    en: "A great bot with tons of features!"
   },
   content: {
-    "en": "# Welcome\nThis is the full page description for your project..."
+    en: "# Welcome\nThis is the full page description for your project..."
   }
 });
 ```
