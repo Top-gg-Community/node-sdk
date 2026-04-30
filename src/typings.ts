@@ -14,10 +14,10 @@ export interface APIOptions {
 export type UserSource = "discord" | "topgg";
 
 /** A project's platform */
-export type Platform = "discord";
+export type Platform = "discord" | "roblox";
 
 /** A project's type */
-export type ProjectType = "bot" | "server";
+export type ProjectType = "bot" | "server" | "game";
 
 /** A locale for a project's payload */
 export type Locale =
