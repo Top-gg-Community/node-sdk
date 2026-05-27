@@ -19,6 +19,9 @@ export type Platform = "discord" | "roblox";
 /** A project's type */
 export type ProjectType = "bot" | "server" | "game";
 
+/** An announcement's type */
+export type AnnouncementType = "announcement" | "event" | "new_feature";
+
 /** A locale for a project's payload */
 export type Locale =
   | "en"
