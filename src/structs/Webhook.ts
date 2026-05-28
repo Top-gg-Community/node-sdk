@@ -128,6 +128,7 @@ export class Webhook {
           votedAt: new Date(body.data.created_at),
           expiresAt: new Date(body.data.expires_at),
           project: this._formatPartialProject(body.data.project),
+          query: body.data.query,
           user: this._formatUser(body.data.user),
         } as VoteCreatePayload;
 
