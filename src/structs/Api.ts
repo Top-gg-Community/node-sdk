@@ -199,7 +199,7 @@ export class Api extends EventEmitter {
    * @returns {Promise<void>}
    */
   public async postCommands(commands: APIApplicationCommand[]): Promise<void> {
-    await this._request("POST", "/projects/@me/commands", commands);
+    await this._request("PUT", "/projects/@me/commands", commands);
   }
 
   /**

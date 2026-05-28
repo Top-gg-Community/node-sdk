@@ -158,6 +158,8 @@ export interface VoteCreatePayload {
   expiresAt: Date;
   /** The project that received this vote */
   project: PartialProject;
+  /** The parsed query parameters appended to the page URL */
+  query: Record<string, string>;
   /** The user who voted for this project */
   user: User;
 }
