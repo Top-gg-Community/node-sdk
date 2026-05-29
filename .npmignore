@@ -3,11 +3,13 @@ src/
 docs/
 logs/
 *.log
+.nvmrc
+.husky/
 
 !dist/
 eslint.config.js
 .gitattributes
 .gitignore
 .github/
-test/
+tests/
 tsconfig.json
