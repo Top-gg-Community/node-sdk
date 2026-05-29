@@ -47,7 +47,7 @@ export const endpoints: MockEndpoint[] = [
   },
   {
     pattern: "/api/v1/projects/@me/commands",
-    method: "POST",
+    method: "PUT",
     data: ""
   },
   {

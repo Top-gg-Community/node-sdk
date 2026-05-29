@@ -195,6 +195,10 @@ export const VOTE_CREATE_PAYLOAD = {
       platform: "discord",
       platform_id: "160105994217586689"
     },
+    query: {
+      key1: "value",
+      key2: "value2"
+    },
     user: {
       id: "160105994217586689",
       platform_id: "160105994217586689",

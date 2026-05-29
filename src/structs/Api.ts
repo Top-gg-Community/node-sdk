@@ -4,16 +4,17 @@ import { EventEmitter } from "events";
 import { STATUS_CODES } from "http";
 
 import type {
-  APIOptions,
-  Snowflake,
-  UserSource,
-  Project,
-  PartialVote,
-  PaginatedVotes,
   Announcement,
+  AnnouncementType,
+  APIOptions,
   Method,
   MetricsPayload,
+  PaginatedVotes,
+  PartialVote,
+  Project,
   ProjectPayload,
+  Snowflake,
+  UserSource,
 } from "../typings.js";
 
 /** The API version to use */
@@ -198,7 +199,7 @@ export class Api extends EventEmitter {
    * @returns {Promise<void>}
    */
   public async postCommands(commands: APIApplicationCommand[]): Promise<void> {
-    await this._request("POST", "/projects/@me/commands", commands);
+    await this._request("PUT", "/projects/@me/commands", commands);
   }
 
   /**
@@ -222,16 +223,18 @@ export class Api extends EventEmitter {
    *
    * @param {string} title The announcement title. Must be between 3 and 100 characters.
    * @param {string} content The announcement body text. Must be between 10 and 2,000 characters.
+   * @param {AnnouncementType} category The category to publish the announcement under. Defaults to `announcement` when omitted.
    * @returns {Promise<Announcement>} The created announcement.
    */
   public async postAnnouncement(
     title: string,
     content: string,
+    category?: AnnouncementType,
   ): Promise<Announcement> {
     const announcement = await this._request(
       "POST",
       "/projects/@me/announcements",
-      { title, content },
+      { title, content, category },
     );
 
     return {
