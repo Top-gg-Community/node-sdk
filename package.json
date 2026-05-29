@@ -20,12 +20,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/top-gg/node-sdk.git"
+    "url": "git+https://github.com/top-gg-community/node-sdk.git"
   },
   "author": "Top.gg <support@top.gg> (https://top.gg)",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/top-gg/node-sdk/issues"
+    "url": "https://github.com/top-gg-community/node-sdk/issues"
   },
   "homepage": "https://topgg.js.org",
   "devDependencies": {
